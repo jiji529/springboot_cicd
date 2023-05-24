@@ -1,0 +1,7 @@
+﻿﻿open ftp://premium_api_dev:gwangho711@222.231.4.31/public_html/eval
+get -neweronly *.php "dist\api\*.php"
+get -neweronly jwt "dist\api\jwt"
+get -neweronly lib "dist\api\lib"
+get -neweronly vendor "dist\api\vendor"
+close
+exit

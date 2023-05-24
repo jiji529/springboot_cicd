@@ -1,0 +1,125 @@
+/*login*/
+
+
+
+#login{
+    width: 100%;
+    text-align: center;
+}
+
+/*  레이아웃  */
+.login-container {
+    display: inline-block;
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px 0;
+    text-align: center;
+}
+
+.login-content {
+    width: 340px;
+    padding-bottom: 10px;
+    display: inline-block;
+    background-color: #f7f7f7;
+    border-radius: 2px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    background-image: url(../images/lock.png);
+    background-position: 106px 50px;
+    background-repeat: no-repeat;
+    padding-top: 204px;
+}
+
+.login-content form {
+    padding: 0 22px;
+}
+
+/*		로그인 폼  //////////////          */
+.lgoin-form {
+    padding: 0;
+    margin: 0;
+    width: 298px;
+}
+
+.lgoin-form input[type="text"], .lgoin-form input[type="password"] {
+    width: 256px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+    border-radius: 4px;
+}
+.login-button{
+    margin: 20px 10px;
+}
+
+.login-submit {
+    width: 100%;
+    color: #fff;
+    background: #009dd9;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    height: 38px;
+    line-height: 38px;
+    border-radius: 3px;
+    border: 0;
+    cursor: pointer;
+
+}
+
+/*		자동 로그인  //////////////          */
+.login-conf {
+    width: 100%;
+    height: 20px;
+}
+
+.login-conf label {
+    font-size: 13px;
+    float: left;
+    line-height: 20px;
+    margin-left: 10px;
+}
+
+.login-conf input {
+    float: left;
+    margin: 5px 5px 0 0;
+    padding: 0
+}
+
+/*		스크랩마스터 프리미엄 bi		*/
+.scrapmasterbi {
+     height: 40px;
+     line-height: 40px;
+     margin: 80px 0 20px;
+     text-align: center;
+ }
+.scrapmasterbi ul{
+    display: inline-block;
+}
+.scrapmasterbi li{
+    float: left;
+}
+
+.scrapmasterbi img {
+    margin: 5px;
+}
+
+.scrapmasterbi span {
+    font-size: 22px;
+    font-weight: 600;
+    color: #666;
+}
+
+.notice {
+    float: left;
+    width: 490px;
+    height: 400px;
+    margin-left: 15px
+}
+
+.notice img {
+    float: left;
+    width: 490px;
+    height: 400px;
+}

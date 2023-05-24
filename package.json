@@ -1,0 +1,71 @@
+{
+  "name": "pm-eval",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.10.4",
+    "@vue/babel-preset-app": "^3.3.0",
+    "@vue/cli": "^4.5.3",
+    "axios": "^0.18.0",
+    "chart.js": "^3.8.0",
+    "datalist-polyfill": "^1.24.4",
+    "formdata-polyfill": "^3.0.20",
+    "html2canvas": "^1.4.1",
+    "moment": "^2.23.0",
+    "npm": "^6.5.0",
+    "vee-validate": "^2.1.5",
+    "vue": "^2.5.17",
+    "vue-async-computed": "^3.8.2",
+    "vue-browser-detect-plugin": "^0.1.13",
+    "vue-chartjs": "^4.1.1",
+    "vue-momentjs": "^0.1.2",
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.24.3",
+    "vuejs-datepicker": "^1.5.3",
+    "vuex": "^3.0.1",
+    "xlsx": "^0.14.1",
+    "yarn": "^1.22.17"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.10.4",
+    "@vue/cli-plugin-babel": "3.3.0",
+    "@vue/cli-service": "^3.3.0",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {
+      "vue/no-use-v-if-with-v-for": [
+        "error",
+        {
+          "allowUsingIterationVar": true
+        }
+      ]
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
