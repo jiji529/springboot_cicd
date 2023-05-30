@@ -129,7 +129,9 @@ const methods = {
      * @returns json
      */
     funcJSONRequest: async function(targetUrl, inputData, funcName, isCallbackData) {
-        let data = JSON.parse(JSON.stringify(inputData)); 
+        /* json으로 변환 */
+        let data = JSON.parse(JSON.stringify(inputData));
+        /*  */
         if (!data) data = {"pid" : store.state.pid};
         else {
             if (funcName == 'office') {}
@@ -138,16 +140,20 @@ const methods = {
         }
         
         let url = "http://192.168.0.104:8081/scrapmaster" + targetUrl;
-        let param = new URLSearchParams(); 
+        let param = new URLSearchParams();
+        /* 검색 데이터 타입 변환 */
         if (typeof data === "string") param.append('data', data); // string
         else param.append('data', JSON.stringify(data)); // object to string
 
         let headerOption = {};
         if (funcName === 'office') headerOption['responseType'] = 'arraybuffer';
 
-        const res = await axios.post(url, param, headerOption);
+        let res = null;
+        try { res = await axios.post(url, param, headerOption); } 
+        catch(e) { alert("Network or API Request Error"); }
+        
         // success
-        if (isCallbackData) { 
+        if (res.status === 200 && isCallbackData) { 
             return (funcName === 'office') ? res : res.data;
         }
     },
