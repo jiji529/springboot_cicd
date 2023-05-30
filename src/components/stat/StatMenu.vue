@@ -1,6 +1,6 @@
 <template>
   <div> <!-- basic -->
-    <div v-if="tapList.length">
+    <div v-if="tapList && tapList.length">
       <div class="pre_top sch">
         <ul class="stat">
           <template v-for="(value, index) in tapList">
@@ -33,10 +33,10 @@
         </div>
       </div>
     </div><!-- [End] StatSearch, MiddleManager -->
-    <a v-else-if="loading && !tapList.length" @click="newTemplate">
+    <a v-else-if="loading && (!tapList || !tapList.length)" @click="newTemplate">
       <Alert :kind="'Warning'" :message="'등록된 탭이 존재하지 않습니다. (클릭하여 통계설정 이동)'"/>
     </a>
-    <a v-if="loading && tapList.length && noReport" @click="newTemplate">
+    <a v-if="loading && (tapList && tapList.length) && noReport" @click="newTemplate">
       <Alert :kind="'Warning'" :message="'보고서 / 템플릿이 존재하지 않습니다. (클릭하여 통계설정 이동)'" />
     </a>
 
@@ -133,7 +133,7 @@
       await this.loadData();
       await this.$nextTick();
       this.loading = true;
-      if (!this.tapList.length) return ;
+      if (!this.tapList || !this.tapList.length) return ;
       let fir = null;
       let idx = 0;
       for (let tap of this.tapList) {
