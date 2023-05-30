@@ -4,7 +4,7 @@ import Router from 'vue-router';
 import Email from './views/Email.vue';
 import Eval from './views/Eval.vue';
 import Login from './views/Login.vue';
-// import LoginAuto from './views/LoginAuto.vue';
+import LoginAuto from './views/LoginAuto.vue';
 import Preview from './views/Preview.vue';
 import Setting from './views/Setting.vue';
 import Stat from './views/Stat.vue';
@@ -91,13 +91,13 @@ const router = new Router({
     children: [
       {path: '/login/:auth', name: 'auto-login', component: Login, meta: {public: true}}
     ]
-  // }, {
-  //   path: '/loginAuto',
-  //   name: 'loginAuto',
-  //   meta: {
-  //     public: true
-  //   },
-  //   component: LoginAuto
+  }, {
+    path: '/loginAuto',
+    name: 'loginAuto',
+    meta: {
+      public: true
+    },
+    component: LoginAuto
   }, {
     path: '/404',
     meta: {
