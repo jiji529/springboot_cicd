@@ -150,7 +150,7 @@ const methods = {
 
         let res = null;
         try { res = await axios.post(url, param, headerOption); } 
-        catch(e) { alert("Network or API Request Error"); }
+        catch(e) { alert("Network or API Request Error"); } /* 리뉴얼된 DB 사용자가 아니면 오류 해당 알림창이 뜰 수 있다. */
         
         // success
         if (res.status === 200 && isCallbackData) { 

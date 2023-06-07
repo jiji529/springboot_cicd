@@ -5,8 +5,7 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 const newDate = new Date();
-// const auth_domain = '/api'; /* 개발할 때, vue,config.js에서 주석처리된 devserver부분을 풀어주고 적용해야 된다. */
-const auth_domain = 'http://222.231.4.31/~premium_api_dev/eval'; /* 배포 단계에서 적용 */
+const auth_domain = '/api'; /* 개발할 때, vue,config.js에서 주석처리된 devserver부분을 풀어주고 적용해야 된다. */
 const statState = () => ({
   searchOpen: true, // 통계 검색 출력 여부우
   searchTotalItemOpen: true, // 통계 검색 출력 여부
@@ -440,7 +439,7 @@ export default new Vuex.Store({
       };
       try {
         const res = await getUserInfo(params);
-
+        
         //성공
         if (res.status === 200) {
           setLogin(store, res.data);

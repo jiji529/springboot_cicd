@@ -15,7 +15,8 @@ module.exports = {
     proxy: { // proxyTable 설정
       '/api': {
         //target: 'https://premium2.scrapmaster.co.kr',
-        target: 'http://222.231.4.31/~premium_api_dev/eval',
+        // target: 'http://222.231.4.31/~premium_api_dev/eval',
+        target: 'http://localhost/eval-api-73',
         changeOrigin: true,
         ws: true,
         logLevel: 'debug',
