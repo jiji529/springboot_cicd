@@ -5,7 +5,7 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 const newDate = new Date();
-const auth_domain = '/api'; /* 개발할 때, vue,config.js에서 주석처리된 devserver부분을 풀어주고 적용해야 된다. */
+const auth_domain = '/premium_eval-phpAPI/evalApi'; /* 개발할 때, vue,config.js에서 주석처리된 devserver부분을 풀어주고 적용해야 된다. */
 const statState = () => ({
   searchOpen: true, // 통계 검색 출력 여부우
   searchTotalItemOpen: true, // 통계 검색 출력 여부

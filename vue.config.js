@@ -13,15 +13,15 @@ module.exports = {
   */
   devServer: { // 배포 시, 적용 안해도 됨.
     proxy: { // proxyTable 설정
-      '/api': {
+      '/premium_eval-phpAPI/evalApi': {
         //target: 'https://premium2.scrapmaster.co.kr',
         // target: 'http://222.231.4.31/~premium_api_dev/eval',
-        target: 'http://localhost/eval-api-73',
+        target: 'http://localhost/premium_eval-phpAPI/evalApi',
         changeOrigin: true,
         ws: true,
         logLevel: 'debug',
         pathRewrite: {
-          '^/api': ''
+          '^/premium_eval-phpAPI/evalApi': ''
         }
       }
     } // proxy
