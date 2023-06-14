@@ -139,7 +139,7 @@ const methods = {
             else data.pid = store.state.pid;
         }
         
-        let url = "http://192.168.0.104:8081/scrapmaster" + targetUrl;
+        let url = "http://127.0.0.1:8081/scrapmaster" + targetUrl;
         let param = new URLSearchParams();
         /* 검색 데이터 타입 변환 */
         if (typeof data === "string") param.append('data', data); // string
