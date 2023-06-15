@@ -119,6 +119,7 @@ const kewordMap = {
     ,"#{표시값}#":"calcValue-numberScaleDupe" // (건수/가치) 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
     // ,"#{금액단위}#":"-" // 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
 }
+const LK = window.origin.split(":80")[0];
 const methods = {
     /**
      * @description 
@@ -138,8 +139,7 @@ const methods = {
             else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
             else data.pid = store.state.pid;
         }
-        
-        let url = "http://127.0.0.1:8081/scrapmaster" + targetUrl;
+        let url = LK + ":8080/scrapmaster" + targetUrl;
         let param = new URLSearchParams();
         /* 검색 데이터 타입 변환 */
         if (typeof data === "string") param.append('data', data); // string
