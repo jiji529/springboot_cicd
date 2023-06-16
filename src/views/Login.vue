@@ -202,7 +202,8 @@
       goToPages() {
         this.isLoading = false;
         this.$router.replace({
-          path: this.$store.state.isPeUser ? '/eval' : '/old/eval'
+          // path: this.$store.state.isPeUser ? '/eval' : '/old/eval'
+          path: 'eval'
         });
       },
       goToLogin() {
