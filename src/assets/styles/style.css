@@ -915,7 +915,7 @@ main.cont .stat_option .btn.src_chart_cir.on{ background-position:-120px -250px}
 .cont_wrap .val_wrap .set_val .val_grp .val_item dt{  display:block; float:left; width: 110px; padding:7px 10px;  color:#999; font-weight:bold; position: relative;}
 .cont_wrap .val_wrap .set_val .val_grp .val_item dd{border-bottom:1px #d9d9d9 solid; padding:7px 10px 7px 120px; position: relative;}
 .cont_wrap .val_wrap .set_val .val_grp .val_item dd:after {content: "";display: table;}
-.cont_wrap .val_wrap .set_val .val_grp .val_item dd label{float: none;}
+.cont_wrap .val_wrap .set_val .val_grp .val_item dd label{float: none !important;}
 .cont_wrap .val_wrap .set_val .val_grp .val_item dd select{ height:20px; font-size:12px;}
 .cont_wrap .val_wrap .set_val .val_grp .val_item dd input{font-size: 12px; padding: 1px 5px; min-width: 200px;}
 .cont_wrap .val_wrap .set_val .val_grp .val_item dd datalist{font-size: 12px;}
