@@ -139,7 +139,7 @@ const methods = {
             else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
             else data.pid = store.state.pid;
         }
-        let url = LK + ":8080/scrapmaster" + targetUrl;
+        let url = LK + ":80/scrapmaster" + targetUrl;
         let param = new URLSearchParams();
         /* 검색 데이터 타입 변환 */
         if (typeof data === "string") param.append('data', data); // string
