@@ -17,10 +17,8 @@
   </div>
 </template>
 <script>
-  var vueThis = null;
   import '@/assets/styles/style.css'
   import PageHeader from '@/components/PageHeader';
-  import axios from 'axios';
 
   export default {
     name: 'SrcApp',
@@ -31,17 +29,15 @@
       
     },
     created: function() {
-      vueThis = this;
-      let vThis = this;
+      const vueThis = this;
       window.addEventListener('beforeunload', async function(e) {
         try {
           let res = await viewerLogout(e);
           e.preventDefault();
-        }catch(ex) {
-        }
+        }catch(ex) { /* ?? */ }
       });
     },
-
+    
     beforeRouteLeave(to, from, next) {
       console.log(from.path);
     }
@@ -51,7 +47,6 @@
     let viewerLogoutUrl = "https://wv.scrapmaster.co.kr/admin/adminLogout.do";
     // let viewerLogoutUrl = "http://localhost/admin/adminLogout.do";
     self.frames['viewerLogoutFrame'].location.href=viewerLogoutUrl;
-    // window.location.href = window.location.origin;
   }  
 </script>
 <style>

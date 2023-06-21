@@ -41,8 +41,7 @@ new Vue({
 
 require('formdata-polyfill');
 
-const ssdo = store.state.domainOrigin;
-
+const ssdo = store.state.hiddenLink1;
 axios.interceptors.request.use(
   async function (config) {
     let uris = [ssdo+'/login.php', ssdo+'/loginAuto.php', ssdo+'/auth.php'];

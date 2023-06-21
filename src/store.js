@@ -4,8 +4,10 @@ import Vuex from 'vuex';
 import axios from 'axios';
 
 Vue.use(Vuex);
+const link_php = process.env.VUE_APP_PHP_PATH;
+const link_java = window.origin.split(":80")[0];
+
 const newDate = new Date();
-const auth_domain = '/premium_eval-phpAPI/evalApi'; /* 개발할 때, vue,config.js에서 주석처리된 devserver부분을 풀어주고 적용해야 된다. */
 const statState = () => ({
   searchOpen: true, // 통계 검색 출력 여부우
   searchTotalItemOpen: true, // 통계 검색 출력 여부
@@ -100,7 +102,8 @@ export default new Vuex.Store({
     embedded: false, // SM embedded mode
     domain: false, // 도메인 여부 체크
     statSetting: statState(),
-    domainOrigin: auth_domain,
+    hiddenLink1: link_php,
+    hiddenLink2: link_java,
     newsGroup: [{
       lvalue: '',
       sname: ''
@@ -387,13 +390,13 @@ export default new Vuex.Store({
         commit('SET_CONFIG_EVAL', data);
       };
       const getConfigEval = (params) => {
-        return axios.post(auth_domain + '/getConfigEvalJson.php', params);
+        return axios.post(link_php + '/getConfigEvalJson.php', params);
       };
 
       // 로그인 서버로 부터 요청
       const getUserInfo = (params) => {
         delete axios.defaults.headers.common['Authorization'];
-        return axios.post(auth_domain + '/loginAuto.php', params);
+        return axios.post(link_php + '/loginAuto.php', params);
       };
       try {
         const res = await getUserInfo(params);
@@ -429,13 +432,13 @@ export default new Vuex.Store({
         commit('SET_CONFIG_EVAL', data);
       };
       const getConfigEval = (params) => {
-        return axios.post(auth_domain + '/getConfigEvalJson.php', params);
+        return axios.post(link_php + '/getConfigEvalJson.php', params);
       };
 
       // 로그인 서버로 부터 요청
       const getUserInfo = (params) => {
         delete axios.defaults.headers.common['Authorization'];
-        return axios.post(auth_domain + '/login.php', params);
+        return axios.post(link_php + '/login.php', params);
       };
       try {
         const res = await getUserInfo(params);
@@ -467,7 +470,7 @@ export default new Vuex.Store({
         commit('LOGIN', data);
       };
       const getAuthAPI = (params) => {
-        return axios.post(auth_domain + '/auth.php', params);
+        return axios.post(link_php + '/auth.php', params);
       };
       try {
         let isEmbedded = localStorage.getItem('is-embedded');
@@ -494,7 +497,7 @@ export default new Vuex.Store({
         commit('LOGIN', data);
       }; 
       const getAuthAPI = (params) => {
-        return axios.post(auth_domain + '/auth.php', params);
+        return axios.post(link_php + '/auth.php', params);
       };
       try {
         let isEmbedded = localStorage.getItem('is-embedded');
@@ -530,7 +533,7 @@ export default new Vuex.Store({
       };
       // 로그인 서버로 부터 요청
       const getNewsGroupInfo = () => {
-        return axios.post(auth_domain + '/newsGroupInfo.php');
+        return axios.post(link_php + '/newsGroupInfo.php');
       };
       try {
         const res = await getNewsGroupInfo();
@@ -546,7 +549,7 @@ export default new Vuex.Store({
     //매체구분 API - 3.5기준 news.category_name
     async categoryNameOldAPI() {
       const getCategoryNameOld = () => {
-        return axios.post(auth_domain + '/categoryNameOld.php');
+        return axios.post(link_php + '/categoryNameOld.php');
       };
       try {
         const res = await getCategoryNameOld();
@@ -571,7 +574,7 @@ export default new Vuex.Store({
       };
       // 매체정보 요청
       const getCategoryId = () => {
-        return axios.post(auth_domain + '/category_id.php');
+        return axios.post(link_php + '/category_id.php');
       };
       try {
         const res = await getCategoryId();
@@ -606,12 +609,12 @@ export default new Vuex.Store({
       };
       //기사목록 서버로 부터 요청
       const getArticle = () => {
-        return axios.post(auth_domain + '/search_API_wip_230221.php', param);
+        return axios.post(link_php + '/search_API_wip_230221.php', param);
       };
       const getEvalIs = (newsIdList) => {
           let postparam = new FormData;
           postparam.append('news_id', newsIdList);
-          return axios.post(auth_domain + '/evalInfoAll.php', postparam);
+          return axios.post(link_php + '/evalInfoAll.php', postparam);
       };
       loadingGifCommit(store, true);
       let rtn = true;
@@ -665,13 +668,13 @@ export default new Vuex.Store({
       };
 
       const getArticle = (param) => {
-        return axios.post(auth_domain + '/articleListWithSubTitle_230208.php', param);
+        return axios.post(link_php + '/articleListWithSubTitle_230208.php', param);
       };
       const getEvalIs = (newsIdList) => {
         if (newsIdList && newsIdList.length > 0) {
           let postparam = new FormData;
           postparam.append('news_id', newsIdList);
-          return axios.post(auth_domain + '/evalInfoAll.php', postparam);
+          return axios.post(link_php + '/evalInfoAll.php', postparam);
         } else {
           return {};
         }
@@ -730,7 +733,7 @@ export default new Vuex.Store({
 		    commit('SET_SEARCH_EVAL_INFO', data);
 	    };
       const getEvalIs = (params) => {
-        return axios.post(auth_domain + '/evalInfoAll.php', params);
+        return axios.post(link_php + '/evalInfoAll.php', params);
       };
 
       try {
@@ -752,7 +755,7 @@ export default new Vuex.Store({
     async inExcludeEvalAPI(store, params){
 	    // 요청
 	    const getAPI = (params) => {
-		    return axios.post(auth_domain + '/inExcludeEval.php', params);
+		    return axios.post(link_php + '/inExcludeEval.php', params);
 	    };
 	    try {
 	    	const res = await getAPI(params);
@@ -777,12 +780,12 @@ export default new Vuex.Store({
       };
       // 매체정보 요청 - 트리구조
       const getEval1Category = (params) => {
-        return axios.post(auth_domain + '/getEval1Category_tree.php', params);
+        return axios.post(link_php + '/getEval1Category_tree.php', params);
       };
 
       // 매체정보 요청 - 대,중,소 별로
       const getEval1ByCategory = (params) => {
-        return axios.post(auth_domain + '/getEval1ByCategory.php', params);
+        return axios.post(link_php + '/getEval1ByCategory.php', params);
       };
       try {
         const res = await getEval1Category(params);
@@ -820,7 +823,7 @@ export default new Vuex.Store({
 
       //평가2항목 요청
       const getEval2Class = (params) => {
-        return axios.post(auth_domain + '/getEval2Class.php', params);
+        return axios.post(link_php + '/getEval2Class.php', params);
       };
       try {
         const res = await getEval2Class(params);
@@ -869,7 +872,7 @@ export default new Vuex.Store({
       };
       //기사 정보 요청
       const getStatScrap = (params) => {
-        return axios.post(auth_domain + '/stat_value_wip.php ', params);
+        return axios.post(link_php + '/stat_value_wip.php ', params);
       };
       let rtn = false;
       // loadingGifCommit(store, true);
@@ -893,7 +896,7 @@ export default new Vuex.Store({
       };
       // 로그인 서버로 부터 요청
       const getValueGroupInfo = () => {
-        return axios.post(auth_domain + '/valueGroupInfo.php');
+        return axios.post(link_php + '/valueGroupInfo.php');
       };
       try {
         const res = await getValueGroupInfo();
@@ -914,7 +917,7 @@ export default new Vuex.Store({
       };
       // 요청
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/setValueSettings.php', params);
+        return axios.post(link_php + '/setValueSettings.php', params);
       };
       try {
         const res = await getAPI(params);
@@ -934,7 +937,7 @@ export default new Vuex.Store({
         commit('SET_CONFIG_EVAL', data);
       };
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/getConfigEvalJson.php', params);
+        return axios.post(link_php + '/getConfigEvalJson.php', params);
       };
 
       try {
@@ -960,10 +963,10 @@ export default new Vuex.Store({
         commit('SET_CONFIG_EVAL_GROUP', data);
       };
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/getConfigEvalJson.php', params);
+        return axios.post(link_php + '/getConfigEvalJson.php', params);
       };
       const getCategoryNameOld = () => {
-        return axios.post(auth_domain + '/categoryNameOld.php');
+        return axios.post(link_php + '/categoryNameOld.php');
       };
 
       try {
@@ -1314,7 +1317,7 @@ export default new Vuex.Store({
     async getArticleSizeAPI(store, params) {
       // 요청
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/articleSize.php', params);
+        return axios.post(link_php + '/articleSize.php', params);
       };
       let rtn = false;
       try {
@@ -1332,7 +1335,7 @@ export default new Vuex.Store({
     async getArticleCharLenAPI(store, params) {
       // 요청
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/articleCharLen.php', params);
+        return axios.post(link_php + '/articleCharLen.php', params);
       };
       let rtn = false;
       try {
@@ -1349,7 +1352,7 @@ export default new Vuex.Store({
     async getMediaImportanceAPI(store, params) {
       // 요청
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/mediaImportance.php', params);
+        return axios.post(link_php + '/mediaImportance.php', params);
       };
       let rtn = false;
       try {
@@ -1366,7 +1369,7 @@ export default new Vuex.Store({
     async getCorrespondentAPI(store, params) {
       // 요청
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/correspondent.php', params);
+        return axios.post(link_php + '/correspondent.php', params);
       };
       let rtn = false;
       try {
@@ -1382,7 +1385,7 @@ export default new Vuex.Store({
     //기사위치 설정 API
     async getArticlePositionAPI(store, params) {
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/articlePosition.php', params);
+        return axios.post(link_php + '/articlePosition.php', params);
       };
       let rtn = false;
       try {
@@ -1399,7 +1402,7 @@ export default new Vuex.Store({
     async setEval1CategoryAPI(store, params) {
       // 요청
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/setEval1Category.php', params);
+        return axios.post(link_php + '/setEval1Category.php', params);
       };
       let rtn = false;
       try {
@@ -1416,7 +1419,7 @@ export default new Vuex.Store({
     async setEval2ClassAPI(store, params) {
       // 요청
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/setEval2Class.php', params);
+        return axios.post(link_php + '/setEval2Class.php', params);
       };
       let rtn = false;
       try {
@@ -1430,7 +1433,7 @@ export default new Vuex.Store({
       return rtn;
     },
 	  async getUnitCostAPI(store, params){
-    	const getAPI = (params) => {return axios.post(auth_domain + '/unitCost.php', params);};
+    	const getAPI = (params) => {return axios.post(link_php + '/unitCost.php', params);};
 	    try {
     		const res = await getAPI(params);
     		if(res.status === 200) {
@@ -1443,7 +1446,7 @@ export default new Vuex.Store({
 	    }
 	  },
 	  async getLayoutSettingAPI(store, params){
-		  const getAPI = (params) => {return axios.post(auth_domain + '/layoutSetting.php', params);};
+		  const getAPI = (params) => {return axios.post(link_php + '/layoutSetting.php', params);};
       let rtn = false;
 		  try {
 			  const res = await getAPI(params);
@@ -1457,7 +1460,7 @@ export default new Vuex.Store({
 	  },
     async getMediaPolicyAPI(store, params){
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/mediaPolicy.php', params);
+        return axios.post(link_php + '/mediaPolicy.php', params);
       };
       let rtn = false;
       try {
@@ -1472,7 +1475,7 @@ export default new Vuex.Store({
     },
     async getMediaCategoryAPI(store, params){
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/mediaCategory.php', params);
+        return axios.post(link_php + '/mediaCategory.php', params);
       };
       let rtn = false;
       try {
@@ -1492,7 +1495,7 @@ export default new Vuex.Store({
         commit('SET_LOADING_GIF', data);
       };
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/mediaValue.php', params);
+        return axios.post(link_php + '/mediaValue.php', params);
       };
       let rtn = false;
       loadingGifCommit(store, true);
@@ -1509,7 +1512,7 @@ export default new Vuex.Store({
     },
     async getColumnSettingAPI(store, params) {
       const getAPI = (params) => {
-        return axios.post(auth_domain + '/columnSetting.php', params);
+        return axios.post(link_php + '/columnSetting.php', params);
       };
       let rtn = false;
       try {
@@ -1524,7 +1527,7 @@ export default new Vuex.Store({
     },
     async getEval2AutoAPI(store,params) {
       const getEval2Class = (params) => {
-  	    return axios.post(auth_domain + '/eval2Auto.php', params);
+  	    return axios.post(link_php + '/eval2Auto.php', params);
       };
       let rtn = false;
       try {
@@ -1544,7 +1547,7 @@ export default new Vuex.Store({
         commit('SET_LOADING_GIF', data);
       };
       const getMediaCategorySelection = (params) => {
-        return axios.post(auth_domain + '/mediaCategorySelection.php', params);
+        return axios.post(link_php + '/mediaCategorySelection.php', params);
       };
       let rtn = false;
       loadingGifCommit(store, true);
@@ -1565,7 +1568,7 @@ export default new Vuex.Store({
         commit('SET_LOADING_GIF', data);
       };
       const updateMediaCategorySelectionAction = (params) => {
-        return axios.post(auth_domain + '/mediaCategorySelectionAction.php', params);
+        return axios.post(link_php + '/mediaCategorySelectionAction.php', params);
       };
       let rtn = false;
       loadingGifCommit(store, true);
@@ -1637,7 +1640,7 @@ export default new Vuex.Store({
   },
 
   getters: {
-    getDomainOrigin: state => state.domainOrigin,
+    gethiddenLink1: state => state.hiddenLink1,
     getUserID: state => state.uid,
     getPremiumID: state => state.pid,
     getPremiumPW: state => state.pwd,

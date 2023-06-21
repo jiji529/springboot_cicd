@@ -23,8 +23,7 @@
         if (!this.uid || this.uid.length < 4) { return false; }
         let params = new FormData();
         params.append('smId', this.uid);
-        // let result = await this.$axios.post(auth_domain + '/getPremiumLink.php', params, { timeout: 2000 });
-        let result = await this.$axios.post(store.state.domainOrigin + '/getPremiumLink.php', params);
+        let result = await this.$axios.post(store.state.hiddenLink1 + '/getPremiumLink.php', params);
         if (!result.data.tgtUrl) {
           alert('서버 오류가 발생했습니다. 관리자에게 문의하여 주십시오!');
         }

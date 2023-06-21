@@ -8,15 +8,15 @@ module.exports = {
     [배포 단계에서 vue.js와 API의 출처(origin)이 다를 때, 처리 방법]
     먼저, 실제 배포할 때 devServer는 작동하지 않는다. 
 
-    1. store.js에서 auth_domain에 요청할 API 전체 경로를 입력한다.
+    1. store.js에서 hiddenLink1에 요청할 API 전체 경로를 입력한다.
     2. API 서버에서 access-control-allow-origin 응답헤더를 세팅한다.
   */
   devServer: { // 배포 시, 적용 안해도 됨.
     proxy: { // proxyTable 설정
       '/premium_eval-phpAPI/evalApi': {
-        //target: 'https://premium2.scrapmaster.co.kr',
-        // target: 'http://222.231.4.31/~premium_api_dev/eval',
-        target: 'http://localhost/premium_eval-phpAPI/evalApi',
+        target: (process.env.VUE_APP_USE_PROXY === "true" ? 
+          process.env.VUE_APP_SERVER_API :
+          process.env.VUE_APP_HOST + process.env.VUE_APP_PHP_PATH),
         changeOrigin: true,
         ws: true,
         logLevel: 'debug',

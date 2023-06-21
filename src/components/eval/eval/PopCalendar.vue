@@ -375,7 +375,7 @@
 			 * 해당 월의 기사 건수 가져오는 함수
 			 */
 			async getSummaryData(flag, year, month, days) {
-				let ssdo = store.state.domainOrigin;
+				let ssdo = store.state.hiddenLink1;
 				let params = new FormData;
 				params.append('year', year);
 				params.append('month', month);

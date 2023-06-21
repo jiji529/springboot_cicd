@@ -692,7 +692,7 @@
 			},
 			//일반기자 seq 가져오기
 			async getNormalReporterSeq(){
-				let ssdo = store.state.domainOrigin;
+				let ssdo = store.state.hiddenLink1;
 				await this.$axios.get(ssdo + '/normalReporterSeq.php').then(r=> {
 					this.normalReporterSeq = String(r.data);
 				}).catch(e=>console.log(e));
@@ -967,7 +967,7 @@
 						params.append("eval2", eval2Arr.join(","));
 						params.append("eval2Change", this.isEval2Change);
 						params.append("news_id", news_id);
-						let ssdo = store.state.domainOrigin;
+						let ssdo = store.state.hiddenLink1;
 						await this.$axios.post(ssdo + "/saveEval.php", params).then(r=>console.log(r.data)).catch(e => console.log(e));
 						this.$set(this.evalInfo, news_id, Object.assign({}, newEvalInfo));
 						if(this.searchEvalInfo[news_id]){

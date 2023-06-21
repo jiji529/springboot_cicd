@@ -189,7 +189,7 @@
 				this.setZero();
 				this.filePath = '';
 				this.miniMapPath = '';
-				let ssdo = store.state.domainOrigin;
+				let ssdo = store.state.hiddenLink1;
 
 				this.isFullHeightActive = false;
 				this.isFullWidthActive = false;
@@ -550,7 +550,7 @@
 				if (this.isPaperOrOnline === 'paper') {
 					let print = window.open('기사인쇄', '기사인쇄', 'width=800, height=600');
 					print.document.open();
-					print.document.write(paperPrint(store.state.domainOrigin + '/paperImage.php?filepath=' + this.filePath));
+					print.document.write(paperPrint(store.state.hiddenLink1 + '/paperImage.php?filepath=' + this.filePath));
 					print.document.close();
 				}else if(this.isPaperOrOnline === 'aef') {
 					let aefDiv = document.querySelector('.aefArticleMulti').innerHTML;
@@ -614,7 +614,7 @@
 				if(this.isPaperOrOnline === 'paper') {
 					const aTag = document.createElement('a');
 					const sel = this.multiSelectedArticle;
-					aTag.href= store.state.domainOrigin + '/saveImage.php?filepath='
+					aTag.href= store.state.hiddenLink1 + '/saveImage.php?filepath='
 						+this.filePath+'&title='+sel.news_title+'&media='+sel.media_name+'&date='+sel.news_date;
 					aTag.setAttribute('download', 'paperImage');
 					document.body.appendChild(aTag);

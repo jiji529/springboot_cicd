@@ -209,7 +209,7 @@
 				this.isShowImage = true;
 				this.isMinimapActive = false;
 				const article = this.selectedArticle;
-				let ssdo = store.state.domainOrigin;
+				let ssdo = store.state.hiddenLink1;
 
 				if (this.isPaperOrOnline === 'no') {
 					this.isShowImage = false;
@@ -626,7 +626,7 @@
 				if(this.isPaperOrOnline === 'paper') {
 					const sel = this.selectedArticle;
 					let aTag = document.createElement('a');
-					aTag.href = store.state.domainOrigin + "/saveImage.php?filepath="+this.filePath+"&title="+sel.news_title+"&media="+sel.media_name+"&date="+sel.news_date;
+					aTag.href = store.state.hiddenLink1 + "/saveImage.php?filepath="+this.filePath+"&title="+sel.news_title+"&media="+sel.media_name+"&date="+sel.news_date;
 					aTag.setAttribute("download", "image");
 					document.body.appendChild(aTag);
 					aTag.click();

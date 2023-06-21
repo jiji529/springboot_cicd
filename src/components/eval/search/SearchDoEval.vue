@@ -420,7 +420,7 @@
 			this.categoryIdAPI();
 			this.getNormalReporterSeq();
 			this.eval2Cate();
-			let ssdo = store.state.domainOrigin;
+			let ssdo = store.state.hiddenLink1;
 			await this.$axios.get(ssdo + '/getConfigEvalJson.php').then(r=> {
 				if (r.data.success) {
 					this.configEval = r.data.config_eval;
@@ -653,7 +653,7 @@
 			},
 			//일반기자 seq 가져오기
 			async getNormalReporterSeq(){
-				await this.$axios.get(store.state.domainOrigin + '/normalReporterSeq.php').then(r=> {
+				await this.$axios.get(store.state.hiddenLink1 + '/normalReporterSeq.php').then(r=> {
 					this.normalReporterSeq = String(r.data);
 				}).catch(e=>console.log(e));
 			},
@@ -919,7 +919,7 @@
 						params.append("eval2Change", this.isEval2Change);
 						params.append("news_id", news_id);
 						//let t0 = performance.now();
-						await this.$axios.post(store.state.domainOrigin + "/saveEval.php", params).then(r=>console.log(r.data)).catch(e => console.log(e));
+						await this.$axios.post(store.state.hiddenLink1 + "/saveEval.php", params).then(r=>console.log(r.data)).catch(e => console.log(e));
 						this.$set(this.searchEvalInfo, news_id, newEvalInfo);
 						if(this.evalInfo[news_id]) {
 							this.$set(this.evalInfo, news_id, newEvalInfo);

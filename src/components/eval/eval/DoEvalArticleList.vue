@@ -181,7 +181,7 @@
 			});
 		},
 		async mounted() {
-			let ssdo = store.state.domainOrigin;
+			let ssdo = store.state.hiddenLink1;
 			await this.getEvalManualSetting();
 			await this.$axios.get(ssdo + '/getConfigEvalJson.php').then(r => {
 				if (r.data.success) {

@@ -567,7 +567,7 @@
 
 					//eval 값 저장
 					this.isLoading=true;
-					let ssdo = store.state.domainOrigin;
+					let ssdo = store.state.hiddenLink1;
 					await this.$axios.post(ssdo + '/saveMultiEval.php',params).then(/*res=>console.log(res.data)*/).catch(e => console.log(e));
 					let paramsA = new FormData();
 					let paramsB = new FormData();

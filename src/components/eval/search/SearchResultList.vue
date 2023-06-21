@@ -229,7 +229,7 @@
 				'listLayout2',
 				'articleResultCount','articleHiddenShow','articleHiddenList'
 				]),
-			...mapGetters(['getDomainOrigin','getPremiumID','getEval2Cnt', 'getSearchEvalInfo']),
+			...mapGetters(['gethiddenLink1','getPremiumID','getEval2Cnt', 'getSearchEvalInfo']),
 			allLength() {
 				const data = this.searchArticleList;
 				let allCnt = 0;
@@ -299,7 +299,7 @@
 			}
 		},
 		async mounted() {
-			let ssdo = store.state.domainOrigin;
+			let ssdo = store.state.hiddenLink1;
 			this.searchForm = new FormData();
 			for (let i = 0; i < 8; i++) {
 				this.newsGroupCheckForm[i] = false;
@@ -766,7 +766,7 @@
 
 			},
 			async excelSave() {
-				let ssdo = store.state.domainOrigin;
+				let ssdo = store.state.hiddenLink1;
 				let searchParam = new FormData();
 				searchParam = this.getArticleListFromSearchParams;
 				searchParam.set('exclude_ids', this.excludedArticleList.join(','));
@@ -804,7 +804,7 @@
 			},
 			async listPrint() {
 				if(this.searchNewsIdList.length >= 1) {
-					let ssdo = store.state.domainOrigin;
+					let ssdo = store.state.hiddenLink1;
 					const print = window.open('', '목록인쇄', 'width=1000, height=600');
 					let searchParam = this.getArticleListFromSearchParams;
 					searchParam.set('news_id_list', this.searchNewsIdList.join(','));

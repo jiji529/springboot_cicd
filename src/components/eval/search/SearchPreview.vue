@@ -235,7 +235,7 @@
 						}
 						let miniMap = article.article_serial;
 						let miniMapPath = miniMap.substr(0, miniMap.length - 3);
-						this.miniMapPath = store.state.domainOrigin + '/paperDown.php?filepath=' + miniMapPath + '&userid=' + this.pid;
+						this.miniMapPath = store.state.hiddenLink1 + '/paperDown.php?filepath=' + miniMapPath + '&userid=' + this.pid;
 						// if (article.article_date !== null) {
 						// 	let leg = article.article_date.length;
 						// 	article.article_date = article.article_date.substr(0, leg - 3);
@@ -255,7 +255,7 @@
 						htmlAddress = 'https://premium.scrapmaster.co.kr/server/article/' + pid + year + month + day + article.guid + '.html';
 					}
 					this.htmlAddress = htmlAddress;
-					let ssdo = store.state.domainOrigin;
+					let ssdo = store.state.hiddenLink1;
 					let param = new FormData;
 					param.append('nid', article.news_id);
 					param.append('pid', this.pid);
@@ -276,7 +276,7 @@
 					let aefAddress = 'https://premium.scrapmaster.co.kr/server/article/' + pid + '/' + year + month + day + article.article_serial + '.aef';
 					let aefTitle = article.article_title;
 					let highLightWord = [];
-					let ssdo = store.state.domainOrigin;
+					let ssdo = store.state.hiddenLink1;
 					let param = new FormData;
 					param.append('url', aefAddress);
 					await this.$axios.post(ssdo + '/getAefImage.php',param)
@@ -288,7 +288,7 @@
 								this.aefImage = data;
 							}
 						}).catch(e => console.error(e));
-					this.aefMediaLogo = store.state.domainOrigin + '/news_logo.php?q=' +article.media_name+'&u=' +pid;
+					this.aefMediaLogo = store.state.hiddenLink1 + '/news_logo.php?q=' +article.media_name+'&u=' +pid;
 					this.aefMediaLogoString = article.media_name;
 					if(article.article_contents !== ',') {
 						this.contents = article.article_contents.replace(/\$n/gi, "<br>");
@@ -567,7 +567,7 @@
 			},
 			print() {
 				if(this.isPaperOrOnline === 'paper') {
-					let ssdo = store.state.domainOrigin;
+					let ssdo = store.state.hiddenLink1;
 					let print = window.open('기사인쇄','기사인쇄', 'width=800, height=600');
 					print.document.open();
 					print.document.write(paperPrint(ssdo + '/paperImage.php?filepath='+this.filePath));
@@ -636,7 +636,7 @@
 				if(this.isPaperOrOnline === 'paper') {
 					const aTag = document.createElement('a');
 					const sel = this.searchSelectedArticle;
-					aTag.href= store.state.domainOrigin + '/saveImage.php?filepath='+this.filePath+'&title='+sel.news_title+'&media='+sel.media_name+'&date='+sel.news_date;
+					aTag.href= store.state.hiddenLink1 + '/saveImage.php?filepath='+this.filePath+'&title='+sel.news_title+'&media='+sel.media_name+'&date='+sel.news_date;
 					aTag.setAttribute('download', 'paperImage');
 					document.body.appendChild(aTag);
 					aTag.click();
