@@ -16,6 +16,19 @@ NPM : 6.5.0
 yarn install
 ```
 
+## 프로젝트 환경 설정
+```
+.env file : Data API 정보를 통합 관리하는 곳
+
+:: 운영서버를 바꾸지 않았다면, 수정이 따로 필요없음.
+VUE_APP_USE_PROXY  #운영서버의 API를 사용할 경우, 
+VUE_APP_SERVER_API #운영서버 경로
+
+:: Java & Php 포트 설정
+VUE_APP_JPORT # 기본 AJP 사용 시 :80, 아니면 :8080
+VUE_APP_PPORT # 기본 :80 포트
+```
+
 ### 프로젝트 실행
 ```
 yarn run serve
