@@ -30,7 +30,7 @@ yarn install
  VUE_APP_JPORT            # AJP    = :80 (운영서버)
                           # dev    = :8080
  VUE_APP_PPORT            # Apache = :80 
- VUE_APP_SERVER_HOST #운영서버 경로
+ VUE_APP_SERVER_HOST      # 운영서버 경로
 ```
 
 ### 프로젝트 실행

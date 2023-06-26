@@ -16,7 +16,7 @@ module.exports = {
       '/premium_eval-phpAPI/evalApi': {
         target: (process.env.VUE_APP_USE_SERVE_PHP === "true" ? 
           process.env.VUE_APP_SERVE_HOST + process.env.VUE_APP_PHP_PATH :
-          process.env.VUE_APP_LOCAL_HOST + process.env.VUE_APP_PHP_PATH),
+          "http://127.0.0.1" + process.env.VUE_APP_PHP_PATH),
         changeOrigin: true,
         ws: true,
         logLevel: 'debug',
