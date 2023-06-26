@@ -22,8 +22,8 @@ yarn install
  # 프로젝트 실행 전, 운영서버의 API를 사용하고 싶다면 true
  # Local PC의 API를 사용하고 싶다면 false
  
- VUE_APP_USE_SERVE_PHP    # 운영서버의  PHP 사용, default true
- VUE_APP_USE_SERVE_JAVA   # 운영서버의 JAVA 사용, default true
+ VUE_APP_USE_SERVE_PHP=true    # 운영서버의  PHP 사용, default true
+ VUE_APP_USE_SERVE_JAVA=true   # 운영서버의 JAVA 사용, default true
 ```
 
 ### 프로젝트 실행
