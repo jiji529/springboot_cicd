@@ -18,19 +18,12 @@ yarn install
 
 ## 프로젝트 환경 설정
 ```
-:: .env & .env.development
- Data API 정보를 통합 관리하는 곳.
- 수정 후, npm으로 실행 중이라면 재시작이 필요.
-
-:: .env.development - 프로젝트 실행 전, 수정이 필요한 부분
+:: File .env.development
+ # 프로젝트 실행 전, 운영서버의 API를 사용하고 싶다면 true
+ # Local PC의 API를 사용하고 싶다면 false
+ 
  VUE_APP_USE_SERVE_PHP    # 운영서버의  PHP 사용, default true
  VUE_APP_USE_SERVE_JAVA   # 운영서버의 JAVA 사용, default true
-
-:: .env - port 및 api 경로가 수정될 경우.
- VUE_APP_JPORT            # AJP    = :80 (운영서버)
-                          # dev    = :8080
- VUE_APP_PPORT            # Apache = :80 
- VUE_APP_SERVER_HOST      # 운영서버 경로
 ```
 
 ### 프로젝트 실행
