@@ -139,7 +139,7 @@ const methods = {
             else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
             else data.pid = store.state.pid;
         }
-        let url = (process.env.VUE_APP_SERVE_JAVA ? 
+        let url = (process.env.VUE_APP_SERVE_JAVA === "true" ? 
             process.env.VUE_APP_SERVE_HOST + process.env.VUE_APP_JAVA_PATH :
             store.state.hiddenLink2 + process.env.VUE_APP_JPORT + process.env.VUE_APP_JAVA_PATH + 
             targetUrl);

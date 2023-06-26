@@ -14,7 +14,7 @@ module.exports = {
   devServer: { // 배포 시, 적용 안해도 됨.
     proxy: { // proxyTable 설정
       '/premium_eval-phpAPI/evalApi': {
-        target: (process.env.VUE_APP_USE_PROXY === "true" ? 
+        target: (process.env.VUE_APP_SERVE_PHP === "true" ? 
           process.env.VUE_APP_SERVE_HOST + process.env.VUE_APP_PHP_PATH :
           process.env.VUE_APP_LOCAL_HOST + process.env.VUE_APP_PHP_PATH),
         changeOrigin: true,
