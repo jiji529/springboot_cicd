@@ -26,14 +26,11 @@ yarn install
  VUE_APP_USE_SERVE_PHP.   # 운영서버의  PHP 사용, default true
  VUE_APP_USE_SERVE_JAVA.  # 운영서버의 JAVA 사용, default true
 
-::: 수정이 필요없을 수도 있음.
+::: port 및 api 경로가 수정될 경우.
  VUE_APP_JPORT            # AJP    = :80 (운영서버)
                           # dev    = :8080
  VUE_APP_PPORT            # Apache = :80 
-
-:: 운영서버 IP 변경이 있을 시, 수정
- VUE_APP_USE_PROXY  #운영서버의 API를 사용할 경우, 
- VUE_APP_SERVER_API #운영서버 경로
+ VUE_APP_SERVER_HOST #운영서버 경로
 ```
 
 ### 프로젝트 실행
