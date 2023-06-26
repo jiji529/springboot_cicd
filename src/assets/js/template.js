@@ -139,10 +139,10 @@ const methods = {
             else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
             else data.pid = store.state.pid;
         }
-        let url = (store.state.hiddenLink2 + 
-            process.env.VUE_APP_JPORT + 
-            process.env.VUE_APP_JAVA_PATH + 
-            targetUrl); console.log(url);
+        let url = (process.env.VUE_APP_SERVE_JAVA ? 
+            process.env.VUE_APP_SERVE_HOST + process.env.VUE_APP_JAVA_PATH :
+            store.state.hiddenLink2 + process.env.VUE_APP_JPORT + process.env.VUE_APP_JAVA_PATH + 
+            targetUrl);
         let param = new URLSearchParams();
         /* 검색 데이터 타입 변환 */
         if (typeof data === "string") param.append('data', data); // string
