@@ -65,4 +65,4 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   return Promise.reject(error);
 });
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false; // 지정된 도메인으로 서버에서 받을 경우 true
