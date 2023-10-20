@@ -13,7 +13,7 @@ NPM : 6.5.0
 
 ## 프로젝트 설치
 ```
-yarn install
+npm install
 ```
 
 ## 프로젝트 환경 설정
@@ -28,12 +28,12 @@ yarn install
 
 ### 프로젝트 실행
 ```
-yarn run serve
+npm run serve
 ```
 
 ### 프로젝트 배포 (vue.js)
 ```
-yarn run build
+npm run build
 ```
 
 ### 프로젝트 배포 (jenkins 사용 - php 통합)
@@ -58,14 +58,26 @@ Jenkins 프로젝트의 상기 두 곳 수정 확인 후 'Build with Parameters'
 ```
 .
 ├─ README.md
+├─ .env
+├─ .env.development
+├─ .gitignore
+├─ .project
 ├─ babel.config.js
+├─ babel.cmd
+├─ fetch.ftp
+├─ package_org.json
+├─ package-lock.json
 ├─ package.json
+├─ vue.config.js
+├─ WinSCP.com
+├─ WinSCP.exe
 └─ public
 │  ├─ favicon.ico
 │  └─ index.html
 └─ src
-   ├─ main.js
    ├─ App.vue
+   ├─ common.js 
+   ├─ main.js
    ├─ routes.js         라우터
    ├─ store.js          상태 관리
    ├─ components        컴포넌트
@@ -74,23 +86,8 @@ Jenkins 프로젝트의 상기 두 곳 수정 확인 후 'Build with Parameters'
    ├─ views             라우터 페이지
    │  ├─ MainView.vue
    │  └─ ...
-   ├─ api               api 함수
-   ├─ utils             필터 등의 유틸리티 함수
-   │  ├─ filters.js
-   │  ├─ bus.js
-   │  └─ ...
-   ├─ mixins            믹스인
-   │  ├─ index.js
-   │  └─ ...
-   ├─ plugins           플러그인
-   │  ├─ ChartPlugin.js
-   │  └─ ...
-   ├─ translations      다국어
-   │  ├─ index.js
-   │  ├─ en.json
-   │  └─ ...
    └─ assets            기타 자원
        ├─ images        이미지
-       ├─ fonts         폰트
+       ├─ js            
        └─ styles        css
 ```
