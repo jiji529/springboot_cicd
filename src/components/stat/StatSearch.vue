@@ -183,7 +183,7 @@
         </dd>
       </dl>
       
-      <dl class="sch_element" v-if="getStatSetting.reportInTapView">
+      <dl class="sch_element" v-if="getStatSetting.reportInTabView">
         <dt>선택된 보고서</dt>
         <div id="customReport">
             <section>
@@ -193,7 +193,7 @@
         </div>
       </dl>
 
-      <dl class="sch_element" v-if="getStatSetting.crossInTapView">
+      <dl class="sch_element" v-if="getStatSetting.crossInTabView">
         <dt>템플릿 목록</dt>
         <div id="templateOption">
             <section>

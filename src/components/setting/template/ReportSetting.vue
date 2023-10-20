@@ -239,7 +239,7 @@ export default {
             SINGLE_REPORT: {},
             reportList: [],
             reportListIndex: null,
-            linkedTap: [],
+            linkedTab: [],
 
             reportRen: 0,
             dragEvent: null,
@@ -512,7 +512,7 @@ export default {
          */
         async loadReport() {
             this.reportList = [];
-            const LIST = await this.$statConfig.funcLoadRecode("list", 'report-e');
+            const LIST = await this.$statConfig.funcLoadRecode("list-exc", 'report');
             this.reportList = LIST ? LIST : [];
             await this.$nextTick();
             this.isAsc = 1;

@@ -1,5 +1,5 @@
 <template>
-    <div class="stat_tap-wrap">
+    <div class="stat_tab-wrap">
 <!-- =========================================================================================================== -->
 <!-- =============================================== 탭 리스트 =============================================== -->
 <!-- =========================================================================================================== -->
@@ -8,7 +8,7 @@
                 <div class="set_title">
                     <h2>탭 리스트</h2>
                     <p>* 항목을 클릭하여 데이터를 수정할 수 있습니다.</p>
-                    <div class="list-reset">새로고침 <div title="새로고침" @click="loadTap()"></div></div>
+                    <div class="list-reset">새로고침 <div title="새로고침" @click="loadTab()"></div></div>
                 </div>
 
                 <div class="set_list_area">
@@ -22,37 +22,37 @@
                             <div class="tagRegDate">등록 날짜</div>
                             <div class="tagtagEtc">기타</div>
                         </div>
-                        <draggable tag="div" :list="getStatSetting.tapList" group="tap-group" @change="changeOrder" :disabled="(addTapData || runModify)">
-                            <template v-for="(tap, tapIdx) in getStatSetting.tapList">
-                            <li :key="'tap'+tapIdx+tapRen">
+                        <draggable tag="div" :list="getStatSetting.tabList" group="tab-group" @change="changeOrder" :disabled="(addTabData || runModify)">
+                            <template v-for="(tab, tabIdx) in getStatSetting.tabList">
+                            <li :key="'tab'+tabIdx+tabRen">
                                 <!-- 일반 -->
-                                <div v-if="modify_reportIdx !== tapIdx" :class="[findReport(tap.sKey, 'active')!==1?'deprecated-template':'']">
-                                    <div title="탭 제목" :data-seq="tap.seq" type="text" @click="tapInfo($event, tap.sKey)">
-                                        <a :href="'#rep-'+tap.sKey" class="track-down">{{tap.alias}}</a>
+                                <div v-if="modify_reportIdx !== tabIdx" :class="[findReport(tab.skey, 'active')!==1?'deprecated-template':'']">
+                                    <div title="탭 제목" :data-seq="tab.seq" type="text" @click="tabInfo($event, tab.skey)">
+                                        <a :href="'#rep-'+tab.skey" class="track-down">{{tab.alias}}</a>
                                     </div>
                                     <div >
-                                        <p title="등록된 보고서">{{findReport(tap.sKey, 'title')}}</p>
+                                        <p title="등록된 보고서">{{findReport(tab.skey, 'title')}}</p>
                                     </div>
 
-                                    <div class="tagRegDate">{{tap.value.regDate}}</div>
+                                    <div class="tagRegDate">{{tab.value.regDate}}</div>
                                     <div class="tagEtc">
-                                        <button class="btn-2d blue" :data-tapIdx="tapIdx" @click="btnModify($event)">수정</button>
-                                        <button class="btn-2d red" :data-seq="tap.seq" @click="deleteTemp">삭제</button>
+                                        <button class="btn-2d blue" :data-tabIdx="tabIdx" @click="btnModify($event)">수정</button>
+                                        <button class="btn-2d red" :data-seq="tab.seq" @click="deleteTemp">삭제</button>
                                     </div>
                                 </div>
 
                                 <!-- 수정 중 -->
                                 <div v-else>
-                                    <input title="탭 제목" :data-seq="SINGLE_TAP.seq" type="text" v-model="SINGLE_TAP.alias">
+                                    <input title="탭 제목" :data-seq="SINGLE_TAB.seq" type="text" v-model="SINGLE_TAB.alias">
                                     <div class="drag_area_border" @dragenter.prevent @dragover.prevent @drop.prevent="dragDrop"> 
-                                        <p>{{findRep[SINGLE_TAP.sKey].title}}</p>
-                                        <!-- SINGLE_TAP.value.reportTitle -->
+                                        <p>{{findRep[SINGLE_TAB.skey].title}}</p>
+                                        <!-- SINGLE_TAB.value.reportTitle -->
                                     </div>
                                     
-                                    <div class="tagRegDate">{{SINGLE_TAP.value.regDate}}</div>
+                                    <div class="tagRegDate">{{SINGLE_TAB.value.regDate}}</div>
                                     <div class="tagEtc">
-                                        <button :data-seq="SINGLE_TAP.seq" @click="btnModify_cancel">취소</button>
-                                        <button class="btn-2d green" :data-tapIdx="tapIdx" :data-seq="SINGLE_TAP.seq" @click="saveTap">저장</button>
+                                        <button :data-seq="SINGLE_TAB.seq" @click="btnModify_cancel">취소</button>
+                                        <button class="btn-2d green" :data-tabIdx="tabIdx" :data-seq="SINGLE_TAB.seq" @click="saveTab">저장</button>
                                     </div>
                                 </div>
                             </li>
@@ -61,23 +61,23 @@
                         </draggable>
 
 
-                        <li v-if="addTapData"> <!-- 데이터를 추가하기 위한 태그 -->
+                        <li v-if="addTabData"> <!-- 데이터를 추가하기 위한 태그 -->
                             <div>
-                                <input title="탭 제목" :data-seq="SINGLE_TAP.seq" type="text" v-model="SINGLE_TAP.alias">
+                                <input title="탭 제목" :data-seq="SINGLE_TAB.seq" type="text" v-model="SINGLE_TAB.alias">
                                 <div class="drag_area_border"  @dragenter.prevent @dragover.prevent @drop.prevent="dragDrop">
-                                    <p class="guide" v-if="guide(SINGLE_TAP.value.reportTitle)">[보고서 리스트]에서 항목을 드래그 하세요.</p>
-                                    <p v-else>{{SINGLE_TAP.value.reportTitle}}</p>
+                                    <p class="guide" v-if="guide(SINGLE_TAB.value.reportTitle)">[보고서 리스트]에서 항목을 드래그 하세요.</p>
+                                    <p v-else>{{SINGLE_TAB.value.reportTitle}}</p>
                                 </div>
-                                <div class="tagRegDate">{{SINGLE_TAP.value.regDate}}</div>
+                                <div class="tagRegDate">{{SINGLE_TAB.value.regDate}}</div>
                                 <div class="tagEtc">
-                                    <button :data-seq="SINGLE_TAP.seq" @click="tapCancel">취소</button>
-                                    <button class="btn-2d green" @click="saveTap">저장</button>
+                                    <button :data-seq="SINGLE_TAB.seq" @click="tabCancel">취소</button>
+                                    <button class="btn-2d green" @click="saveTab">저장</button>
                                 </div>
                             </div>
                         </li>
                     </div>
                     <div class="btn">
-                        <button class="right-btn" @click="addTap">추가</button>
+                        <button class="right-btn" @click="addTab">추가</button>
                     </div>
                 </div>
             </div>
@@ -104,48 +104,48 @@
                     </div>
                     <div class="item_list">
                         <div class="item_list_title">
-                            <div class="tap-header-title">제목</div>
-                            <div class="tap-header-des">상세설명</div>
+                            <div class="tab-header-title">제목</div>
+                            <div class="tab-header-des">상세설명</div>
                             <div></div>
                             <div>날짜</div>
                         </div>
 
-                        <div class="tap-at-all-report tap-space-report">
+                        <div class="tab-at-all-report tab-space-report">
                             <input type="checkbox" id="all-report" @change="scrollContr"/>
                             <label for="all-report">전체 보고서 리스트<em></em></label>
                             <ul>
-                                <template v-for="(tapReport, tapReportIdx) in reportList">
-                                <li v-if="tapReport.active != 0" :key="'tap-report'+tapReportIdx+tapRen">
+                                <template v-for="(tabReport, tabReportIdx) in reportList">
+                                <li v-if="tabReport.active != 0" :key="'tab-report'+tabReportIdx+tabRen">
                                     <div>
-                                        <div class="item_title short" :id="'rep-'+tapReport.seq" title="보고서 정보 상세보기" :data-seq="tapReport.seq" 
-                                            draggable="true" @dragstart="dragStart($event, tapReport)">{{tapReport.title}}</div>
-                                        <div class="item_description short"><span>{{tapReport.description}}</span></div>
+                                        <div class="item_title short" :id="'rep-'+tabReport.seq" title="보고서 정보 상세보기" :data-seq="tabReport.seq" 
+                                            draggable="true" @dragstart="dragStart($event, tabReport)">{{tabReport.title}}</div>
+                                        <div class="item_description short"><span>{{tabReport.description}}</span></div>
                                         <div class="item_more">
-                                            <div v-if="isThereMoreWriting(tapReport.title, tapReport.description)"
+                                            <div v-if="isThereMoreWriting(tabReport.title, tabReport.description)"
                                             class="rollup" @click="textView" data-nextAction="rolldown"></div>
                                         </div>
-                                        <div>{{printDate(tapReport.regDate, tapReport.updDate)}}</div>
+                                        <div>{{printDate(tabReport.regDate, tabReport.updDate)}}</div>
                                     </div>
                                 </li>
                                 </template>
                             </ul>
-                        </div> <!-- .tap-at-all-report -->
+                        </div> <!-- .tab-at-all-report -->
 
-                        <div class="search-result tap-space-report">
+                        <div class="search-result tab-space-report">
                             <input type="checkbox" id="search-report" @change="scrollContr"/>
                             <label for="search-report">검색 보고서 리스트<em></em></label>
                             <ul>
-                                <template v-for="(tapReport, tapReportIdx) in searchReportList">
-                                <li v-if="tapReport.active != 0" :key="'tap-search-report'+tapReportIdx+tapRen">
+                                <template v-for="(tabReport, tabReportIdx) in searchReportList">
+                                <li v-if="tabReport.active != 0" :key="'tab-search-report'+tabReportIdx+tabRen">
                                     <div>
-                                        <div class="item_title short" title="보고서 정보 상세보기" :data-seq="tapReport.seq" 
-                                            draggable="true" @dragstart="dragStart($event, tapReport)">{{tapReport.title}}</div>
-                                        <div class="item_description short"><span>{{tapReport.description}}</span></div>
+                                        <div class="item_title short" title="보고서 정보 상세보기" :data-seq="tabReport.seq" 
+                                            draggable="true" @dragstart="dragStart($event, tabReport)">{{tabReport.title}}</div>
+                                        <div class="item_description short"><span>{{tabReport.description}}</span></div>
                                         <div class="item_more">
-                                            <div v-if="isThereMoreWriting(tapReport.title, tapReport.description)"
+                                            <div v-if="isThereMoreWriting(tabReport.title, tabReport.description)"
                                             class="rollup" @click="textView" data-nextAction="rolldown"></div>
                                         </div>
-                                        <div>{{printDate(tapReport.regDate, tapReport.updDate)}}</div>
+                                        <div>{{printDate(tabReport.regDate, tabReport.updDate)}}</div>
                                     </div>
                                 </li>
                                 </template>
@@ -164,16 +164,16 @@ import {mapGetters} from 'vuex';
 import draggable from "vuedraggable";
 export default {
     components: { draggable },
-    name: "TapSetting",
+    name: "TabSetting",
     data() {
         return {
-            SINGLE_TAP:[]
-            ,tapList: []
+            SINGLE_TAB:[]
+            ,tabList: []
             ,reportList: []
             ,searchReportList: []
             ,findRep: {}
-            ,tapRen : 0
-            ,addTapData: false
+            ,tabRen : 0
+            ,addTabData: false
             ,reSearch: ''
             ,dragEvent: {
                 seq: null
@@ -203,13 +203,13 @@ export default {
     },
     methods: {
 
-        tapRendering() {
-            this.tapRen = (this.tapRen > 100) ? 0 : this.tapRen + 1;
+        tabRendering() {
+            this.tabRen = (this.tabRen > 100) ? 0 : this.tabRen + 1;
         },
 
-        findReport(sKey, key) {
-            if (!this.findRep || !this.findRep[sKey]) return false;
-            return this.findRep[sKey][key];
+        findReport(skey, key) {
+            if (!this.findRep || !this.findRep[skey]) return false;
+            return this.findRep[skey][key];
         },
 
         checkTagSize: function(basicTagSize, content) {
@@ -227,8 +227,8 @@ export default {
         },
 
         isThereMoreWriting(title, des) {
-            const t = document.querySelector('.tap-header-title');
-            const d = document.querySelector('.tap-header-des');
+            const t = document.querySelector('.tab-header-title');
+            const d = document.querySelector('.tab-header-des');
             if (!t || !d) return;
             return this.checkTagSize(t.offsetWidth, title) || this.checkTagSize(d.offsetWidth, des);
         },
@@ -304,10 +304,10 @@ export default {
         },
 
         dragDrop() { // [등록된 보고서] 세팅하기
-            if (this.SINGLE_TAP) {
-                this.SINGLE_TAP.sKey = this.dragEvent.seq; // report 시퀀스 세팅
-                this.SINGLE_TAP.value.reportTitle = this.dragEvent.title; // report 제목 세팅
-                this.SINGLE_TAP.alias = this.dragEvent.title;
+            if (this.SINGLE_TAB) {
+                this.SINGLE_TAB.skey = this.dragEvent.seq; // report 시퀀스 세팅
+                this.SINGLE_TAB.value.reportTitle = this.dragEvent.title; // report 제목 세팅
+                this.SINGLE_TAB.alias = this.dragEvent.title;
             }
         },
 
@@ -323,50 +323,48 @@ export default {
                                 .filter(e => e.title.includes(that.reSearch));
         },
 
-        tapListRendering() {
-            if (this.tapRen === 100) this.tapRen = 0;
-            else this.tapRen++;
+        tabListRendering() {
+            if (this.tabRen === 100) this.tabRen = 0;
+            else this.tabRen++;
         },
         
         
-        setSINGLE_TAP(_seq, _order) {
+        setSINGLE_TAB(_seq, _order) {
             const day = this.getDate.strDate;
-            this.SINGLE_TAP = {
+            this.SINGLE_TAB = {
                 seq: _seq
-                ,fKey: "STAT_TAP_SETTING"
-                ,sKey: null
-                ,tKey: _order
+                ,skey: null
+                ,tkey: _order
                 ,value: { // (=config 잡다한 정보가 들어감 reportTitle, reDate)
                     reportTitle: ''
                     ,regDate: day
                 } 
                 ,alias: '새 탭' //(=title)
-                ,description: "평가-탭 설정"
             };
         },
 
-        addTap(e) {
+        addTab(e) {
             this.modify_reportIdx = null;
             this.runModify = false;
-            this.setSINGLE_TAP(
+            this.setSINGLE_TAB(
                 null,
-                (this.getStatSetting.tapList.length + 1)
+                (this.getStatSetting.tabList.length + 1)
             );
-            this.addTapData = true;
-            this.tapListRendering();
+            this.addTabData = true;
+            this.tabListRendering();
         },
 
-        tapCancel() {
-            this.SINGLE_TAP = {};
+        tabCancel() {
+            this.SINGLE_TAB = {};
             this.modify_reportIdx = null;
             this.runModify = false;
-            this.addTapData = false;
-            this.tapListRendering();
+            this.addTabData = false;
+            this.tabListRendering();
         },
 
         
         btnModify(e) {
-            this.SINGLE_TAP = {};
+            this.SINGLE_TAB = {};
             this.modify_reportIdx = null;
             let parentDiv =  document.querySelector('.highlight');
             if (parentDiv) {
@@ -376,29 +374,29 @@ export default {
             }
 
 
-            const _tapIdx = parseInt(e.target.getAttribute('data-tapIdx'));
-            this.SINGLE_TAP = JSON.parse(
+            const _tabIdx = parseInt(e.target.getAttribute('data-tabIdx'));
+            this.SINGLE_TAB = JSON.parse(
                 JSON.stringify(
-                    this.getStatSetting.tapList[_tapIdx]
+                    this.getStatSetting.tabList[_tabIdx]
                 )
             );
-            if (this.SINGLE_TAP.seq === undefined) return;
+            if (this.SINGLE_TAB.seq === undefined) return;
 
-            this.modify_reportIdx = _tapIdx;
+            this.modify_reportIdx = _tabIdx;
             this.runModify = true;
-            this.addTapData = false;
+            this.addTabData = false;
         },
 
         btnModify_cancel() {
-            this.SINGLE_TAP = {};
+            this.SINGLE_TAB = {};
             this.modify_reportIdx = null;
             this.runModify = false;
         },
 
         changeOrder(e) {
-            this.getStatSetting.tapList.
-                forEach((el, tli) => { el.tKey = (tli+1); });
-            this.saveTapOrderInfo();
+            this.getStatSetting.tabList.
+                forEach((el, tli) => { el.tkey = (tli+1); });
+            this.saveTabOrderInfo();
         },
 
 
@@ -406,10 +404,10 @@ export default {
          * @description :
          *    탭 리스트 불러오기
          */
-        async loadTap() {
-            this.getStatSetting.tapList =
-                await this.$statConfig.funcLoadRecode("list", 'tap');
-        }, // loadTap
+        async loadTab() {
+            this.getStatSetting.tabList =
+                await this.$statConfig.funcLoadRecode("list", 'tab');
+        }, // loadTab
 
         async loadReport() {
             this.reportList = []; 
@@ -426,34 +424,34 @@ export default {
         async deleteTemp(e) {
             if (confirm("탭을 삭제하시겠습니까?")) {
                 const _seq = parseInt(e.target.getAttribute('data-seq'));
-                await this.setSINGLE_TAP(_seq, 0);
-                await this.$statConfig.funcDeleteRecode('tap', this.SINGLE_TAP);
-                await this.loadTap(); // 데이터를 로드하는 곳에서 탭-리스트 재세팅이 이루어진다.
-                this.SINGLE_TAP = {};
+                await this.setSINGLE_TAB(_seq, 0);
+                await this.$statConfig.funcDeleteRecode('tab', this.SINGLE_TAB);
+                await this.loadTab(); // 데이터를 로드하는 곳에서 탭-리스트 재세팅이 이루어진다.
+                this.SINGLE_TAB = {};
                 this.modify_reportIdx = null;
                 this.runModify = false;
-                this.addTapData = false;
-                this.tapListRendering();
+                this.addTabData = false;
+                this.tabListRendering();
             }
         }, // deleteTemp
 
 
-        async saveTap() {
-            if (!this.SINGLE_TAP.alias.trim().length) { alert('제목에 공백만 들어갈 수 없습니다.'); return; }
-            if (this.SINGLE_TAP.alias.length > 20) { alert('탭 제목은 20글자 이상 쓸 수 없습니다.'); return; }
-            if (this.SINGLE_TAP.sKey == null) { alert('보고서를 "드래그"하여 등록해 주십시오.'); return; }
+        async saveTab() {
+            if (!this.SINGLE_TAB.alias.trim().length) { alert('제목에 공백만 들어갈 수 없습니다.'); return; }
+            if (this.SINGLE_TAB.alias.length > 20) { alert('탭 제목은 20글자 이상 쓸 수 없습니다.'); return; }
+            if (this.SINGLE_TAB.skey == null) { alert('보고서를 "드래그"하여 등록해 주십시오.'); return; }
 
-            if ((this.addTapData || this.runModify) && confirm("저장 또는 수정을 하시겠습니까?")) {
+            if ((this.addTabData || this.runModify) && confirm("저장 또는 수정을 하시겠습니까?")) {
                 // null -> create
-                if (this.SINGLE_TAP.seq === null) await this.$statConfig.funcCreateRecode('tap',this.SINGLE_TAP);
+                if (this.SINGLE_TAB.seq === null) await this.$statConfig.funcCreateRecode('tab',this.SINGLE_TAB);
                 else { 
-                    await this.$statConfig.funcModifyRecode('tap', this.SINGLE_TAP); 
+                    await this.$statConfig.funcModifyRecode('tab', this.SINGLE_TAB); 
                     this.modify_reportIdx = null;
                 }
-                await this.loadTap(); // 데이터를 로드하는 곳에서 레포트 재세팅이 이루어진다.
-                this.addTapData = false;
+                await this.loadTab(); // 데이터를 로드하는 곳에서 레포트 재세팅이 이루어진다.
+                this.addTabData = false;
                 this.runModify = false;
-                this.tapRendering();
+                this.tabRendering();
             }
         },
 
@@ -462,23 +460,23 @@ export default {
          *  템플릿 사용/비사용을 컨트롤 한다.
          */
         contrActivity(act, div) {
-            if (div === 'list') this.getStatSetting.reportTapActivity = act;
-            else this.getStatSetting.crossTapActivity = act;
+            if (div === 'list') this.getStatSetting.reportTabActivity = act;
+            else this.getStatSetting.crossTabActivity = act;
         },
 
 
         async funcOrderModification(arr) {
             await this.$statConfig.funcJSONRequest(
-                "/put/tap/order.do"
+                "/update.menutab"
                 , arr
-                , "funcOrderModification"
+                , "tab-order"
                 , false
             );
         },
 
 
-        tapInfo(e, sKey) {
-            if (this.findRep[sKey].active==0) return;
+        tabInfo(e, skey) {
+            if (this.findRep[skey].active==0) return;
             document.getElementById('all-report').checked = true;
 
             this.currentFocus = e.target.parentElement.parentElement;
@@ -503,18 +501,18 @@ export default {
             }
         },
 
-        async saveTapOrderInfo() {
-            let tapArr = [];
-            const len = this.getStatSetting.tapList.length;
+        async saveTabOrderInfo() {
+            let tabArr = [];
+            const len = this.getStatSetting.tabList.length;
             for (let ti = 0; ti < len; ti++) {
-                let _s = this.getStatSetting.tapList[ti].seq;
-                let _t = this.getStatSetting.tapList[ti].tKey;
-                tapArr.push({
+                let _s = this.getStatSetting.tabList[ti].seq;
+                let _t = this.getStatSetting.tabList[ti].tkey;
+                tabArr.push({
                     seq: _s
-                    ,tKey: _t
+                    ,tkey: _t
                 });
             }
-            await this.funcOrderModification(tapArr);
+            await this.funcOrderModification(tabArr);
         },
 
         guide(str) {
@@ -531,7 +529,7 @@ export default {
 </script>
 
 <style scoped>
-    .stat_tap-wrap {
+    .stat_tab-wrap {
         display: flex;
         flex-direction: row;
     }

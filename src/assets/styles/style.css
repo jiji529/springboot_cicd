@@ -266,16 +266,16 @@ label[for="ative-visual-object-map"] + div > footer > div > p {
 .align-items-right { justify-content: right; }
 
 
-/* taps */
+/* tabs */
 .track-down { text-decoration: none; color: black; }
-.tap-space-report { display: flex; flex-direction: column; }
-.tap-space-report input + label { display: inline; padding: 8px 20px 8px 20px; border-bottom:0; color:black; font-weight: 900; background: #d2d2d2; cursor: pointer; position:relative; border: 1px solid; margin: 2px 0; }
-.tap-space-report input + label + ul { max-height: 0px; transition: all .7s; overflow:hidden }
-.tap-space-report input + label + ul::-webkit-scrollbar { width: 10px; }
-.tap-space-report input + label + ul::-webkit-scrollbar-thumb { background-color: rgba(65, 65, 65, 0.5); border-radius: 10px; }
-.tap-space-report input:checked + label + ul { max-height: 445px; overflow-y: auto; }
-.tap-space-report input + label em { position: absolute; top: 50%; right: 25px; width: 30px; height: 20px; margin-top: -10px; display: inline; background: url(../images/scroll.png) 0px -13px no-repeat; background-size: cover; }
-.tap-space-report input:checked + label em { background-position: 0px 3px; }
+.tab-space-report { display: flex; flex-direction: column; }
+.tab-space-report input + label { display: inline; padding: 8px 20px 8px 20px; border-bottom:0; color:black; font-weight: 900; background: #d2d2d2; cursor: pointer; position:relative; border: 1px solid; margin: 2px 0; }
+.tab-space-report input + label + ul { max-height: 0px; transition: all .7s; overflow:hidden }
+.tab-space-report input + label + ul::-webkit-scrollbar { width: 10px; }
+.tab-space-report input + label + ul::-webkit-scrollbar-thumb { background-color: rgba(65, 65, 65, 0.5); border-radius: 10px; }
+.tab-space-report input:checked + label + ul { max-height: 445px; overflow-y: auto; }
+.tab-space-report input + label em { position: absolute; top: 50%; right: 25px; width: 30px; height: 20px; margin-top: -10px; display: inline; background: url(../images/scroll.png) 0px -13px no-repeat; background-size: cover; }
+.tab-space-report input:checked + label em { background-position: 0px 3px; }
 
 .btn-2d.blue { background: rgba(102,152,203,1); border-radius: 3px; color: white; }
 .btn-2d.blue:active {background: #528bc4;}

@@ -1,11 +1,11 @@
 <template>
   <div> <!-- basic -->
-    <div v-if="tapList && tapList.length">
+    <div v-if="tabList && tabList.length">
       <div class="pre_top sch">
         <ul class="stat">
-          <template v-for="(value, index) in tapList">
-            <li v-if="!inactive(value)" :class="[index === tapMenuIndex ? 'on common' : 'common']" :key="index"
-                @click="selectComponent(index, value.sKey)">
+          <template v-for="(value, index) in tabList">
+            <li v-if="!inactive(value)" :class="[index === tabMenuIndex ? 'on common' : 'common']" :key="index"
+                @click="selectComponent(index, value.skey)">
               <a :title="value.alias">{{value.alias}}</a>
             </li>
           </template>
@@ -19,7 +19,7 @@
       </div> <!-- [End] pre_top sch -->
       
       <div v-if="!noReport"> <!-- [Start] StatSearch, MiddleManager -->
-        <StatSearch @newModal="fromTapToSearchComponent" @input="statSearch"></StatSearch>
+        <StatSearch @newModal="fromTabToSearchComponent" @input="statSearch"></StatSearch>
         <h2 class="no-data" v-if="noData">평가된 기사가 없음</h2>
         <div v-show="!noData"> <!-- single-template을 감싸고 있는 태그 -->
           <template v-for="(temp, templIdx) in template_group">
@@ -33,10 +33,10 @@
         </div>
       </div>
     </div><!-- [End] StatSearch, MiddleManager -->
-    <a v-else-if="loading && (!tapList || !tapList.length)" @click="newTemplate">
+    <a v-else-if="loading && (!tabList || !tabList.length)" @click="newTemplate">
       <Alert :kind="'Warning'" :message="'등록된 탭이 존재하지 않습니다. (클릭하여 통계설정 이동)'"/>
     </a>
-    <a v-if="loading && (tapList && tapList.length) && noReport" @click="newTemplate">
+    <a v-if="loading && (tabList && tabList.length) && noReport" @click="newTemplate">
       <Alert :kind="'Warning'" :message="'보고서 / 템플릿이 존재하지 않습니다. (클릭하여 통계설정 이동)'" />
     </a>
 
@@ -53,8 +53,8 @@
           <legend>목 록</legend>
           <ul>
             <template v-for="(rep, key) in reportList">
-            <li v-if="repListIndex === key" @click="selecting(false, rep, key)" class="normal-font" :key="'tap-rep'+key">{{rep.title}}</li>
-            <li v-else @click="selecting(false, rep, key)" :key="'tap-rep'+key">{{rep.title}}</li>
+            <li v-if="repListIndex === key" @click="selecting(false, rep, key)" class="normal-font" :key="'tab-rep'+key">{{rep.title}}</li>
+            <li v-else @click="selecting(false, rep, key)" :key="'tab-rep'+key">{{rep.title}}</li>
             </template>
           </ul>
         </fieldset>
@@ -107,13 +107,13 @@
       return {
         type: 'statSection'
         // list
-        ,tapList: []
+        ,tabList: []
         ,reportList: []
         // single
-        ,tap: null
+        ,tab: null
         ,report: null
         // etc
-        ,tapMenuIndex: 0
+        ,tabMenuIndex: 0
         ,repListIndex: -1
         ,template_group: []
         ,temporarySeq: 0
@@ -133,13 +133,13 @@
       await this.loadData();
       await this.$nextTick();
       this.loading = true;
-      if (!this.tapList || !this.tapList.length) return ;
+      if (!this.tabList || !this.tabList.length) return ;
       let fir = null;
       let idx = 0;
-      for (let tap of this.tapList) {
+      for (let tab of this.tabList) {
         for (let rep of this.reportList) {
-          if ([1,2].includes(tap.sKey) || (tap.sKey == rep.seq && rep.active == 1)) {
-            fir = tap.sKey;
+          if ([1,2].includes(tab.skey) || (tab.skey == rep.seq && rep.active == 1)) {
+            fir = tab.skey;
             break;
           }
         }
@@ -174,13 +174,13 @@
       newTemplate() {
         document.location.href = document.location.origin + '/setting/stat-config';
       },
-      inactive(tap) {
+      inactive(tab) {
         for (let re of this.reportList) {
-          if (tap.sKey == re.seq) {
+          if (tab.skey == re.seq) {
             return !(re.active == 1);
           }
         }
-        return ![1,2].includes(tap.sKey);
+        return ![1,2].includes(tab.skey);
       },
       searchOpen: function() {
         let rst = false;
@@ -193,17 +193,17 @@
 
       /**
        * @description: 
-       *  report[seq] === tap[sKey]
+       *  report[seq] === tab[skey]
        *  1 : 보고서 목록
        *  2 : 사용자 지정
        * @param: modal = new window
-       * @param: _idx = tap index
+       * @param: _idx = tab index
        * @param: nowReportSeq = now report seq(primary key)
        * @param: pastSeq = past report seq(primary key) - statSearch에서 호출할 때, 사용됨.
        */
-      selectComponent(_idx, nowReportSeq) { 
-        this.tapMenuIndex = _idx; // 탭 선택
-        this.getStatSetting.preTapMenuIndex = _idx; // 이전 탭 기억
+      selectComponent(_idx, nowReportSeq) {
+        this.tabMenuIndex = _idx; // 탭 선택
+        this.getStatSetting.preTabMenuIndex = _idx; // 이전 탭 기억
         this.initMiddleManager(); // <MiddleManager> 초기화
         if (this.notFindReportConfig(nowReportSeq)) return ;
         this.getStatSetting.chooseReportSeq = nowReportSeq; // 선택된 탭과 매핑되는 보고서 시퀀스
@@ -213,13 +213,13 @@
           this.repListIndex = -1; // rep
           this.getStatSetting.templInfoSettings = []; // templ
           this.template_group = []; // templ
-          this.fromTapToSearchComponent(true, nowReportSeq);
+          this.fromTabToSearchComponent(true, nowReportSeq);
         }
-        else this.fromTapToSearchComponent(false, nowReportSeq);
+        else this.fromTabToSearchComponent(false, nowReportSeq);
       },
 
       /**
-       * @description: tap과 연결된 report의 config정보(template)를 확인하는 함수
+       * @description: tab과 연결된 report의 config정보(template)를 확인하는 함수
        * @param {number} report.seq
        */
       notFindReportConfig(repSeq) {
@@ -256,20 +256,20 @@
        * @param: SEQ     (보고서 시퀀스 -기본키)
        * @param: pastSeq (이전 보고서 시퀀스 -기본키)
        */
-      async fromTapToSearchComponent(modal, SEQ) {
+      async fromTabToSearchComponent(modal, SEQ) {
         const isStatReport = (SEQ == 1); // 보고서 목록 띄우기
         const isStatCustom = (SEQ == 2); // 커스텀 템플릿 띄우기
         if (isStatReport) {
           if (modal) {
-            this.reportList = await this.$statConfig.funcLoadRecode("list","report-e");
+            this.reportList = await this.$statConfig.funcLoadRecode("list-exc","report");
             await this.$nextTick();
           }
           this.reportModal = modal; // 보고서-목록 모달창 띄우기
         } else if (isStatCustom) {
           this.templateModal = modal; // 사용자-지정-템플릿 모달창 띄우기
         }
-        this.getStatSetting.reportInTapView = isStatReport;
-        this.getStatSetting.crossInTapView  = isStatCustom;
+        this.getStatSetting.reportInTabView = isStatReport;
+        this.getStatSetting.crossInTabView  = isStatCustom;
       },  
 
       /**
@@ -324,7 +324,7 @@
           let num = this.getStatSetting.chooseReportSeq;
           let template = null;
           if (num != 2) { // "사용자 지정"이 아닐 때
-            this.reportList = await this.$statConfig.funcLoadRecode("list","report-e");
+            this.reportList = await this.$statConfig.funcLoadRecode("list-exc","report");
             template = await this.$statConfig.funcLoadRecode("list","template");
             await this.findTemplateInReport(num, template);
             // let res = await this.$statConfig.funcJSONRequest(
@@ -382,10 +382,10 @@
        */
       async loadData() {
         this.reportList = [];
-        this.tapList = [];
+        this.tabList = [];
         // API 호출
-        this.reportList = await this.$statConfig.funcLoadRecode("list","report-e");
-        this.tapList = await this.$statConfig.funcLoadRecode("list","tap");
+        this.reportList = await this.$statConfig.funcLoadRecode("list-exc","report");
+        this.tabList = await this.$statConfig.funcLoadRecode("list","tab");
       }, // loadData
 
 

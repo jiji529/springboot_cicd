@@ -505,9 +505,7 @@
         setTimeout(function(){
           const element = document.getElementById('print-wrap');
           let html = 
-            "<html>"
-            +"<body>" + element.outerHTML + "</body>"
-            +"</html>";
+            "<html><body>" + element.outerHTML + "</body></html>";
           // document.querySelector('body').style.minHeight = "auto";
           document.querySelector('#wrap').removeAttribute('hidden');
           element.remove();

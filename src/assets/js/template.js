@@ -125,47 +125,84 @@ const methods = {
      * @description 
      * @param {string} targetUrl 
      * @param {object} inputData 
-     * @param {string} funcName 
+     * @param {string} condition 
      * @param {boolean} isCallbackData 
      * @returns json
      */
-    funcJSONRequest: async function(targetUrl, inputData, funcName, isCallbackData) {
-        /* json으로 변환 */
-        let data = JSON.parse(JSON.stringify(inputData));
-        /*  */
+    funcJSONRequest: async function(targetUrl, inputData, condition, isCallbackData) {
+        /* 깊은 복사 */
+        let data = typeof inputData !== "string" ? JSON.parse(JSON.stringify(inputData)) : inputData;
+        /* 프리미엄 */
         if (!data) data = {"pid" : store.state.pid};
-        else {
-            if (funcName == 'office') {}
-            else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
-            else data.pid = store.state.pid;
-        }
+        else if (condition == 'office') {}
+        else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
+        else data.pid = store.state.pid;
+        
+        
+        /* URL 설정 */
+        let common_path = process.env.VUE_APP_JPORT + process.env.VUE_APP_JAVA_PATH + targetUrl + ".eval.json";
         let url = (process.env.VUE_APP_USE_SERVE_JAVA === "true" ? 
-            process.env.VUE_APP_SERVE_HOST + process.env.VUE_APP_JAVA_PATH + targetUrl :
-            store.state.hiddenLink2 + process.env.VUE_APP_JPORT + process.env.VUE_APP_JAVA_PATH + targetUrl
+            process.env.VUE_APP_SERVE_HOST + common_path :
+            store.state.hiddenLink2 + common_path
         );
-        let param = new URLSearchParams();
-        /* 검색 데이터 타입 변환 */
-        if (typeof data === "string") param.append('data', data); // string
-        else param.append('data', JSON.stringify(data)); // object to string
+        
+        let param = new URLSearchParams(); 
+        /* 파라미터 세팅 */
+        if (condition==="office") { /* 엑셀, 워드 */
+            param.append("param", typeof data === "string" ? data : JSON.stringify(data));
+        } else { 
+            if (condition==="tab-order") {
+                /* 탭 순서 변경 요청 */
+                param.append("reorder", JSON.stringify(data));
+            } else {
+                /* 템플릿, 보고서, 탭 관련 요청*/
+                for (const [key, value] of Object.entries(data)) {    
+                    if (key==="config") param.append(key, JSON.stringify(value));
+                    else if (condition==="create" && key==="seq") {/*초기 저장 seq=null*/}
+                    else if (condition==="modify" && key==="active") {/*수정 active=null*/}
+                    else if (key==="fkey") param.append("fKey", value); /* Tab */
+                    else if (key==="skey") param.append("sKey", value); /* Tab */
+                    else if (key==="tkey") param.append("tKey", value); /* Tab */
+                    else if (key==="value") param.append(key, JSON.stringify(value)); /* Tab */
+                    else param.append(key, value);
+                }
+                /*보고서 seq=1,2 제외*/
+                if (condition.includes("list-exc")) param.append("callCustomListOnly", true);
+            }
+        }
 
         let headerOption = {};
-        if (funcName === 'office') headerOption['responseType'] = 'arraybuffer';
-
+        if (condition === 'office') headerOption['responseType'] = 'arraybuffer';
         let res = null;
         try { res = await axios.post(url, param, headerOption); } 
         catch(e) { alert("Network or API Request Error"); } /* 리뉴얼된 DB 사용자가 아니면 오류 해당 알림창이 뜰 수 있다. */
         
         // success
-        if (res.status === 200 && isCallbackData) { 
-            return (funcName === 'office') ? res : res.data;
+        if (res.status === 200 && isCallbackData) {
+            const ret = res.data;
+            if (condition.includes('office')) return res;
+            else if (ret.result==="SUCCESS" && ret.tmpltRprtList && ret.tmpltRprtList.tmpltRprt) { 
+                /* reponse Template, Report */
+                ret.tmpltRprtList.tmpltRprt
+                .forEach(e => {
+                    e.config = JSON.parse(e.config);
+                });
+                return ret.tmpltRprtList.tmpltRprt;
+            } else if (ret.result==="SUCCESS" && ret.tabList && ret.tabList.tab) { 
+                /* reponse Tab */
+                ret.tabList.tab.forEach(e => {
+                    e.value = JSON.parse(e.value);
+                });
+                return ret.tabList.tab;
+            }
         }
     },
 
 
     async downloadOffice(filename, type, data) {
         const url = {
-            "xlsx":"/get/office/excel.do",
-            "docx":"/get/office/word/html.do"
+            "xlsx":"/excel.export",
+            "docx":"/word.export"
         };
         const answer = await this.funcJSONRequest(url[type], data, 'office', true);
         if (!answer) return null;
@@ -182,7 +219,7 @@ const methods = {
     /**
      * @description
      *  kind: single, list
-     *  type: 'template', 'report', 'tap'
+     *  type: 'template', 'report', report-e, 'menutab'
      * @param {string} kind 
      * @param {string} type 
      * @returns json
@@ -190,40 +227,28 @@ const methods = {
     async funcLoadRecode(kind, type, data) {
         const t = type.toLowerCase();
         let url = null;
-        let msg = null;
-        if (kind == 'single') {
-            if (t == 'template') {
-                url = "/get/template.do";
-                msg = "template loadData";
-            } else if (t == 'report') {
-                url = "/get/report.do";
-                msg = "report loadData";
-            } else if (t == 'tap') {
-                url = "/get/tap.do";
-                msg = "tap loadData";
-            }
-        } else if (kind == 'list') {
-            if (t == 'template') {
-                url = "/get/list/template.do";
-                msg = "template list loadData";
-            } else if (t == 'report-e') {
-                url = "/get/list/report/exceptions.do";
-                msg = "report list loadData";
-            } else if (t == 'report') {
-                url = "/get/list/report.do";
-                msg = "report list loadData";
-            } else if (t == 'tap') {
-                url = "/get/list/tap.do";
-                msg = "tap list loadData";
-            }
+        let cond = null;
+        if (t == 'template') {
+            if (kind == 'single') cond = "read template";
+            else if (kind == 'list') cond = "read template list";
+            url = "/read.template";
+        } else if (t == 'report') {
+            if (kind == 'single') cond = "read report";
+            else if (kind == 'list') cond = "read report list";
+            else if (kind == 'list-exc') cond = "read report list-exc"; // exceptions
+            url = "/read.report";
+        } else if (t == 'tab') {
+            if (kind == 'single') cond = "read menutab";
+            else if (kind == 'list') cond = "read menutab list";
+            url = "/read.menutab";
         }
         return await this.funcJSONRequest(
-            url, (!data ? null : data), msg, true);
+            url, (!data ? null : data), cond, true);
     },
 
     /**
      * @description
-     *  type: 'template', 'report', 'tap'
+     *  type: 'template', 'report', 'menutab'
      * @param {string} type 
      * @param {object} data 
      * @param {...any} etc
@@ -232,17 +257,17 @@ const methods = {
     async funcCreateRecode(type, data) {
         const name = type.toLowerCase();
         const _url = {
-            template:"/post/template.do",
-            report: "/post/report.do",
-            tap: "/post/tap.do"
+            template:"/create.template",
+            report: "/create.report",
+            tab: "/create.menutab"
         }
-        return await this.funcJSONRequest(_url[name], data, "funcCreateRecode", true);
+        return await this.funcJSONRequest(_url[name], data, "create", true);
     }, // funcCreateTemplates
 
 
     /**
      * @description
-     *  type: 'template', 'report', 'tap'
+     *  type: 'template', 'report', 'menutab'
      * @param {string} type 
      * @param {object} data 
      * @returns undefined
@@ -251,32 +276,26 @@ const methods = {
         if (data.seq === undefined) return;
         const name = type.toLowerCase();
         const _url = {
-            template:"/delete/template.do",
-            report: "/delete/report.do",
-            tap: "/delete/tap.do"
+            template:"/delete.template",
+            report: "/delete.report",
+            tab: "/delete.menutab"
         };
-        const _connection = {
-            template:"/get/report/linked.do",
-            report: "/get/tap/linked.do",
-            tap: null
-        };
-        if (_connection[name] != null) {
-            const link = await this.funcJSONRequest(_connection[name], data
-                                                    , "funcLikedRecode", true);
-            const ex = link.length;
-            if (ex !== 0) {
-                const notice = this.funcNotice(link, ex, name != 'report' ? '보고서' : '탭');
-                alert(notice);
-                return ; // 삭제 취소 클릭시
-            }
+        const link = await this.funcJSONRequest(_url[name], data, "delete", true);
+
+        const ex = link.length;
+        if (ex !== 0) {
+            const notice = this.funcNotice(link, ex, name != 'report' ? '보고서' : '탭');
+            alert(notice);
+            return ; // 삭제 취소 클릭시
         }
-        await this.funcJSONRequest(_url[name], data, "funcDeleteRecode", false);
     }, // funcDeleteTemplates
 
 
     /**
      * @description
-     *  type: 'template', 'report', 'tap'
+     *  type: 'template', 'report', 'menutab'
+     *  - active=null 이면 title, description, config가 수정.
+     *  - active=number이면 active만 수정.
      * @param {string} type 
      * @param {object} data
      * @returns Returns the data whose value is modified by etc
@@ -284,11 +303,11 @@ const methods = {
     async funcModifyRecode(type, data) {
         const name = type.toLowerCase();
         const _url = {
-            template:"/put/template.do",
-            report: "/put/report.do",
-            tap: "/put/tap.do"
+            template:"/update.template",
+            report: "/update.report",
+            tab: "/update.menutab"
         }
-        await this.funcJSONRequest(_url[name], data, "funcModifyRecode", false);
+        await this.funcJSONRequest(_url[name], data, "modify", false);
         return data;
     }, // funcEditTemplates
 
@@ -297,21 +316,21 @@ const methods = {
      * @description
      *  type: 'template', 'report'
      * @param {click.$event} e 
-     * @param {object} element 
+     * @param {object} data 
      * @param {string} type 
      */
-    funcActive(e, element, type) {
+    funcActive(e, data, type) {
         const name = type.toLowerCase();
         const _url = {
-            template:"/put/template/active.do",
-            report: "/put/report/active.do"
+            template:"/update.template",
+            report: "/update.report"
         }
         let num = parseInt(e.target.getAttribute('data-active'));
-        element.active = num;
+        data.active = num;
         this.funcJSONRequest(
             _url[name]
-            , element
-            , "contrActivity"
+            , data
+            , "active"
             , false
         );
     },

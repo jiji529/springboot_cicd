@@ -69,15 +69,15 @@ const statState = () => ({
   statValue: null,
   templateList: [],
   reportList: [],
-  tapList: [],
+  tabList: [],
 
   template: null,
   report: null,
 
   chooseReportSeq: 1,
-  reportInTapView: false,
-  crossInTapView: false,
-  preTapMenuIndex: 0,
+  reportInTabView: false,
+  crossInTabView: false,
+  preTabMenuIndex: 0,
   templInfoSettings: []
 });
 

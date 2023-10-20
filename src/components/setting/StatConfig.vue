@@ -20,7 +20,7 @@
 				<ReportSetting ref="report"></ReportSetting>
 			</div>
 			<div id="settingType3" class="statSettingArea" :class="{'dn':settingType !== 2}">
-				<TapSetting ref="tap"></TapSetting>
+				<TabSetting ref="tab"></TabSetting>
 			</div>
 			<div class="loading" v-if="loadingGif">
 				<img class="loading-image" :src="require('@/assets/images/loading.gif')" alt="Loading..."/>
@@ -45,11 +45,11 @@
 	import {mapGetters, mapState} from 'vuex';
 	import TemplateSetting from './template/TemplateSetting';
 	import ReportSetting from './template/ReportSetting';
-	import TapSetting from './template/TapSetting';
+	import TabSetting from './template/TabSetting';
 
 	export default {
 		name: 'StatConfig',
-		components: {TemplateSetting, ReportSetting, TapSetting},
+		components: {TemplateSetting, ReportSetting, TabSetting},
 		data(){
 			return{
 				settingType: 0, // 0|1|2
@@ -106,8 +106,8 @@
 						this.initsSearchList();
 						break;
 					case 2: // 탭 설정
-						await this.$refs.tap.loadReport();
-						await this.$refs.tap.loadTap();
+						await this.$refs.tab.loadReport();
+						await this.$refs.tab.loadTab();
 						await this.$refs.template.resetPreview();
 						await this.$refs.report.resetPreview();
 						await this.$refs.report.closeValueCalc();

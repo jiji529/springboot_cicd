@@ -1268,7 +1268,7 @@ export default {
         },
 
         insteadOfLegend() {
-            console.log(this.tableOrChart[this.TCIndex].crossAxesLength != 1 && !this.setDetails[0].legendFlag);
+            // console.log(this.tableOrChart[this.TCIndex].crossAxesLength != 1 && !this.setDetails[0].legendFlag);
             return (this.tableOrChart[this.TCIndex].crossAxesLength !== 1  
                 || (this.setDetails && !this.setDetails[0].legendFlag));
         }
@@ -1694,7 +1694,7 @@ export default {
             let duplChecked = false;
             for(let new_ of newDeteils) {
                 duplChecked = false;
-                for(let old_ of voo.details) { console.log(new_.name, old_.name, new_.display, new_.name == old_.name)
+                for(let old_ of voo.details) { 
                     if (new_.name == old_.name && new_.display && old_.display) {
                         copies.push(old_);
                         duplChecked = true;
