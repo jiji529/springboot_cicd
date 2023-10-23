@@ -4,8 +4,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 
 Vue.use(Vuex);
-const link_php = process.env.VUE_APP_PHP_PATH;
-const link_java = window.origin.split(":80")[0];
+const link_php = '/evalPhp';
 
 const newDate = new Date();
 const statState = () => ({
@@ -103,7 +102,6 @@ export default new Vuex.Store({
     domain: false, // 도메인 여부 체크
     statSetting: statState(),
     hiddenLink1: link_php,
-    hiddenLink2: link_java,
     newsGroup: [{
       lvalue: '',
       sname: ''

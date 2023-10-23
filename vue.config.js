@@ -13,15 +13,16 @@ module.exports = {
   */
   devServer: { // 배포 시, 적용 안해도 됨.
     proxy: { // proxyTable 설정
-      '/premium_eval-phpAPI/evalApi': {
+      '/evalPhp': {
         target: (process.env.VUE_APP_USE_SERVE_PHP === "true" ? 
-          process.env.VUE_APP_SERVE_HOST + process.env.VUE_APP_PHP_PATH :
-          "http://127.0.0.1" + process.env.VUE_APP_PHP_PATH),
+          process.env.VUE_APP_PHP_SERVE_HOST :
+          "http://127.0.0.1:" + process.env.VUE_APP_PPORT),
         changeOrigin: true,
         ws: true,
         logLevel: 'debug',
+        secure: false,
         pathRewrite: {
-          '^/premium_eval-phpAPI/evalApi': ''
+          '^/evalPhp': ''
         }
       }
     } // proxy

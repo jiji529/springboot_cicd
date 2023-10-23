@@ -119,7 +119,6 @@ const kewordMap = {
     ,"#{표시값}#":"calcValue-numberScaleDupe" // (건수/가치) 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
     // ,"#{금액단위}#":"-" // 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
 }
-
 const methods = {
     /**
      * @description 
@@ -140,10 +139,10 @@ const methods = {
         
         
         /* URL 설정 */
-        let common_path = process.env.VUE_APP_JPORT + process.env.VUE_APP_JAVA_PATH + targetUrl + ".eval.json";
+        let common_path = "/jApi" + targetUrl + ".eval.json";
         let url = (process.env.VUE_APP_USE_SERVE_JAVA === "true" ? 
-            process.env.VUE_APP_SERVE_HOST + common_path :
-            store.state.hiddenLink2 + common_path
+            process.env.VUE_APP_JAVA_SERVE_HOST + common_path :
+            "http://127.0.0.1:" + process.env.VUE_APP_JPORT + common_path
         );
         
         let param = new URLSearchParams(); 
