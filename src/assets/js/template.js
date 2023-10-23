@@ -119,6 +119,11 @@ const kewordMap = {
     ,"#{표시값}#":"calcValue-numberScaleDupe" // (건수/가치) 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
     // ,"#{금액단위}#":"-" // 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
 }
+const javaApi = '/' + (
+    process.env.VUE_APP_USE_SERVE_JAVA === undefined 
+        ? process.env.VUE_APP_JAVA_SERVE_CONTEXT
+        : 'javaApi'
+);
 const methods = {
     /**
      * @description 
@@ -136,14 +141,6 @@ const methods = {
         else if (condition == 'office') {}
         else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
         else data.pid = store.state.pid;
-        
-        
-        /* URL 설정 */
-        let common_path = targetUrl + ".eval.json";
-        let url = (process.env.VUE_APP_USE_SERVE_JAVA === "true" ? 
-            process.env.VUE_APP_JAVA_SERVE_HOST + common_path :
-            "http://127.0.0.1:" + process.env.VUE_APP_JPORT + "/jApi" + common_path
-        );
         
         let param = new URLSearchParams(); 
         /* 파라미터 세팅 */
@@ -173,8 +170,14 @@ const methods = {
         let headerOption = {};
         if (condition === 'office') headerOption['responseType'] = 'arraybuffer';
         let res = null;
-        try { res = await axios.post(url, param, headerOption); } 
-        catch(e) { alert("Network or API Request Error"); } /* 리뉴얼된 DB 사용자가 아니면 오류 해당 알림창이 뜰 수 있다. */
+        
+        try {
+            res = await axios.post(
+                javaApi + targetUrl + ".eval.json"
+                , param
+                , headerOption
+            ); 
+        } catch(e) { alert("Network or API Request Error"); } /* 리뉴얼된 DB 사용자가 아니면 오류 해당 알림창이 뜰 수 있다. */
         
         // success
         if (res.status === 200 && isCallbackData) {
