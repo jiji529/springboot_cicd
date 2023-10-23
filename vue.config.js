@@ -16,7 +16,7 @@ module.exports = {
       '/evalPhp': {
         target: (process.env.VUE_APP_USE_SERVE_PHP === "true" ? 
           process.env.VUE_APP_PHP_SERVE_HOST :
-          "http://127.0.0.1:" + process.env.VUE_APP_PPORT),
+          "http://127.0.0.1:" + process.env.VUE_APP_PPORT + '/evalPhp'),
         changeOrigin: true,
         ws: true,
         logLevel: 'debug',

@@ -139,10 +139,10 @@ const methods = {
         
         
         /* URL 설정 */
-        let common_path = "/jApi" + targetUrl + ".eval.json";
+        let common_path = targetUrl + ".eval.json";
         let url = (process.env.VUE_APP_USE_SERVE_JAVA === "true" ? 
             process.env.VUE_APP_JAVA_SERVE_HOST + common_path :
-            "http://127.0.0.1:" + process.env.VUE_APP_JPORT + common_path
+            "http://127.0.0.1:" + process.env.VUE_APP_JPORT + "/jApi" + common_path
         );
         
         let param = new URLSearchParams(); 
