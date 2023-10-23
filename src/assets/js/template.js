@@ -154,8 +154,8 @@ const methods = {
                 /* 템플릿, 보고서, 탭 관련 요청*/
                 for (const [key, value] of Object.entries(data)) {    
                     if (key==="config") param.append(key, JSON.stringify(value));
-                    else if (condition==="create" && key==="seq") {/*초기 저장 seq=null*/}
-                    else if (condition==="modify" && key==="active") {/*수정 active=null*/}
+                    else if (condition==="create" && key==="seq") {/*최초 저장: seq=null*/}
+                    else if (condition==="modify" && key==="active") {/*수정: active=null*/}
                     else if (key==="fkey") param.append("fKey", value); /* Tab */
                     else if (key==="skey") param.append("sKey", value); /* Tab */
                     else if (key==="tkey") param.append("tKey", value); /* Tab */
