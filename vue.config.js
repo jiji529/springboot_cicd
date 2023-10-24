@@ -15,7 +15,7 @@ module.exports = {
     proxy: { 
       '/phpApi': {
         target: (process.env.VUE_APP_USE_SERVE_PHP === "true" ? 
-            process.env.VUE_APP_PHP_SERVE_HOST :
+            process.env.VUE_APP_PHP_SERVE_HOST + '/' + process.env.VUE_APP_PHP_SERVE_CONTEXT :
             "http://127.0.0.1:" + process.env.VUE_APP_PPORT + '/' + process.env.VUE_APP_PHP_SERVE_CONTEXT),
         changeOrigin: true,
         logLevel: 'debug',
@@ -27,8 +27,8 @@ module.exports = {
       }
       , '/javaApi': {
         target: (process.env.VUE_APP_USE_SERVE_JAVA === "true" ? 
-            process.env.VUE_APP_JAVA_SERVE_HOST :
-            "http://127.0.0.1:" + process.env.VUE_APP_JPORT + '/' + process.env.VUE_APP_JAVA_SERVE_CONTEXT), // premium로 수정
+            process.env.VUE_APP_JAVA_SERVE_HOST  + '/' + process.env.VUE_APP_JAVA_SERVE_CONTEXT :
+            "http://127.0.0.1:" + process.env.VUE_APP_JPORT + '/' + process.env.VUE_APP_JAVA_SERVE_CONTEXT),
         changeOrigin: true,
         logLevel: 'debug',
         secure: false,
