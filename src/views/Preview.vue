@@ -1,44 +1,48 @@
 <template>
   <div style="width: 100%;height: 100%">
-    <iframe :src="previewSrc"
+    <!--:src="previewSrc"-->
+    <iframe :src="viewerLogoutUri"
             style="width: 100%;height: 100%;border: none" v-if="previewSrc !== false"></iframe>
-    <div class="loading" v-if="previewSrc === false">
+    <!-- <div class="loading" v-if="previewSrc === false">
       <img class="loading-image" :src="require('@/assets/images/loading.gif')" alt="Loading..."/>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
   import store from '../store'
-  import {mapGetters, mapMutations, mapActions} from 'vuex';
+  import {mapState, mapGetters, mapMutations, mapActions} from 'vuex';
   
   export default {
     name: 'Preview',
     asyncComputed: {
+      ...mapState(['viewerLogoutUri']),
       ...mapGetters({
         pid: 'getPremiumID',
         uid: 'getUserID'
       }),
       async previewSrc() {
-        if (!this.uid || this.uid.length < 4) { return false; }
+        if (!this.uid || this.uid.length < 4) return false; 
         let params = new FormData();
         params.append('smId', this.uid);
         let result = await this.$axios.post(store.state.hiddenLink1 + '/getPremiumLink.php', params);
-        if (!result.data.tgtUrl) {
-          alert('서버 오류가 발생했습니다. 관리자에게 문의하여 주십시오!');
-        }
-        if (result.data.success === true) {
-          this.SET_VIEWER_LOGOUT_URI(result.data.tgtUrl);
-          return result.data.tgtUrl;
+
+        if (result.data.tgtUrl && result.data.success) {
+          this.viewerLogoutUri = result.data.tgtUrl;
         } else {
-          await this.viewerLogout();
-          return false;
+          this.SET_VIEWER_LOGOUT_URI(result.data.tgtUrl);
+          this.viewerLogoutUri = 'https://view.scrapmaster.co.kr/admin/adminLogin.do';
+          alert('서버 오류가 발생했습니다. 관리자에게 문의하여 주십시오!');
+          
         }
+        
+        // await this.viewerLogout();
+        // return false;
       }
     },
     methods: {
       ...mapMutations(['SET_VIEWER_LOGOUT_URI']),
-      ...mapActions(['viewerLogout'])
+      // ...mapActions(['viewerLogout'])
     }
   }
 </script>

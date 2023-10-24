@@ -24,7 +24,6 @@
       return {
         viewTitle: '구버전 보기',
         oldLink: '/old/eval',
-        viewerLogoutUrl: null
       };
     },
     components: {
@@ -48,12 +47,11 @@
     methods: {
       ...mapMutations(['SET_VIEWER_LOGOUT_URI']),
       LOGOUT() {
+        if (this.viewerLogoutUri !== null) {
+          this.SET_VIEWER_LOGOUT_URI(this.viewerLogoutUri);
+        }
         this.$store.dispatch('LOGOUT').then(() => {
-          if (this.viewerLogoutUri !== null) {
-            this.viewerLogoutUrl = this.viewerLogoutUri;
-          } else {
-            this.$router.push('/login');
-          }
+          this.$router.push('/login');
         });
       },
       async destroyAuth() { // TEST
@@ -61,7 +59,6 @@
         alert('auth destroyed');
       },
       async load() {
-        this.viewerLogoutUrl = null;
         this.SET_VIEWER_LOGOUT_URI(null);
         this.$router.push('/login');
       }
