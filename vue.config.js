@@ -1,4 +1,5 @@
 const ansiRegex = require('ansi-regex')
+const fs = require('fs')
 
 module.exports = {
   publicPath: '/',
@@ -37,6 +38,12 @@ module.exports = {
           '^/javaApi': ''
         }
       }
+    }
+    , host: 'local.scrapmaster.co.kr'
+    , https: {
+      key: fs.readFileSync('ssl/star_scrapmaster_co_kr.key'),
+      cert: fs.readFileSync('ssl/star_scrapmaster_co_kr.crt'),
+      ca: fs.readFileSync('ssl/star_scrapmaster_co_kr.ca_root'),
     }
   },
   
