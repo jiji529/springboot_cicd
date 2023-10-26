@@ -17,7 +17,7 @@
     computed: {
       ...mapGetters({
         resultMessage: 'getMessage',
-        isAuth: 'getIsAuth',
+        isAuth: 'getIsAuth', // cmlim: login 성공시, true
         isPeUser: 'getIsPeUser'
       })
     },
@@ -95,7 +95,8 @@
       },
       LOGOUT() {
         this.isLoading = false;
-        this.$store.commit('LOGOUT');
+        this.$store.dispatch('LOGOUT');
+        // this.$store.commit('LOGOUT');
       }
     }
   };
