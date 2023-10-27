@@ -31,8 +31,8 @@ npm install
 npm run serve
 ```
  - 기본적으로 https 로 동작하도록 세팅되어 있으며, local.scrapmaster.co.kr 을 로컬호스트로 지정하여 사용한다.
- - ["https README"](http://git.dahami.com:4000/daejeonmember/premium_eval-vue/-/blob/master/ssl/README.md "value") 
- - ["https README(RAW)"](http://git.dahami.com:4000/daejeonmember/premium_eval-vue/-/raw/master/ssl/README.md "value") 
+ - ["https README"](https://dev-git.scrapmaster.co.kr/daejeonmember/premium_eval-vue/-/blob/master/ssl/README.md "value") 
+ - ["https README(RAW)"](https://dev-git.scrapmaster.co.kr/daejeonmember/premium_eval-vue/-/raw/master/ssl/README.md "value") 
 
 ### 프로젝트 배포 (vue.js)
 ```

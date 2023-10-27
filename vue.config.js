@@ -39,7 +39,10 @@ module.exports = {
         }
       }
     }
-    , host: 'local.scrapmaster.co.kr'
+//    , host: 'local.scrapmaster.co.kr'
+    , host: 'eval.scrapmaster.co.kr'
+    // 특정 포트 지정 가능
+    //, port:443
     , https: {
       key: fs.readFileSync('ssl/star_scrapmaster_co_kr.key'),
       cert: fs.readFileSync('ssl/star_scrapmaster_co_kr.crt'),
