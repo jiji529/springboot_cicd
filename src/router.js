@@ -107,14 +107,16 @@ const router = new Router({
     component: () => import(
       `@/views/NotFound.vue`
     )
-  }, {
-    path: '/old/:page',
-    name: 'old',
-    props: true,
-    component: () => import(
-      `@/components/Iframe.vue`
-    )
-  }]
+  } 
+  // ,{
+  //   path: '/old/:page',
+  //   name: 'old',
+  //   props: true,
+  //   component: () => import(
+  //     `@/components/Iframe.vue`
+  //   )
+  // }
+  ]
 });
 
 router.beforeEach((to, from, next) => {

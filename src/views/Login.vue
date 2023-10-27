@@ -149,10 +149,8 @@
             params.append('uid', this.username);
             params.append('password', this.password);
           }
-
-
-
           this.isLoading = true;
+
           let loginResult = await this.loginAPI(params); // 로그인 성공 여부
           if (loginResult) {
             if (this.isPeUser) {
@@ -213,7 +211,8 @@
       },
       LOGOUT() {
         this.isLoading = false;
-        this.$store.commit('LOGOUT');
+        this.$store.dispatch('LOGOUT');
+        // this.$store.commit('LOGOUT');
       }
 
     }

@@ -169,7 +169,6 @@ export default new Vuex.Store({
   mutations: {
     LOGIN(state, data) {
       if (data.success) {
-        const token = data.data.accessToken;
         state.uid = data.data.uid;
         state.pid = data.data.pid;
         state.isPeUser = data.data.peUser;
@@ -182,8 +181,6 @@ export default new Vuex.Store({
           localStorage.removeItem('is-embedded');
           localStorage.setItem('last-auth-check', Date.now());
         }
-        axios.defaults.headers.common['Authorization'] = token;
-        localStorage.setItem('user-token', token); // store the token in localstorage
         localStorage.setItem('is-new-mode', data.data.peUser);
         state.isAuth = true;
         state.domain = data.data.domain;
@@ -194,11 +191,9 @@ export default new Vuex.Store({
         state.ev = '';
         state.isPeUser = false;
         state.isEmbedded = false;
-        localStorage.removeItem('user-token');
         localStorage.removeItem('is-new-mode');
         localStorage.removeItem('last-auth-check');
         localStorage.removeItem('is-embedded');
-        delete axios.defaults.headers.common['Authorization'];
         state.isAuth = false;
       }
       state.message = data.message;
@@ -209,11 +204,9 @@ export default new Vuex.Store({
       state.pwd = '';
       state.ev = '';
       state.message = '';
-      localStorage.removeItem('user-token');
       localStorage.removeItem('is-new-mode');
       localStorage.removeItem('last-auth-check');
       localStorage.removeItem('is-embedded');
-      delete axios.defaults.headers.common['Authorization'];
       state.isAuth = false;
       state.isPeuser = false;
       state.isEmbedded = false;
@@ -368,7 +361,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    LOGOUT({commit}) {
+    async LOGOUT({commit}) {
+      await axios.post(phpApi + '/logout.php');
       commit('LOGOUT');
       commit('SET_SELECTED_ARTICLE', '');
       commit('SET_SEARCH_SELECTED_ARTICLE', '');
@@ -397,7 +391,6 @@ export default new Vuex.Store({
 
       // 로그인 서버로 부터 요청
       const getUserInfo = (params) => {
-        delete axios.defaults.headers.common['Authorization'];
         return axios.post(phpApi + '/loginAuto.php', params);
       };
       try {
@@ -439,7 +432,6 @@ export default new Vuex.Store({
 
       // 로그인 서버로 부터 요청
       const getUserInfo = (params) => {
-        delete axios.defaults.headers.common['Authorization'];
         return axios.post(phpApi + '/login.php', params);
       };
       try {
@@ -476,13 +468,6 @@ export default new Vuex.Store({
       };
       try {
         let isEmbedded = localStorage.getItem('is-embedded');
-        const token = localStorage.getItem('user-token');
-        if (token) {
-          axios.defaults.headers.common['Authorization'] = token;
-        } else {
-          return false;
-        }
-
         const res = await getAuthAPI(params);
         if (res.status === 200) {
           //성공
@@ -503,17 +488,10 @@ export default new Vuex.Store({
       };
       try {
         let isEmbedded = localStorage.getItem('is-embedded');
-        const token = localStorage.getItem('user-token');
         let oldTime = Number(localStorage.getItem('last-auth-check'));
         oldTime = isNaN(oldTime) ? 0 : oldTime;
         let curTime = Date.now();
         let diffTime = (curTime - oldTime) / 1000;
-
-        if (token) {
-          axios.defaults.headers.common['Authorization'] = token;
-        } else {
-          return false;
-        }
         
         if (diffTime > 60) {
           const res = await getAuthAPI(params);
