@@ -49,13 +49,13 @@ module.exports = {
     // 끝 / http
     // https로 사용 할 시 포트 (http로 사용시 아래 3개 항목 주석)
     // 시작 / https 
-//    , port:443
+  //  , port:443
 //	, host: 'eval.scrapmaster.co.kr'
-////	, host: 'local.scrapmaster.co.kr'
-//    , https: {
-//      key: fs.readFileSync('ssl/star_scrapmaster_co_kr.key'),
-//      cert: fs.readFileSync('ssl/star_scrapmaster_co_kr.crt'),
-//      ca: fs.readFileSync('ssl/star_scrapmaster_co_kr.ca_root'),
+	  , host: 'local.scrapmaster.co.kr'
+    , https: {
+      key: fs.readFileSync('ssl/star_scrapmaster_co_kr.key'),
+      cert: fs.readFileSync('ssl/star_scrapmaster_co_kr.crt'),
+      ca: fs.readFileSync('ssl/star_scrapmaster_co_kr.ca_root'),
     }
     // 끝 / https
   },

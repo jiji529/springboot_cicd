@@ -28,8 +28,8 @@ Vue.use(Router);
 // 	// 	store.getters.getIsAuth ? next() : next('login');
 // 	// })
 // };
-let isNewMode = (localStorage.getItem('is-new-mode') === 'true');
-let basePath = isNewMode ? '/eval' : '/old/eval';
+// let isNewMode = (localStorage.getItem('is-new-mode') === 'true');
+// let basePath = isNewMode ? '/eval' : '/old/eval';
 
 const router = new Router({
   mode: 'history',
@@ -46,7 +46,7 @@ const router = new Router({
     name: 'root',
     meta: {},
     redirect: {
-      path: basePath //'eval'
+      path: 'eval'// basePath
     }
   }, {
     path: '/eval',
