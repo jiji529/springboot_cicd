@@ -34,9 +34,16 @@ npm run serve
  - ["https README"](https://dev-git.scrapmaster.co.kr/daejeonmember/premium_eval-vue/-/blob/master/ssl/README.md "value") 
  - ["https README(RAW)"](https://dev-git.scrapmaster.co.kr/daejeonmember/premium_eval-vue/-/raw/master/ssl/README.md "value") 
 
-### 프로젝트 배포 (vue.js)
+### 배포본 빌드
 ```
 npm run build
+ - dist 폴더에 배포본 생성됨
+ - phpapi와 함께 배포하면 됨
+  : premium_eval-phpapi/src 내 evalPhp 폴더를 같이 배포
+ - 아파치 설정변경(우분투 기준 아래 명령)
+  : rewrite모듈 활성화 & 관련 설정 추가(.htaccess 사용하도록)
+  $ a2enmod rewrite
+  $ sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 ```
 
 ### 프로젝트 배포 (jenkins 사용 - php 통합)
