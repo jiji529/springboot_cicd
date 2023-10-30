@@ -24,6 +24,10 @@ npm install
  
  VUE_APP_USE_SERVE_PHP=true    # 운영서버의  PHP 사용, default true
  VUE_APP_USE_SERVE_JAVA=true   # 운영서버의 JAVA 사용, default true
+ 
+ # 아래 포트정보는 로컬 API 사용시만 사용됨
+ VUE_APP_PPORT=8080	# 로컬 php API 아파치 포트
+ VUE_APP_JPORT=81		# 로컬 java 프리미엄 API 스프링부트 포트
 ```
 
 ### 프로젝트 실행
