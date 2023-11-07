@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>premium</groupId>
+  <artifactId>eval-vue</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+  
+  <properties>
+	  <eval.php.version>0.0.0</eval.php.version>
+  </properties>
+
+  <build>
+	<plugins>
+		<plugin>
+	        <groupId>com.github.eirslett</groupId>
+	        <artifactId>frontend-maven-plugin</artifactId>
+	        <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
+	        <version>1.14.2</version>
+	
+	        <executions>
+				<execution>
+					<id>install node and npm</id>
+					<goals>
+						<goal>install-node-and-npm</goal>
+					</goals>
+					<configuration>
+					  <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
+						<nodeVersion>v16.14.1</nodeVersion>
+						<npmVersion>8.3.1</npmVersion>
+					</configuration>
+				</execution>
+	
+				 <execution>
+				 	<id>npm ci</id>
+				    <goals>
+						<goal>npm</goal>
+				    </goals>
+				    <!-- Optional configuration which provides for running any npm command -->
+				    <configuration>
+						<arguments>ci</arguments>
+				    </configuration>
+				 </execution>
+          
+				<execution>
+					<id>npm run build</id>
+				    <goals>
+						<goal>npm</goal>
+				    </goals>
+				    <configuration>
+						<arguments>run build</arguments>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+			
+		<plugin>
+		    <artifactId>maven-clean-plugin</artifactId>
+		    <version>2.4.1</version>
+		    <configuration>
+		        <filesets>		            
+		            <fileset>
+		                <directory>dist</directory>
+		                <includes>
+		                    <include>**</include>
+		                </includes>
+		                <followSymlinks>false</followSymlinks>
+		            </fileset>
+		            
+		            <fileset>
+		                <directory>node</directory>
+		                <includes>
+		                    <include>**</include>
+		                </includes>
+		                <followSymlinks>false</followSymlinks>
+		            </fileset>
+		            
+		            <fileset>
+		                <directory>node_modules</directory>
+		                <includes>
+		                    <include>**</include>
+		                </includes>
+		                <followSymlinks>false</followSymlinks>
+		            </fileset>
+		        </filesets>
+		    </configuration>
+		</plugin>
+		
+		
+	</plugins>
+	
+  </build>
+</project>
