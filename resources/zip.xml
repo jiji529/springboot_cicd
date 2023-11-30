@@ -4,8 +4,8 @@
 	<id>sources</id>
 	<formats>
 <!-- 		<format>tar.gz</format> -->
-<!-- 		<format>zip</format> -->
-		<format>tar.gz</format>
+		<format>zip</format>
+<!-- 		<format>tar.gz</format> -->
 	</formats>
 	<fileSets>
 		<fileSet>
@@ -60,7 +60,7 @@
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory></outputDirectory>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
 		</dependencySet>
