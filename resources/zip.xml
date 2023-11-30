@@ -44,7 +44,7 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>/</directory>
+			<directory>${basedir}</directory>
 			<includes>
 				<include>*</include>
 			</includes>
