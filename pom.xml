@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>premium</groupId>
+  <groupId>com.dahami</groupId>
   <artifactId>eval-vue</artifactId>
   <version>0.0.2</version>
   <packaging>pom</packaging>
@@ -70,7 +70,7 @@
 		        </filesets>
 		    </configuration>
 		</plugin>
-		<!-- 어차피 java 파일도 없는데 그냥 zip으로 처리 하기 위해 maven-source-plugin이 아닌 assembly로 진행함 -->
+		<!-- 어차피 java 파일도 없는데 그냥 zip으로 처리 하기 위해 maven-source-plugin이 아닌 assembly로 진행 -->
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-assembly-plugin</artifactId>

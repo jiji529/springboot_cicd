@@ -5,7 +5,7 @@
 	<formats>
 <!-- 		<format>tar.gz</format> -->
 <!-- 		<format>zip</format> -->
-		<format>jar</format>
+		<format>tar.gz</format>
 	</formats>
 	<fileSets>
 		<fileSet>
@@ -58,14 +58,4 @@
 			</excludes>
 		</fileSet>
 	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>lib</outputDirectory>
-			<unpack>false</unpack>
-			<scope>runtime</scope>
-			<excludes>
-				<exclude>junit:junit</exclude>
-			</excludes>
-		</dependencySet>
-	</dependencySets>
 </assembly>
