@@ -60,6 +60,7 @@
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory></outputDirectory>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
