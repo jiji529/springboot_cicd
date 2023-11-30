@@ -43,20 +43,19 @@
 				<include>**/*</include>
 			</includes>
 		</fileSet>
-		<fileSet>
-			<directory>${basedir}</directory>
-			<includes>
-				<include>*</include>
-			</includes>
-			<excludes>
-				<exclude>.settings</exclude>
-<!-- 				<exclude>dist</exclude> -->
-				<exclude>node</exclude>
-				<exclude>node_modules</exclude>
-				<exclude>target</exclude>
-				<exclude>WinSCP.*</exclude>
-			</excludes>
-		</fileSet>
+<!-- 		<fileSet> -->
+<!-- 			<directory>${basedir}</directory> -->
+<!-- 			<includes> -->
+<!-- 				<include>*</include> -->
+<!-- 			</includes> -->
+<!-- 			<excludes> -->
+<!-- 				<exclude>.settings</exclude> -->
+<!-- 				<exclude>node</exclude> -->
+<!-- 				<exclude>node_modules</exclude> -->
+<!-- 				<exclude>target</exclude> -->
+<!-- 				<exclude>WinSCP.*</exclude> -->
+<!-- 			</excludes> -->
+<!-- 		</fileSet> -->
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
