@@ -45,11 +45,20 @@
 				<include>**/*</include>
 			</includes>
 		</fileSet>
-<!-- 		<fileSet> -->
-<!-- 			<directory>/</directory> -->
-<!-- 			<includes> -->
-<!-- 				<include>*</include> -->
-<!-- 			</includes> -->
+		<fileSet>
+			<directory>${basedir}</directory>
+			<includes>
+				<include>.env*</include>
+				<include>.gitignore</include>
+				<include>.project</include>
+				<include>babel.config.js</include>
+				<include>bundle.cmd</include>
+				<include>fetch.ftp</include>
+				<include>package*</include>
+				<include>pom.xml</include>
+				<include>README.md</include>
+				<include>vue.config.js</include>
+			</includes>
 <!-- 			<excludes> -->
 <!-- 				<exclude>.settings</exclude> -->
 <!-- 				<exclude>node</exclude> -->
@@ -57,7 +66,7 @@
 <!-- 				<exclude>target</exclude> -->
 <!-- 				<exclude>WinSCP.*</exclude> -->
 <!-- 			</excludes> -->
-<!-- 		</fileSet> -->
+		</fileSet>
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
