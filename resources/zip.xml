@@ -2,9 +2,11 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 	<id>sources</id>
+	<!-- 압축된 파일 root 디렉토리 제거를 위해 -->
+	<includeBaseDirectory>false</includeBaseDirectory>
 	<formats>
-<!-- 		<format>tar.gz</format> -->
-		<format>zip</format>
+		<format>jar</format>
+<!-- 		<format>zip</format> -->
 <!-- 		<format>tar.gz</format> -->
 	</formats>
 	<fileSets>
@@ -44,7 +46,7 @@
 			</includes>
 		</fileSet>
 <!-- 		<fileSet> -->
-<!-- 			<directory>${basedir}</directory> -->
+<!-- 			<directory>/</directory> -->
 <!-- 			<includes> -->
 <!-- 				<include>*</include> -->
 <!-- 			</includes> -->
