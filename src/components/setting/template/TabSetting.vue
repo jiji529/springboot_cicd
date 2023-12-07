@@ -329,11 +329,11 @@ export default {
         },
         
         
-        setSINGLE_TAB(_seq, _order) {
+        setSINGLE_TAB(_seq, _skey, _order) {
             const day = this.getDate.strDate;
             this.SINGLE_TAB = {
                 seq: _seq
-                ,skey: null
+                ,skey: _skey
                 ,tkey: _order
                 ,value: { // (=config 잡다한 정보가 들어감 reportTitle, reDate)
                     reportTitle: ''
@@ -347,6 +347,7 @@ export default {
             this.modify_reportIdx = null;
             this.runModify = false;
             this.setSINGLE_TAB(
+                null,
                 null,
                 (this.getStatSetting.tabList.length + 1)
             );
@@ -424,7 +425,7 @@ export default {
         async deleteTemp(e) {
             if (confirm("탭을 삭제하시겠습니까?")) {
                 const _seq = parseInt(e.target.getAttribute('data-seq'));
-                await this.setSINGLE_TAB(_seq, 0);
+                await this.setSINGLE_TAB(_seq, 0, 0);
                 await this.$statConfig.funcDeleteRecode('tab', this.SINGLE_TAB);
                 await this.loadTab(); // 데이터를 로드하는 곳에서 탭-리스트 재세팅이 이루어진다.
                 this.SINGLE_TAB = {};
