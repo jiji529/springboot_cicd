@@ -284,7 +284,7 @@ const methods = {
         };
         const link = await this.funcJSONRequest(_url[name], data, "delete", true);
 
-        const ex = (link) ? link.length : 0;
+        cconst ex = (link) ? link.length : 0;
         if (ex !== 0) {
             const notice = this.funcNotice(link, ex, name != 'report' ? '보고서' : '탭');
             alert(notice);

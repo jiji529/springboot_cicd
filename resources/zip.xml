@@ -2,9 +2,11 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 	<id>sources</id>
+	<!-- 압축된 파일 root 디렉토리 제거를 위해 -->
+	<includeBaseDirectory>false</includeBaseDirectory>
 	<formats>
-<!-- 		<format>tar.gz</format> -->
-		<format>zip</format>
+		<format>jar</format>
+<!-- 		<format>zip</format> -->
 <!-- 		<format>tar.gz</format> -->
 	</formats>
 	<fileSets>
@@ -46,16 +48,24 @@
 		<fileSet>
 			<directory>${basedir}</directory>
 			<includes>
-				<include>*</include>
+				<include>.env*</include>
+				<include>.gitignore</include>
+				<include>.project</include>
+				<include>babel.config.js</include>
+				<include>bundle.cmd</include>
+				<include>fetch.ftp</include>
+				<include>package*</include>
+				<include>pom.xml</include>
+				<include>README.md</include>
+				<include>vue.config.js</include>
 			</includes>
-			<excludes>
-				<exclude>.settings</exclude>
-<!-- 				<exclude>dist</exclude> -->
-				<exclude>node</exclude>
-				<exclude>node_modules</exclude>
-				<exclude>target</exclude>
-				<exclude>WinSCP.*</exclude>
-			</excludes>
+<!-- 			<excludes> -->
+<!-- 				<exclude>.settings</exclude> -->
+<!-- 				<exclude>node</exclude> -->
+<!-- 				<exclude>node_modules</exclude> -->
+<!-- 				<exclude>target</exclude> -->
+<!-- 				<exclude>WinSCP.*</exclude> -->
+<!-- 			</excludes> -->
 		</fileSet>
 	</fileSets>
 	<dependencySets>
