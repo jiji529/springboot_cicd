@@ -45,6 +45,14 @@
 				<include>**/*</include>
 			</includes>
 		</fileSet>
+		<!-- 별도 프로젝트 PHP API를 추가하기 위해, 다른 프로젝트에서 가져오는것 -->
+		<fileSet>
+			<directory>evalPhp</directory>
+			<outputDirectory>evalPhp</outputDirectory>
+			<includes>
+				<include>**/*</include>
+			</includes>
+		</fileSet>
 		<fileSet>
 			<directory>${basedir}</directory>
 			<includes>
