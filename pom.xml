@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
   
   <properties>
-	  <eval.php.version>0.0.0</eval.php.version>
+	  <eval.php.version>0.0.7</eval.php.version>
   </properties>
 
   <build>
