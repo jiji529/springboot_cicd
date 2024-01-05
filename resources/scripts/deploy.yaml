@@ -1,0 +1,253 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eval-vue
+  labels:
+    app: eval-vue
+    
+spec:
+  # 업데이트 전략 지정 
+  strategy: 
+    # 업데이트 전략 지정 (종류는 RollingUpdate (지정한 개수만큼의 파드를 죽이고, 새로 만드는 전략) / Recreate (기존파드 모두 삭제후 진행하는 전략) 2가지) 
+    type: RollingUpdate 
+    rollingUpdate: 
+      # 업데이트 완료시까지 이용불가능하게 만들 개수 ( terminating 할 개수를 뜻한다.  /  % 로 비율 지정도 가능)
+      # (0이면 완전 업데이트되기 전까지 다 살아있는다)  
+      maxUnavailable: 0 
+      # 신규 파드를 몇개씩 만들어낼지 개수 ( 신규 파드 생성단위 / %로 비율 지정도 가능 ) 
+      maxSurge: 2
+  # 파드(들 / maxSurge 단위) 시작 후 다음 파드(들) 시작 전까지 대기시간(설정하지 않으면 디폴트는 0초 )
+  # readinessProbe 최초 통과 후 해당 시간 대기 후 다음파드 생성&기존파트 제거 작업 시작함 
+  minReadySeconds: 5
+  
+  # 생성할 레플리카 순서 / 변경시 기존 레플리카셋의 숫자도 맞춘다
+  # EX. 1에서 4 변경시 기존 레플리카셋도 4개의 파드로 구성하고, 신규 파드도 4개를 구성한 뒤 기존 파드 제거함(신규파드 문제 없을 시)
+  replicas: 4
+  selector:
+    matchLabels:
+      app: eval-vue
+  template:
+    metadata:
+      labels:
+        app: eval-vue
+    spec:
+      # 위치시킬 노드 정의
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              # 쉐프 디스크가 있는 노드
+              - key: ceph
+                operator: Exists
+              # 서비스용 노드
+              - key: purpose
+                operator: In
+                values:
+                  - service
+      containers:
+      - name: eval-vue
+        image: dev-nexus-docker.scrapmaster.co.kr/${TAG_ARTIFACTID}:${TAG_NAME}
+        imagePullPolicy: Always
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: DEPLOY_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app']
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: POD_SERVICE_ACCOUNT
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.serviceAccountName
+          # JENKINS에서 K8S 배포시마다 현재시간을 타임스템프로 입력하여 kubectl이 yaml 파일이 수정된 것으로 인식하도록 함 
+          - name: APPLY_TIMESTAMP
+            value: "${APPLY_TIMESTAMP}"
+        ports:
+           - containerPort: 80
+        volumeMounts:
+          - name: timezone-config
+            mountPath: /etc/localtime
+          - name: pvc-cephfs-logrepository
+            mountPath: /root/logs
+          - name: pvc-nfs-premium-premium
+            mountPath: /nfs/premium_premium
+          - name: pvc-nfs-premium-doosan
+            mountPath: /nfs/premium_doosan
+          - name: pvc-nfs-premium-doosaninfra
+            mountPath: /nfs/premium_doosaninfra
+          - name: pvc-nfs-premium-dsheavy
+            mountPath: /nfs/premium_dsheavy
+          - name: pvc-nfs-premium-gbcouncil
+            mountPath: /nfs/premium_gbcouncil
+          - name: pvc-nfs-premium-gbpr
+            mountPath: /nfs/premium_gbpr
+          - name: pvc-nfs-premium-gunpo
+            mountPath: /nfs/premium_gunpo
+          - name: pvc-nfs-premium-kotra
+            mountPath: /nfs/premium_kotra
+          - name: pvc-nfs-premium-krmc
+            mountPath: /nfs/premium_krmc
+          - name: pvc-nfs-premium-lgchem
+            mountPath: /nfs/premium_lgchem 
+          - name: pvc-nfs-premium-lottepr
+            mountPath: /nfs/premium_lottepr
+          - name: pvc-nfs-premium-mctgo
+            mountPath: /nfs/premium_mctgo
+          - name: pvc-nfs-premium-prteam 
+            mountPath: /nfs/premium_prteam
+          - name: pvc-nfs-premium-sports
+            mountPath: /nfs/premium_sports 
+          - name: pvc-nfs-premium-today
+            mountPath: /nfs/premium_today
+          - name: pvc-nfs-premium-wjcoway
+            mountPath: /nfs/premium_wjcoway
+          #- name: pvc-nfs-premium-youno65
+          #  mountPath: /nfs/premium_youno65
+          #- name: pvc-nfs-premium-mail2
+          #  mountPath: /nfs/premium_mail2
+        # 컨테이너 정상여부 판단
+        # 종류 : 
+        # 초기시작시 체크 / failureThreshold 초과 문제 발생시 재시작
+        startupProbe:
+          httpGet:
+            # path는 파드의 로컬호스트가 기본이 된다는 사실을 알아야함
+            # WAS의 contextPath가 있다면, 해당 부분을 포함하여 헬스체크할 링크를 적어주도록 한다.
+            path: /jsp-pre-compile
+            port: 80
+          # Pod가 생성되고 Container가 시작된 이후 최초 probe가 수행되기 전 Delay를 주는 시간, default=0
+          initialDelaySeconds: 10
+          # probe의 수행 주기 설정, 이 값은 timeoutSeconds 보다 커야함, default=10
+          periodSeconds: 5
+          # probe 수행 응답을 기다리는 timeout 시간 설정 default=1
+          timeoutSeconds: 15
+          # probe가 최소 몇번 실패해야 실패로 마킹할 것인지 설정하는 필드 default=3
+          failureThreshold: 10
+          # probe가 최소 몇번을 성공해야 성공으로 마킹할 것인지 설정하는 필드 default=1
+          successThreshold: 1
+        # 문제생길시, 트래픽 연결만 끊어줌
+        # startProbe 성공 후 동작함 / 최초 성공시까지 서비스에 삽입하지 않음
+        readinessProbe:
+          # 컨테이너 생존여부 판단기준
+          # 종류 :
+          # command 방식 : shell스크립트 혹은 커맨드를 실행하여 결과가 0(정상) / 1(비정상)
+          # httpget 방식 : http 요청을 보내 200~399(정상) / 400이상(비정상)
+          # TCP 방식 : 지정한 포트에 접근하여, 접근성공(정상) / connection Refused(비정상)
+          # 특정 쓰레드 생존여부 혹은 concheck Active 등 약속한 헬스체크 여부 등응 확인하기 위해서는 SpringBoot Actuactor 를 사용해야함을 참고사항으로 기록한다.
+          httpGet:
+            # path는 파드의 로컬호스트가 기본이 된다는 사실을 알아야함
+            # WAS의 contextPath가 있다면, 해당 부분을 포함하여 헬스체크할 링크를 적어주도록 한다.
+            path: /conCheck
+            port: 80
+          # Pod가 생성되고 Container가 시작된 이후 최초 probe가 수행되기 전 Delay를 주는 시간, default=0
+          initialDelaySeconds: 0
+          # probe의 수행 주기 설정, 이 값은 timeoutSeconds 보다 커야함, default=10
+          periodSeconds: 120
+          # probe 수행 응답을 기다리는 timeout 시간 설정 default=1
+          timeoutSeconds: 3
+          # probe가 최소 몇번 실패해야 실패로 마킹할 것인지 설정하는 필드 default=3
+          failureThreshold: 1
+          # probe가 최소 몇번을 성공해야 성공으로 마킹할 것인지 설정하는 필드 default=1
+          successThreshold: 1
+        # 문제생길시, 컨테이너 재시작 / 다른 프로브와 같이 쓸 수 있음
+        # livenessProbe
+          # (livenessProbe 전용)파드를 중지시키고, 제거할때까지의 시간 ( default는 30이다)
+          # 
+          #terminationGracePeriodSeconds: 30
+      volumes:
+        - name: timezone-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Seoul
+        - name : pvc-cephfs-logrepository
+          persistentVolumeClaim:
+            claimName: pvc-cephfs-logrepository
+        - name : pvc-nfs-premium-premium
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-premium
+        - name : pvc-nfs-premium-doosan 
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-doosan 
+        - name : pvc-nfs-premium-doosaninfra
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-doosaninfra
+        - name : pvc-nfs-premium-dsheavy 
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-dsheavy 
+        - name : pvc-nfs-premium-gbcouncil
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-gbcouncil
+        - name : pvc-nfs-premium-gbpr 
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-gbpr 
+        - name : pvc-nfs-premium-gunpo
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-gunpo
+        - name : pvc-nfs-premium-kotra
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-kotra
+        - name : pvc-nfs-premium-krmc
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-krmc
+        - name : pvc-nfs-premium-lgchem
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-lgchem
+        - name : pvc-nfs-premium-lottepr
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-lottepr
+        - name : pvc-nfs-premium-mctgo 
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-mctgo 
+        - name : pvc-nfs-premium-prteam 
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-prteam 
+        - name : pvc-nfs-premium-sports
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-sports
+        - name : pvc-nfs-premium-today 
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-today 
+        - name : pvc-nfs-premium-wjcoway
+          persistentVolumeClaim:
+            claimName: pvc-nfs-premium-wjcoway
+        #- name : pvc-nfs-premium-youno65 
+        #  persistentVolumeClaim:
+        #    claimName: pvc-nfs-premium-youno65 
+        #- name : pvc-nfs-premium-mail2
+        #  persistentVolumeClaim:
+        #    claimName: pvc-nfs-premium-mail2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eval-vue
+spec:
+  type: ClusterIP
+  selector:
+    app: eval-vue
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+
+# 아래 URL로 연결한다
+# web-viewer.scrapmaster.co.kr
+# view.scrapmaster.co.kr
+# wv.scrapmaster.co.kr
+# contextName : /
