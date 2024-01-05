@@ -67,7 +67,7 @@
             </div>
             
             <div class="set_text_area">
-              <div class="set_subtitle">> 템플릿 제목 및 상세글 작성</div>
+              <div class="set_subtitle"> 템플릿 제목 및 상세글 작성</div>
               <div class="template_text">
                 <div class="template_title">
                   <p>템플릿 제목</p>
@@ -81,7 +81,7 @@
             </div>
 
             <div class="set_list_area">
-              <div class="set_subtitle">> 시각객체 설정</div>
+              <div class="set_subtitle"> 시각객체 설정</div>
               <VsOjOption :SINGLE_TEMPLATE="SINGLE_TEMPLATE" @LoadTemplate="loadTemplate" @SearchTemplate="statSearch"></VsOjOption>
 
             </div>
@@ -91,7 +91,7 @@
 
     <StatSearch></StatSearch>
     <h2 class="no-data" v-if="noData">평가된 기사가 없음</h2>
-    <div v-if="!noData">
+    <div v-show="!noData">
       <MiddleManager v-if="SINGLE_TEMPLATE && SINGLE_TEMPLATE.config"  
                     :ref="type"
                     :componentType="type" 
@@ -423,8 +423,8 @@ export default {
               }
             }
             this.$store.state.loadingGif = true;
-            await this.$refs[this.type].dropSearchValue(); // 데이터 초기화
-            await this.$refs[this.type].settingSearchValue(); // (선)검색
+            await this.$refs[this.type].dropSearchValue(); // 기존 데이터 초기화
+            await this.$refs[this.type].settingSearchValue(); // 새 데이터 요청
             await this.$refs[this.type].onSearch(null, this.SINGLE_TEMPLATE, true);
             this.$store.state.loadingGif = false;
           }

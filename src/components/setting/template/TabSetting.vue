@@ -7,7 +7,7 @@
             <div class="set-object-item-box">
                 <div class="set_title">
                     <h2>탭 리스트</h2>
-                    <p>* 항목을 클릭하여 데이터를 수정할 수 있습니다.</p>
+                    <p>* 통계 목록을 구성하는 곳 입니다.</p>
                     <div class="list-reset">새로고침 <div title="새로고침" @click="loadTab()"></div></div>
                 </div>
 
@@ -91,7 +91,7 @@
             <div class="set-object-item-box">
                 <div class="set_title">
                     <h2>보고서 리스트</h2>
-                    <p>* 항목을 클릭하여 데이터를 수정할 수 있습니다.</p>
+                    <p>* 항목을 드래그하여 '탭 리스트를' 구성할 수 있습니다.</p>
                     <label for="reportSearch">
                         보고서 검색하기: 
                     </label>

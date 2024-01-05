@@ -336,8 +336,8 @@
           template = JSON.parse(JSON.stringify(this.template_group));
           if (template.length == 0) { alert('등록된 템플릿이 없습니다.'); return;}
           this.$store.state.loadingGif = true;
-          await this.$refs[this.type + '0'][0].dropSearchValue(); // 기존 데이터
-          await this.$refs[this.type + '0'][0].settingSearchValue(); // (선)검색
+          await this.$refs[this.type + '0'][0].dropSearchValue(); // 기존 데이터 초기화
+          await this.$refs[this.type + '0'][0].settingSearchValue(); // 새 데이터 요청
           await this.searchLogic(template);
           this.$store.state.loadingGif = false;
         } catch(e) {

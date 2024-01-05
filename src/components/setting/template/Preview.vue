@@ -874,7 +874,7 @@
           if (row > 1) await this.snatcher(rStruc, getConfigEvalItem, req_evg_seq.slice(0,row), changeData);
           if (col > 1) await this.snatcher(cStruc, getConfigEvalItem, req_evg_seq.slice(row, row+col), changeData);
         }
-        
+		
         /* rt (run time)
           changeData : table data를 변형한 것
           row        : 행의 수 (number)
@@ -4320,16 +4320,16 @@
         // column 정렬 
         let sortedCol = {};
         tempColumn = funcSort(tempColumn);
-        for (const [xkey, xObject] of entr(tempColumn)) {
+        for (let [xkey, xObject] of entr(tempColumn)) {
           if (!sortedCol[xkey]) sortedCol[xkey] = {};
           xObject = funcSort(xObject);
-          for (const [ykey,yObject] of entr(xObject)) {
+          for (let [ykey,yObject] of entr(xObject)) {
             if (!sortedCol[xkey][ykey]) sortedCol[xkey][ykey] = {};
             yObject = funcSort(yObject);
-            for (const [zkey,zObject] of entr(yObject)) {
+            for (let [zkey,zObject] of entr(yObject)) {
               if (!sortedCol[xkey][ykey][zkey]) sortedCol[xkey][ykey][zkey] = {};
               zObject = funcSort(zObject);
-              for (const [rkey,rObject] of entr(zObject)) {
+              for (let [rkey,rObject] of entr(zObject)) {
                 if (!sortedCol[xkey][ykey][zkey][rkey]) sortedCol[xkey][ykey][zkey][rkey] = {};
               }
             }

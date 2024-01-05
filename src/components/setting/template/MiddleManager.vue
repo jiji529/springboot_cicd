@@ -65,8 +65,8 @@
        *    검색 -> 차트 생성을 위한 함수.
        * 
        *    **선행 작업**
-       *    1. dropSearchValue() 데이터 초기화
-       *    2. settingSearchValue() 데이터 세팅
+       *    1. dropSearchValue() 기존 데이터 초기화
+       *    2. settingSearchValue() 새 데이터 요청
        * @param {int} number -order
        * @param {object} TEMPLATE -template
        * @param {boolean} ready -is search
@@ -104,8 +104,6 @@
           const templateName = document.querySelector('.template-name'+this.MMIdx);
           if (templateName) templateName.value = TEMPLATE.title || "sheet" + (this.MMIdx + 1);
           
-          // dropSearchValue()는 해당 분기점을 일방적으로 통과하는 것을 막기 위해서 이다.
-          // settingSearchValue()가 외부에서 선행 작업을 이행한 뒤에 들어와야 한다.
           if (this.getStatSetting.statValue.length) {
             this.$emit( "nothing", false );
             await this.$nextTick(); // 렌더링을 기다려주기 위한 코드

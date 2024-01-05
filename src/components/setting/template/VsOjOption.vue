@@ -33,7 +33,7 @@
                                     <select v-model="row.val" @change="changeCrossStd($event, parent_i, idx, 'row', true)" :key="parent_i+'selectItem'+reSeletItem">
                                     <option value="0">-선택-</option>
                                     <slot v-for="auto in getConfigEval.group.AT">
-                                        <option v-if="auto.isUse === 'Y' || showUnusedEvalItem" :value="auto.seq" :disabled="evalDuplicateVerification(obj,(Number(auto.seq)))" :key="parent_i+'c-c'+auto.name">[자동]{{auto.name}}</option>
+                                        <option v-if="auto.isUse === 'Y' || showUnusedEvalItem" :value="auto.seq" :disabled="evalDuplicateVerification(obj,(Number(auto.seq)))" :key="parent_i+'c-c-a'+auto.name">[자동]{{auto.name}}</option>
                                     </slot>
                                     <slot v-if="getConfigEval.group.M1.isUse === 'Y' || showUnusedEvalItem">
                                         <option value="10001" :disabled="evalDuplicateVerification(obj,10001,'M1')">[평가1]대분류</option>
@@ -43,7 +43,7 @@
                                         <option value="10033" :disabled="evalDuplicateVerification(obj,10003,'M1')">[평가1]소분류(상위포함)</option>
                                     </slot>
                                     <slot v-for="ev2 in getConfigEval.group.M2">
-                                        <option v-if="ev2.isEval === 'Y' || showUnusedEvalItem" :value="ev2.seq" :disabled="evalDuplicateVerification(obj,(Number(ev2.seq)))" :key="parent_i+'c-c'+ev2.name">[평가2]{{ev2.name}}</option>
+                                        <option v-if="ev2.isEval === 'Y' || showUnusedEvalItem" :value="ev2.seq" :disabled="evalDuplicateVerification(obj,(Number(ev2.seq)))" :key="parent_i+'c-c-e2'+ev2.name">[평가2]{{ev2.name}}</option>
                                     </slot>
                                     <option value="100001" :disabled="evalDuplicateVerification(obj,100001)">[기타]기간</option>
                                     <option v-if="getConfigEval.policy.S3 && getConfigEval.policy.S3.value === 'Y'" value="100004" :disabled="evalDuplicateVerification(obj,100004)">[기타]매체분류(3.5)</option>

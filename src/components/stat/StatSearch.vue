@@ -244,8 +244,8 @@
         </span>
       </div>
       <div class="ft_cont" :class="getStatSetting.evaluation0Options===1?'and':''" v-if="getEval0ClassNew">
-        <template v-for="eval0 in getEval0ClassNew">
-          <div class="ft2_box" v-if="eval0.isUse === 'Y' || showUnusedEvalItem" :class="eval0.isUse === 'N' ? 'wither' : ''" :key="eval0.name">
+        <template v-for="(eval0, e0i) in getEval0ClassNew">
+          <div class="ft2_box" v-if="eval0.isUse === 'Y' || showUnusedEvalItem" :class="eval0.isUse === 'N' ? 'wither' : ''" :key="e0i+'e0'+eval0.name">
             <div class="ft_ch" style="overflow:hidden" :title="eval0.isUse === 'N' ? eval0.name+' (미사용)' : eval0.name">
               <input type="checkbox"
               v-if="getStatSetting.evaluation0Options===2"
@@ -257,7 +257,8 @@
             </div>
             <ul class="ft2_li" v-if="getEvalGroupItems[eval0.seq]">
               <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
-              <li v-for="item in getEvalGroupItems[eval0.seq]" v-if="item.isUse === 'Y' || getConfigEval.policy.NU.value === 'Y'" :class="item.isUse === 'N' ? 'wither' : ''" :title="item.isUse === 'N' ? item.value + ' (미사용)' : item.value" :key="item.value">
+              <li v-for="(item, e0si) in getEvalGroupItems[eval0.seq]" v-if="item.isUse === 'Y' || getConfigEval.policy.NU.value === 'Y'" 
+              :class="item.isUse === 'N' ? 'wither' : ''" :title="item.isUse === 'N' ? item.value + ' (미사용)' : item.value" :key="e0si+'-'+item.value">
                 <input :type="getStatSetting.evaluation0Options===2 ? 'checkbox' : 'radio'"
                 :id="'ft0_b'+item.seq"
                 :name="'ft0_a'+eval0.seq"
@@ -370,9 +371,9 @@
         </span>
       </div>
       <div class="ft_cont" :class="getStatSetting.evaluation2Options===1?'and':''" v-if="getEval2ClassNew">
-        <template v-for="eval2 in getEval2ClassNew">
+        <template v-for="(eval2, e2i) in getEval2ClassNew">
           <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
-          <div class="ft2_box" v-if="eval2.isUse === 'Y' || showUnusedEvalItem" :class="eval2.isUse === 'N' ? 'wither' : ''" :key="eval2.name">
+          <div class="ft2_box" v-if="eval2.isUse === 'Y' || showUnusedEvalItem" :class="eval2.isUse === 'N' ? 'wither' : ''" :key="e2i+'-e2-'+eval2.name">
             <div class="ft_ch" style="overflow:hidden" :title="eval2.isUse === 'N' ? eval2.name+' (미사용)' : eval2.name">
               <input type="checkbox"
               v-if="getStatSetting.evaluation2Options===2"
@@ -384,7 +385,8 @@
             </div>
             <ul class="ft2_li" v-if="getEvalGroupItems[eval2.seq]">
               <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
-              <li v-for="item in getEvalGroupItems[eval2.seq]" v-if="item.isUse === 'Y' || showUnusedEvalItem" :class="item.isUse === 'N' ? 'wither' : ''" :title="item.isUse === 'N' ? item.value + ' (미사용)' : item.value" :key="item.value">
+              <li v-for="(item, e2si) in getEvalGroupItems[eval2.seq]" v-if="item.isUse === 'Y' || showUnusedEvalItem" 
+              :class="item.isUse === 'N' ? 'wither' : ''" :title="item.isUse === 'N' ? item.value + ' (미사용)' : item.value" :key="e2si+'-'+item.value">
                 <input :type="getStatSetting.evaluation2Options===2 ? 'checkbox' : 'radio'"
                 :id="'ft2_b'+item.seq"
                 :name="'ft2_a'+eval2.seq"
