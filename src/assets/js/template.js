@@ -136,7 +136,7 @@ const methods = {
     funcJSONRequest: async function(targetUrl, inputData, condition, isCallbackData) {
         /* 깊은 복사 */
         let data = typeof inputData !== "string" ? JSON.parse(JSON.stringify(inputData)) : inputData;
-        /* 프리미엄 */
+        /* 프리미엄 */ 
         if (!data) data = {"pid" : store.state.pid};
         else if (condition == 'office') {}
         else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
@@ -149,6 +149,7 @@ const methods = {
         } else { 
             if (condition==="tab-order") {
                 /* 탭 순서 변경 요청 */
+                param.append("pid", store.state.pid);
                 param.append("reorder", JSON.stringify(data));
             } else {
                 /* 템플릿, 보고서, 탭 관련 요청*/
@@ -262,7 +263,7 @@ const methods = {
             template:"/create.template",
             report: "/create.report",
             tab: "/create.menutab"
-        }
+        };
         return await this.funcJSONRequest(_url[name], data, "create", true);
     }, // funcCreateTemplates
 

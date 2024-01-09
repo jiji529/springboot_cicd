@@ -30,9 +30,21 @@
                                     <div title="탭 제목" :data-seq="tab.seq" type="text" @click="tabInfo($event, tab.skey)">
                                         <a :href="'#rep-'+tab.skey" class="track-down">{{tab.alias}}</a>
                                     </div>
-                                    <div >
+                                    <div>
                                         <p title="등록된 보고서">{{findReport(tab.skey, 'title')}}</p>
                                     </div>
+
+                                    <section class="summary"><p>
+                                        <data v-if="getCrossCalc(tab, 'tabCalcType') == 0">원본</data>
+                                        <data v-else-if="getCrossCalc(tab, 'tabCalcType') == 1">건수</data>
+                                        <data v-else>가치</data>
+                                        <template v-if="getCrossCalc(tab, 'tabCalcType') == 2">
+                                            -
+                                            <data v-if="getCrossCalc(tab, 'priceUnit') == 0">원</data>
+                                            <data v-else-if="getCrossCalc(tab, 'priceUnit') == 1">천원</data>
+                                            <data v-else style="font-size: smaller;">백만원</data>
+                                        </template>
+                                    </p></section>
 
                                     <div class="tagRegDate">{{tab.value.regDate}}</div>
                                     <div class="tagEtc">
@@ -48,7 +60,8 @@
                                         <p>{{findRep[SINGLE_TAB.skey].title}}</p>
                                         <!-- SINGLE_TAB.value.reportTitle -->
                                     </div>
-                                    
+
+                                    <div class="tabSetting"> <button @click="calcSetting($event)"></button> </div>
                                     <div class="tagRegDate">{{SINGLE_TAB.value.regDate}}</div>
                                     <div class="tagEtc">
                                         <button :data-seq="SINGLE_TAB.seq" @click="btnModify_cancel">취소</button>
@@ -68,6 +81,7 @@
                                     <p class="guide" v-if="guide(SINGLE_TAB.value.reportTitle)">[보고서 리스트]에서 항목을 드래그 하세요.</p>
                                     <p v-else>{{SINGLE_TAB.value.reportTitle}}</p>
                                 </div>
+                                <div class="tabSetting"> <button @click="calcSetting($event)"></button> </div>
                                 <div class="tagRegDate">{{SINGLE_TAB.value.regDate}}</div>
                                 <div class="tagEtc">
                                     <button :data-seq="SINGLE_TAB.seq" @click="tabCancel">취소</button>
@@ -81,6 +95,57 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- 설정 모달창 -->
+        <div class="tab-value-calc"> 
+            <template  v-if="valueCalc !== null">
+            <p><span>표시 값</span><span @click="closeValueCalc">X</span></p>
+            <section>
+                <ul>
+                    <li>
+                        <!-- value >>>> v-model -->
+                        <input id="tItemCalcShow1" type="radio" name="calc_show_group" v-model="valueCalc.show" v-bind:value="true" >
+                        <label for="tItemCalcShow1"><span></span>선택</label>
+                    </li>
+                    <li>
+                        <input id="tItemCalcShow2" type="radio" name="calc_show_group" v-model="valueCalc.show" v-bind:value="false">
+                        <label for="tItemCalcShow2"><span></span>고정</label>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <!-- value >>>> v-model -->
+                        <input id="tItemCalc1" type="radio" name="calc_group" v-model="valueCalc.tabCalcType" value="0" >
+                        <label for="tItemCalc1"><span></span>원본</label>
+                    </li>
+                    <li>
+                        <input id="tItemCalc2" type="radio" name="calc_group" v-model="valueCalc.tabCalcType" value="1">
+                        <label for="tItemCalc2"><span></span>건수</label>
+                    </li>
+                    <li>
+                        <input id="tItemCalc3" type="radio" name="calc_group" v-model="valueCalc.tabCalcType" value="2">
+                        <label for="tItemCalc3"><span></span>가치</label>
+                    </li>
+                </ul>
+                <div class="tab-won-unit" v-if="valueCalc.tabCalcType == 2"> <!-- unit1에서 1이라는 숫자는 templIdx를 뜻한다. -->
+                    <ul>
+                        <li>
+                            <input id="tItemUnit1" type="radio" name="unit_group" v-model="valueCalc.priceUnit" v-bind:value="0">
+                            <label for="tItemUnit1"><span></span>원</label>
+                        </li>
+                        <li>
+                            <input id="tItemUnit2" type="radio" name="unit_group" v-model="valueCalc.priceUnit" v-bind:value="1">
+                            <label for="tItemUnit2"><span></span>천원</label>
+                        </li>
+                        <li>
+                            <input id="tItemUnit3" type="radio" name="unit_group" v-model="valueCalc.priceUnit" v-bind:value="2">
+                            <label for="tItemUnit3" style="font-size: smaller;"><span></span>백만원</label>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            </template>
         </div>
 
 
@@ -105,7 +170,7 @@
                     <div class="item_list">
                         <div class="item_list_title">
                             <div class="tab-header-title">제목</div>
-                            <div class="tab-header-des">상세설명</div>
+                            <div class="tab-header-des rep-h-d">상세설명</div>
                             <div></div>
                             <div>날짜</div>
                         </div>
@@ -189,6 +254,9 @@ export default {
             ,beforeHl: null
 
             ,lastTKEY: 0 // 마지막 인덱스를 변수에 넣을 일이 없다면 삭제
+
+            ,valueCalc: null
+            ,currCalcBtn: null
         }
     },
 
@@ -304,11 +372,10 @@ export default {
         },
 
         dragDrop() { // [등록된 보고서] 세팅하기
-            if (this.SINGLE_TAB) {
-                this.SINGLE_TAB.skey = this.dragEvent.seq; // report 시퀀스 세팅
-                this.SINGLE_TAB.value.reportTitle = this.dragEvent.title; // report 제목 세팅
-                this.SINGLE_TAB.alias = this.dragEvent.title;
-            }
+            if (!this.SINGLE_TAB) return ;
+            this.SINGLE_TAB.skey = this.dragEvent.seq; // report 시퀀스 세팅
+            this.SINGLE_TAB.value.reportTitle = this.dragEvent.title; // report 제목 세팅
+            this.SINGLE_TAB.alias = this.dragEvent.title;
         },
 
         funcReportSearch(event) {
@@ -327,17 +394,64 @@ export default {
             if (this.tabRen === 100) this.tabRen = 0;
             else this.tabRen++;
         },
-        
-        
+
+        /**
+         * @description: 통계값(교차-계산)에 해당하는 "표시값 유형 설정" 모달창이다.
+         * @param {boolean} reset 클릭한 버튼을 초기화할 것인지 결정한다.
+         */
+        closeValueCalc(reset) { 
+            if (document.querySelector('.tab-value-calc')) 
+                document.querySelector('.tab-value-calc').style.display = 'none';
+            if (this.currCalcBtn) {
+                this.currCalcBtn.style.backgroundColor = '#f0f0f0';
+                this.currCalcBtn.style.color = 'black';
+                if (reset) this.currCalcBtn = null;
+            }
+            this.valueCalc = null; 
+        },
+
+        calcSetting(e, tab) {
+            const btn = e.currentTarget;
+            const group = document.querySelector('.item_list');
+            const div = document.querySelector('.tab-value-calc');
+            if (this.currCalcBtn != null) this.closeValueCalc(false);
+            if (this.currCalcBtn === btn) { 
+                this.closeValueCalc(true);
+                return; 
+            }
+            this.currCalcBtn = btn;
+            btn.style.backgroundColor = '#c1c0c0';
+            btn.style.color = '#fff';
+            div.style.top = (btn.offsetTop - group.scrollTop) + "px" ;
+            div.style.left = (btn.offsetLeft + btn.offsetWidth) + 'px';
+            div.style.display = 'inline-block';
+			div.style.position = 'absolute';
+
+            if (!this.SINGLE_TAB 
+                || !this.SINGLE_TAB.value 
+                || !this.SINGLE_TAB.value.selectTabStatValue) return ;
+            this.valueCalc = this.SINGLE_TAB.value.selectTabStatValue;
+        },
+
+        getCrossCalc(tab, key) {
+            if (!tab || !tab.value || tab.value.selectTabStatValue)
+            return tab.value.selectTabStatValue[key];
+        },
+
         setSINGLE_TAB(_seq, _skey, _order) {
-            const day = this.getDate.strDate;
+            const DAY = this.getDate.strDate;
             this.SINGLE_TAB = {
                 seq: _seq
                 ,skey: _skey
                 ,tkey: _order
                 ,value: { // (=config 잡다한 정보가 들어감 reportTitle, reDate)
                     reportTitle: ''
-                    ,regDate: day
+                    ,regDate: DAY
+                    ,selectTabStatValue: {
+                        show: true
+                        ,tabCalcType: 0
+                        ,priceUnit: 0
+                    }
                 } 
                 ,alias: '새 탭' //(=title)
             };
@@ -446,7 +560,7 @@ export default {
                 // null -> create
                 if (this.SINGLE_TAB.seq === null) await this.$statConfig.funcCreateRecode('tab',this.SINGLE_TAB);
                 else { 
-                    await this.$statConfig.funcModifyRecode('tab', this.SINGLE_TAB); 
+                    await this.$statConfig.funcModifyRecode('tab', this.SINGLE_TAB);
                     this.modify_reportIdx = null;
                 }
                 await this.loadTab(); // 데이터를 로드하는 곳에서 레포트 재세팅이 이루어진다.
@@ -622,6 +736,7 @@ export default {
         height: auto;
         max-height: 470px;
     }
+    /* Tab List title */
     .item_list > div.item_list_title {
         display: flex;
         flex-direction: row;
@@ -630,10 +745,11 @@ export default {
         padding: 0px 0px 3px 0px
     }
     .item_list div.item_list_title > div { font-size: 13px; font-weight: bolder; }
-    .item_list div.item_list_title > div:nth-child(1) { width: 40%; }
-    .item_list div.item_list_title > div:nth-child(2) { width: 34%; }
+    .item_list div.item_list_title > div:nth-child(1) { width: 34%; }
+    .item_list div.item_list_title > div:nth-child(2):not(.rep-h-d) { width: 41%; }
     .item_list div.item_list_title > div:nth-child(3):not(.tagRegDate) { width: 10%; }
-    .item_list div.item_list_title > div:nth-child(4):not(.tagtagEtc) { width: 15%; }
+    /*.item_list div.item_list_title > div:nth-child(4):not(.tagtagEtc) { width: 15%; }*/
+    .item_list div.item_list_title > div.tagEtc { width: 15%; }
     .item_list li {
         list-style: none;
         border-bottom: 1px solid #b1b1b1;
@@ -646,21 +762,111 @@ export default {
         line-height: 33px;
         margin: 0px 0px 5px 0px;
     }
-    .item_list li > div > div:nth-child(1) { width: 39.5%; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-    .item_list li > div > div:nth-child(2) { width: 35%;}
-    .item_list li > div > div:nth-child(2) > p { width: 100%; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 5px;}
-    .item_list li > div > div:nth-child(3):not(.tagRegDate) { width: 10%; }/**/
-    .item_list li > div > div:nth-child(3) > div.upNdown { 
-        width: 26px; height: 26px; background: url(../../../assets/images/ico_pre.png) 3px -283px no-repeat; margin: 4px 0px 0px 0px;}/**/
-    .item_list li > div > div:nth-child(4):not(.tagtagEtc) { width: 12%; display: flex; padding: 0px 0px 0px 0px; }
-    .item_list li > div > div:nth-child(4) > a { width: 40px; height: 24px; text-align: center; line-height: 24px; margin: 1px 0px 0px 5px;}
-    .item_list li > div > div:nth-child(4) > a.act { border: 1px solid #3678b3; background: #5ca5e6; font-size: 12px; font-weight: 700; color:#fff; }
-    .item_list li > div > div:nth-child(4) > a.inact { border: 1px solid #ccc; background: #f2f2f2; font-size: 12px; font-weight: 700; color:#000000}
 
-    .item_list li > div > input:nth-child(1) { width: 300px; margin: 0px 26px 0px 0px; }
+    /* Report List title */
+    .rep-h-d { width: 26.5% }
+
+    /* ITEM LIST css */
+    .item_list li > div > div:nth-child(1) { width: 33.5%; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .item_list li > div > div:nth-child(2):not(.drag_area_border) { width: 32%;}
+    .item_list li > div > div:nth-child(2) > p { width: 100%; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 5px;}
+    .item_list li > div > div:nth-child(3):not(.tagRegDate) { width: 5%; }/**/
+    .item_list li > div > div.tabSetting { width: 10%; }/**/
+    .item_list li > div > div:nth-child(4) > div.upNdown { 
+        width: 26px; height: 26px; background: url(../../../assets/images/ico_pre.png) 3px -283px no-repeat; margin: 4px 0px 0px 0px;}/**/
+    /*.item_list li > div > div:nth-child(5):not(.tagtagEtc) { width: 12%; display: flex; padding: 0px 0px 0px 0px; }*/
+    .item_list li > div > div.tagEtc { width: 12%; display: flex; padding: 0px 0px 0px 0px; }
+    .item_list li > div > div:nth-child(5) > a { width: 40px; height: 24px; text-align: center; line-height: 24px; margin: 1px 0px 0px 5px;}
+    .item_list li > div > div:nth-child(5) > a.act { border: 1px solid #3678b3; background: #5ca5e6; font-size: 12px; font-weight: 700; color:#fff; }
+    .item_list li > div > div:nth-child(5) > a.inact { border: 1px solid #ccc; background: #f2f2f2; font-size: 12px; font-weight: 700; color:#000000}
+
+    /* ITEM LIST MODIFY css */
+    .item_list li > div > input:nth-child(1) { width: 266px; margin: 0px 15px 0px 0px; }
     .item_list li > div > input:nth-child(2) { width: 300px; }
 
-    .drag_area_border { border: 1px solid #000000; }
+    /* Tab Setting */
+    .item_list .tabSetting {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0px 40px 0px 0px;
+    }
+    .item_list .tabSetting button {
+        background-image: url('../../../assets/images/preference.png');
+        background-size: cover;
+        cursor: pointer;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+    }
+    div.tab-value-calc {
+        display: none;
+        width: 277px;
+        height: 115px;
+        background-color: #e9e9e8;
+        margin: 0 10px;
+        border: 2px solid;
+        z-index: 1;
+    }
+    div.tab-value-calc > section {
+        display: flex;
+        flex-direction: row;
+    }
+    div.tab-value-calc > section > ul {
+        display: flex;
+        flex-direction: column;
+        width: 80px;
+        margin: 3px 0;
+        padding: 0 10px;
+    }
+   div.tab-value-calc > p {
+        background-color: black;
+        color: white;
+        padding: 0 10px;
+        text-align: left;
+        font-size: 14px;
+        padding: 3px;
+    }
+    div.tab-value-calc > p > span:nth-child(2) {
+        float: right;
+        cursor: pointer;
+        width: 13px;
+    }
+    div.tab-value-calc ul li {
+        list-style: none;
+        margin: 3px;
+    }
+    div.tab-won-unit {
+        display: inline-block;
+        width: 93px;
+        margin: 10px 10px;
+        border: 2px solid;
+        z-index: 1;
+    }
+    div.tab-won-unit > ul {
+        display: flex;
+        flex-direction: column;
+        margin: 3px 0;
+        padding: 0 10px;
+    }
+    div.tab-won-unit > p {
+        background-color: black;
+        color: white;
+        padding: 0 10px;
+        text-align: center;
+        font-size: 14px;
+        padding: 3px;
+    }
+    div.tab-won-unit ul li {
+        list-style: none;
+        margin: 0;
+    }
+    
+
+    .summary { width: 75px; }
+    
+
+    .drag_area_border { width: 254px; border: 1px solid #000000; }
     .tagRegDate { width: 11%; margin: 0px 0px 0px 15px; }
     .tagEtc { margin: 0px 0px 0px 0px; }
     .tagEtc > button { width: 45%; margin: 0px 5px 0px 0px; }
