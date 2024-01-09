@@ -14,7 +14,7 @@
           <label for="cross_calc_value_2"><span></span>가치</label>
         </dd>
       </dl>
-      <dl class="sch_element" :class="{'conceal' : getStatSetting.crossCalcValue != 2}" v-if="this.getStatSetting.showCrossCalc">
+      <dl class="sch_element" :class="{'conceal' : getStatSetting.crossCalcValue != 2}" v-if="this.getStatSetting.showCrossCalc || this.getStatSetting.crossCalcValue == 2">
         <dt>금액단위</dt>
         <dd>
           <input type="radio" id="numberScale_0" v-model="getStatSetting.numberScale" value="0"><label for="numberScale_0"><span></span>원</label>

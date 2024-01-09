@@ -179,7 +179,7 @@ const methods = {
                 , headerOption
             ); 
         } catch(e) { alert("Network or API Request Error"); } /* 리뉴얼된 DB 사용자가 아니면 오류 해당 알림창이 뜰 수 있다. */
-        
+
         // success
         if (res.status === 200 && isCallbackData) {
             const ret = res.data;
@@ -197,6 +197,19 @@ const methods = {
                     e.value = JSON.parse(e.value);
                 });
                 return ret.tabList.tab;
+            } else if (ret.result==="FAIL" && ret.action.includes("delete")) {
+                if (ret.tmpltRprtList && ret.tmpltRprtList.tmpltRprt) {
+                    ret.tmpltRprtList.tmpltRprt
+                    .forEach(e => {
+                        e.config = JSON.parse(e.config);
+                    });
+                    return ret.tmpltRprtList.tmpltRprt;
+                } else if (ret.tabList && ret.tabList.tab) {
+                    ret.tabList.tab.forEach(e => {
+                        e.value = JSON.parse(e.value);
+                    });
+                    return ret.tabList.tab;
+                }
             }
         }
     },
@@ -284,7 +297,7 @@ const methods = {
             tab: "/delete.menutab"
         };
         const link = await this.funcJSONRequest(_url[name], data, "delete", true);
-
+        
         const ex = (link) ? link.length : 0;
         if (ex !== 0) {
             const notice = this.funcNotice(link, ex, name != 'report' ? '보고서' : '탭');
