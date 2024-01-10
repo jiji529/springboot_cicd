@@ -682,8 +682,8 @@
           }
           rawCrossData = null;
           
-          // 알고리즘
-          /* 
+          
+          /* 알고리즘
             ex) 기간   - 1 ~ 12월 12개 배열 생성 -> 값 삽입
                 글자수 - 소, 중, 대 3개 배열 생성 -> 값 삽입
                 크기   - 소, 중, 대 3개 배열 생성 -> 값 삽입
@@ -731,8 +731,19 @@
               }
             } // for tableData
           } // for rawCrossDataFull
+
+          /* 소수점 자리 제거 */ 
+          for (let [fk, fv] of Object.entries(tableData)) {
+            for (let [sk, sv] of Object.entries(fv)) {
+              for (let [tk, tv] of Object.entries(sv)) {
+                for (let [lk, lv] of Object.entries(tv)) {
+                  tableData[fk][sk][tk][lk] = Math.trunc(lv);
+                }
+              }
+            }
+          }
           
-          // 정렬
+          /* 정렬*/
           let tableDataSort = {}; // WIP
           Object.keys(tableData).sort().forEach(xk => {
             if (!tableDataSort[xk]) {
@@ -4438,7 +4449,7 @@
         let num2p = Number(num2);
           if (isNaN(num2p)) num2p = 0;
         let multiplier = Math.pow(10, digit);
-        return (Math.trunc(num1p * multiplier) + Math.trunc(num2p * multiplier)) / multiplier;
+        return ((num1p * multiplier) + (num2p * multiplier)) / multiplier;
       },
       addCommaFunc(value, ignoreZero = true) {
         let rtn = '-', num = Number(value);
