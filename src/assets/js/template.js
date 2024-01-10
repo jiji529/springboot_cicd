@@ -369,15 +369,20 @@ const methods = {
     },
 
     // 연결된 항목(데이터) 확인 메세지
-    funcNotice(linkedItem, _len, title) { 
+    funcNotice(linkedItem, _len, title) {
+        let dupl = [];
         let str = '[현재 연결된 '+title+']\n\n';
         for (let _c = 0; _c < _len; _c++) {
+            const s = linkedItem[_c].seq
+            if (dupl.includes(s)) continue;
+            dupl.push(s);
             str += 
             '- 제목: ' + (title!="탭"?linkedItem[_c].title:linkedItem[_c].alias) +
             ' / 등록날짜: ' + (title!="탭"?linkedItem[_c].regDate.slice(0, 10)
                                         :linkedItem[_c].value.regDate.slice(0, 10)) +
             '\n\n';
         } str += '연결된 상위 데이터를 먼저 삭제하십시오.';
+        dupl = null;
         return str;
     },
 
