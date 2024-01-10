@@ -1,6 +1,28 @@
 <template>
   <div class="sch_area" v-if="getConfigEval" v-show=" this.getStatSetting.searchOpen">
     <div class="sch_cont">
+      <dl class="sch_element" v-if="this.getStatSetting.showCrossCalc">
+        <dt>통계값</dt>
+        <dd>
+          <input type="radio" id="cross_calc_value_0" v-model="getStatSetting.crossCalcValue" :value="0">
+          <label for="cross_calc_value_0"><span></span>원본</label>
+
+          <input type="radio" id="cross_calc_value_1" v-model="getStatSetting.crossCalcValue" :value="1">
+          <label for="cross_calc_value_1"><span></span>건수</label>
+
+          <input type="radio" id="cross_calc_value_2" v-model="getStatSetting.crossCalcValue" :value="2">
+          <label for="cross_calc_value_2"><span></span>가치</label>
+        </dd>
+      </dl>
+      <dl class="sch_element" :class="{'conceal' : getStatSetting.crossCalcValue != 2}" v-if="this.getStatSetting.showCrossCalc || this.getStatSetting.crossCalcValue == 2">
+        <dt>금액단위</dt>
+        <dd>
+          <input type="radio" id="numberScale_0" v-model="getStatSetting.numberScale" value="0"><label for="numberScale_0"><span></span>원</label>
+          <input type="radio" id="numberScale_1" v-model="getStatSetting.numberScale" value="1"><label for="numberScale_1"><span></span>천원</label>
+          <input type="radio" id="numberScale_2" v-model="getStatSetting.numberScale" value="2"><label for="numberScale_2"><span></span>백만원</label>
+        </dd>
+      </dl>
+
       <dl class="sch_element">
         <dt>기간 설정</dt>
         <dd class="datebox">
@@ -161,28 +183,6 @@
         </dd>
       </dl>
 
-      <dl class="sch_element">
-        <dt>교차-계산</dt>
-        <dd>
-          <input type="radio" id="cross_calc_value_0" v-model="getStatSetting.crossCalcValue" :value="0">
-          <label for="cross_calc_value_0"><span></span>원본</label>
-
-          <input type="radio" id="cross_calc_value_1" v-model="getStatSetting.crossCalcValue" :value="1">
-          <label for="cross_calc_value_1"><span></span>건수</label>
-
-          <input type="radio" id="cross_calc_value_2" v-model="getStatSetting.crossCalcValue" :value="2">
-          <label for="cross_calc_value_2"><span></span>가치</label>
-        </dd>
-      </dl>
-      <dl class="sch_element" :class="{'conceal' : getStatSetting.crossCalcValue != 2}">
-        <dt>금액단위</dt>
-        <dd>
-          <input type="radio" id="numberScale_0" v-model="getStatSetting.numberScale" value="0"><label for="numberScale_0"><span></span>원</label>
-          <input type="radio" id="numberScale_1" v-model="getStatSetting.numberScale" value="1"><label for="numberScale_1"><span></span>천원</label>
-          <input type="radio" id="numberScale_2" v-model="getStatSetting.numberScale" value="2"><label for="numberScale_2"><span></span>백만원</label>
-        </dd>
-      </dl>
-      
       <dl class="sch_element" v-if="getStatSetting.reportInTabView">
         <dt>선택된 보고서</dt>
         <div id="customReport">
@@ -210,22 +210,6 @@
           <a class="ext_btn" @click="newModal('template')"></a>
         </div>
       </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       
     </div> <!--  -->

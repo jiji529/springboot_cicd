@@ -81,7 +81,9 @@ const statState = () => ({
   reportInTabView: false,
   crossInTabView: false,
   preTabMenuIndex: 0,
-  templInfoSettings: []
+  templInfoSettings: [],
+
+  showCrossCalc: true
 });
 
 const checkTheDate = () => ({

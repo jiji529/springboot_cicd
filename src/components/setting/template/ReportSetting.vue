@@ -504,7 +504,6 @@ export default {
 
         delSelectedTempl(e, _deli) {
             this.SINGLE_REPORT.config.splice(_deli, 1);
-            this.SINGLE_REPORT
         },
 
         /**

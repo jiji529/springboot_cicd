@@ -136,7 +136,7 @@ const methods = {
     funcJSONRequest: async function(targetUrl, inputData, condition, isCallbackData) {
         /* 깊은 복사 */
         let data = typeof inputData !== "string" ? JSON.parse(JSON.stringify(inputData)) : inputData;
-        /* 프리미엄 */
+        /* 프리미엄 */ 
         if (!data) data = {"pid" : store.state.pid};
         else if (condition == 'office') {}
         else if (Array.isArray(data)) data.forEach(el => el.pid = store.state.pid);
@@ -149,6 +149,7 @@ const methods = {
         } else { 
             if (condition==="tab-order") {
                 /* 탭 순서 변경 요청 */
+                param.append("pid", store.state.pid);
                 param.append("reorder", JSON.stringify(data));
             } else {
                 /* 템플릿, 보고서, 탭 관련 요청*/
@@ -178,7 +179,7 @@ const methods = {
                 , headerOption
             ); 
         } catch(e) { alert("Network or API Request Error"); } /* 리뉴얼된 DB 사용자가 아니면 오류 해당 알림창이 뜰 수 있다. */
-        
+
         // success
         if (res.status === 200 && isCallbackData) {
             const ret = res.data;
@@ -196,6 +197,19 @@ const methods = {
                     e.value = JSON.parse(e.value);
                 });
                 return ret.tabList.tab;
+            } else if (ret.result==="FAIL" && ret.action.includes("delete")) {
+                if (ret.tmpltRprtList && ret.tmpltRprtList.tmpltRprt) {
+                    ret.tmpltRprtList.tmpltRprt
+                    .forEach(e => {
+                        e.config = JSON.parse(e.config);
+                    });
+                    return ret.tmpltRprtList.tmpltRprt;
+                } else if (ret.tabList && ret.tabList.tab) {
+                    ret.tabList.tab.forEach(e => {
+                        e.value = JSON.parse(e.value);
+                    });
+                    return ret.tabList.tab;
+                }
             }
         }
     },
@@ -262,7 +276,7 @@ const methods = {
             template:"/create.template",
             report: "/create.report",
             tab: "/create.menutab"
-        }
+        };
         return await this.funcJSONRequest(_url[name], data, "create", true);
     }, // funcCreateTemplates
 
@@ -283,7 +297,7 @@ const methods = {
             tab: "/delete.menutab"
         };
         const link = await this.funcJSONRequest(_url[name], data, "delete", true);
-
+        
         const ex = (link) ? link.length : 0;
         if (ex !== 0) {
             const notice = this.funcNotice(link, ex, name != 'report' ? '보고서' : '탭');
@@ -355,15 +369,20 @@ const methods = {
     },
 
     // 연결된 항목(데이터) 확인 메세지
-    funcNotice(linkedItem, _len, title) { 
+    funcNotice(linkedItem, _len, title) {
+        let dupl = [];
         let str = '[현재 연결된 '+title+']\n\n';
         for (let _c = 0; _c < _len; _c++) {
+            const s = linkedItem[_c].seq
+            if (dupl.includes(s)) continue;
+            dupl.push(s);
             str += 
             '- 제목: ' + (title!="탭"?linkedItem[_c].title:linkedItem[_c].alias) +
             ' / 등록날짜: ' + (title!="탭"?linkedItem[_c].regDate.slice(0, 10)
                                         :linkedItem[_c].value.regDate.slice(0, 10)) +
             '\n\n';
         } str += '연결된 상위 데이터를 먼저 삭제하십시오.';
+        dupl = null;
         return str;
     },
 

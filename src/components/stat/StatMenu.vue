@@ -5,7 +5,7 @@
         <ul class="stat">
           <template v-for="(value, index) in tabList">
             <li v-if="!inactive(value)" :class="[index === tabMenuIndex ? 'on common' : 'common']" :key="index"
-                @click="selectComponent(index, value.skey)">
+                @click="selectComponent(index, value)">
               <a :title="value.alias">{{value.alias}}</a>
             </li>
           </template>
@@ -139,7 +139,7 @@
       for (let tab of this.tabList) {
         for (let rep of this.reportList) {
           if ([1,2].includes(tab.skey) || (tab.skey == rep.seq && rep.active == 1)) {
-            fir = tab.skey;
+            fir = tab;
             break;
           }
         }
@@ -201,7 +201,12 @@
        * @param: nowReportSeq = now report seq(primary key)
        * @param: pastSeq = past report seq(primary key) - statSearch에서 호출할 때, 사용됨.
        */
-      selectComponent(_idx, nowReportSeq) {
+      selectComponent(_idx, tab) {
+        let nowReportSeq = tab.skey;
+        let tabSettingValue = null
+        if (tab || tab.value || tab.value.selectTabStatValue)
+          tabSettingValue = tab.value.selectTabStatValue;
+
         this.tabMenuIndex = _idx; // 탭 선택
         this.getStatSetting.preTabMenuIndex = _idx; // 이전 탭 기억
         this.initMiddleManager(); // <MiddleManager> 초기화
@@ -213,9 +218,9 @@
           this.repListIndex = -1; // rep
           this.getStatSetting.templInfoSettings = []; // templ
           this.template_group = []; // templ
-          this.fromTabToSearchComponent(true, nowReportSeq);
+          this.fromTabToSearchComponent(true, nowReportSeq, tabSettingValue);
         }
-        else this.fromTabToSearchComponent(false, nowReportSeq);
+        else this.fromTabToSearchComponent(false, nowReportSeq, tabSettingValue);
       },
 
       /**
@@ -256,7 +261,7 @@
        * @param: SEQ     (보고서 시퀀스 -기본키)
        * @param: pastSeq (이전 보고서 시퀀스 -기본키)
        */
-      async fromTabToSearchComponent(modal, SEQ) {
+      async fromTabToSearchComponent(modal, SEQ, tabSettingValue) {
         const isStatReport = (SEQ == 1); // 보고서 목록 띄우기
         const isStatCustom = (SEQ == 2); // 커스텀 템플릿 띄우기
         if (isStatReport) {
@@ -270,6 +275,9 @@
         }
         this.getStatSetting.reportInTabView = isStatReport;
         this.getStatSetting.crossInTabView  = isStatCustom;
+        this.getStatSetting.showCrossCalc = tabSettingValue.show;
+        this.getStatSetting.crossCalcValue = tabSettingValue.tabCalcType;
+        this.getStatSetting.numberScale = tabSettingValue.priceUnit;
       },  
 
       /**

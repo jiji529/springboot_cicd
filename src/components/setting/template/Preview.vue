@@ -344,8 +344,10 @@
             let s = this.$statConfig.deepCopy(rs);
             // 가격
             s.eval_score_old = s.eval_score; 
-            s.eval_score = Math.trunc(s.eval_score / Math.pow(1000, this.numberScaleDupe));
-            s.eval_score_org = Math.trunc(s.eval_score_org / Math.pow(1000, this.numberScaleDupe));
+            // s.eval_score = Math.trunc(s.eval_score / Math.pow(1000, this.numberScaleDupe));
+            // s.eval_score_org = Math.trunc(s.eval_score_org / Math.pow(1000, this.numberScaleDupe));
+            s.eval_score = (s.eval_score / Math.pow(1000, this.numberScaleDupe));
+            s.eval_score_org = (s.eval_score_org / Math.pow(1000, this.numberScaleDupe));
             
             // let news_date_tmp, news_date_split_tmp = s.scrap_date.split('-'); // 매체 날짜(년-월-일)
             // if (setting.dateType === 1) {                       // 연도 검색
