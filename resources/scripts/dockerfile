@@ -13,12 +13,15 @@ RUN apt-get install -y --no-install-recommends php7.3 && apt-get install -y --no
 
 RUN apt-get install -y php7.3-redis && apt-get install -y php7.3-mcrypt
 
+COPY ./dist /var/www/html
+WORKDIR /var/www/html/evalPhp/jwt
+
 RUN apt-get install -y curl && apt-get install -y unzip
 RUN curl -sS https://getcomposer.org/installer | /usr/bin/php -- --install-dir=/usr/local/bin/ 
 RUN ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
-RUN composer require predis/predis
-
-COPY ./dist /var/www/html
+#RUN composer require predis/predis
+RUN composer install
+RUN cp -rf vendor ../vendor
 
 WORKDIR /var/www/html
 
