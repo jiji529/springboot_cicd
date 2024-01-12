@@ -14,10 +14,10 @@
 		</ul>
 		<div class="cont_wrap2">
 			<div id="settingType1" class="statSettingArea" :class="{'dn':settingType !== 0}">
-				<TemplateSetting ref="template"></TemplateSetting>
+				<TemplateSetting ref="template" :show-comp="settingType"></TemplateSetting>
 			</div>
 			<div id="settingType2" class="statSettingArea" :class="{'dn':settingType !== 1}">
-				<ReportSetting ref="report"></ReportSetting>
+				<ReportSetting ref="report" :show-comp="settingType"></ReportSetting>
 			</div>
 			<div id="settingType3" class="statSettingArea" :class="{'dn':settingType !== 2}">
 				<TabSetting ref="tab"></TabSetting>

@@ -117,7 +117,7 @@
 		<!--하단버튼-->
 		<div class="cont_btn">
 			<ul class="btn_left">
-				<li><a @click="reset">초기화</a></li>
+				<li><a @click="reset('o')">초기화</a></li>
 			</ul>
 			<ul class="btn_right">
 				<li class="btn_bl"><a @click="goSave('formData')">저장</a></li>
@@ -164,7 +164,10 @@
 				fetchEval1Minor: [],
 
 				//평가1 항목 검색
-				fetchSearchData: []
+				fetchSearchData: [],
+
+				/* 원본 데이터를 저장하기 위한 변수 */
+				originArticle: null
 			}
 		},
 		computed: {
@@ -224,7 +227,12 @@
 			this.$eventBus.$on("toMultiDoEval", (flag) => {this.confirm(flag)});
 		},
 		watch: {
-			multiSelectedArticle: function() {
+			multiSelectedArticle(article) {
+				if (article == undefined || article == null || 
+					(typeof article == "string" && article == "")) return ;
+				if (!this.originArticle || typeof article == "object"
+					&& article.article_serial != this.originArticle.article_serial)
+					this.originArticle = JSON.parse(JSON.stringify(article));
 				this.getEvalValue();
 				this.isEvalChange = false;
 			},
@@ -239,7 +247,7 @@
 			this.eval2Cate();
 			const display = await this.getLayoutSettingAPI();
 			this.evalLayout = Number(display.layout);
-			this.getEvalValue();
+			this.getEvalValue("mounted");
 			this.isEvalChange = false;
 			this.fetchEval1Major = this.getEval1ByCategory.major;
 			this.fetchSearchData = this.getEval1SearchList();
@@ -417,7 +425,13 @@
 					});
 				}
 			},
-			async getEvalValue() {
+			async getEvalValue(resetArticle) {
+				if (this.multiSelectedArticle && resetArticle 
+					&& resetArticle.article_serial == this.multiSelectedArticle.article_serial) {
+					this.SET_MULTI_SELECTED_ARTICLE(resetArticle);
+				} else if (resetArticle == "mounted") {
+					this.originArticle = JSON.parse(JSON.stringify(this.multiSelectedArticle));
+				}
 				this.isEvalChange = false;
 				this.isEval1Change = false;
 				this.isEval2Change = false;
@@ -508,16 +522,23 @@
 			closeEvalMulti() {
 				this.SET_SHOW_DO_EVAL_MULTI(false);
 			},
-			reset() {
-				this.notAutoCateSeq.forEach(seq=>{
-					this.$set(this.selEval2, seq, null);
-					// this.$set(this.inputEval2, seq, null);
-				});
-				this.eval1Change();
-				this.eval2Change();
-				this.evalInfoReset();
-				this.fetchEval1Middle = [];
-				this.fetchEval1Minor = [];
+			reset(type) {
+				if (type == undefined || type == null
+					|| !this.originArticle 
+					|| !this.originArticle.eval2) return ;
+				if (type === "o") { 
+					this.getEvalValue(this.originArticle);
+				} else if (type === "n") {
+					this.notAutoCateSeq.forEach(seq=>{
+						this.$set(this.selEval2, seq, null);
+						// this.$set(this.inputEval2, seq, null);
+					});
+					this.eval1Change();
+					this.eval2Change();
+					this.evalInfoReset();
+					this.fetchEval1Middle = [];
+					this.fetchEval1Minor = [];
+				}
 			},
 			evalInfoReset() { // 화면 요소만 초기화
 				this.$el.querySelector('#multi_sch_eval1_text').value = '';

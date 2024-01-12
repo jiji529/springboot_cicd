@@ -19,19 +19,21 @@
       ...mapState(['viewerLogoutUri']),
       ...mapGetters({
         pid: 'getPremiumID',
-        uid: 'getUserID'
+        uid: 'getUserID',
+        purl: 'getPremiumLink'
       }),
       async previewSrc() {
         if (!this.uid || this.uid.length < 4) return false; 
         let params = new FormData();
         params.append('smId', this.uid);
+        params.append('pmLink', this.purl);
         let result = await this.$axios.post(store.state.hiddenLink1 + '/getPremiumLink.php', params);
 
         if (result.data.tgtUrl && result.data.success) {
           this.viewerLogoutUri = result.data.tgtUrl;
         } else {
           this.SET_VIEWER_LOGOUT_URI(result.data.tgtUrl);
-          this.viewerLogoutUri = 'https://view.scrapmaster.co.kr/admin/adminLogin.do';
+          this.viewerLogoutUri = this.purl+'/admin/adminLogin.do';
           alert('서버 오류가 발생했습니다. 관리자에게 문의하여 주십시오!');
           
         }

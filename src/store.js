@@ -166,6 +166,7 @@ export default new Vuex.Store({
     , listLayout1: true
     , listLayout2: true
 
+    , viewerUri: null
     , viewerLogoutUri: null
   },
   mutations: {
@@ -591,7 +592,7 @@ export default new Vuex.Store({
       };
       //기사목록 서버로 부터 요청
       const getArticle = () => {
-        return axios.post(phpApi + '/search_API_wip_230221.php', param);
+        return axios.post(phpApi + '/search_API_wip.php', param);
       };
       const getEvalIs = (newsIdList) => {
           let postparam = new FormData;
@@ -650,7 +651,7 @@ export default new Vuex.Store({
       };
 
       const getArticle = (param) => {
-        return axios.post(phpApi + '/articleListWithSubTitle_230208.php', param);
+        return axios.post(phpApi + '/articleListWithSubTitle.php', param);
       };
       const getEvalIs = (newsIdList) => {
         if (newsIdList && newsIdList.length > 0) {
@@ -1648,5 +1649,6 @@ export default new Vuex.Store({
     getConfigEvalGroup : state => state.configEvalGroup,
     getListLayout: state => state.listLayout,
     getDate : state => state.date,
+    getPremiumLink : state => state.viewerUri,
   }
 });

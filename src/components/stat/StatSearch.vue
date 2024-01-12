@@ -1,7 +1,7 @@
 <template>
-  <div class="sch_area" v-if="getConfigEval" v-show=" this.getStatSetting.searchOpen">
+  <div class="sch_area" v-if="getConfigEval" v-show=" getStatSetting.searchOpen">
     <div class="sch_cont">
-      <dl class="sch_element" v-if="this.getStatSetting.showCrossCalc">
+      <dl class="sch_element" v-if="getStatSetting.showCrossCalc">
         <dt>통계값</dt>
         <dd>
           <input type="radio" id="cross_calc_value_0" v-model="getStatSetting.crossCalcValue" :value="0">
@@ -14,7 +14,7 @@
           <label for="cross_calc_value_2"><span></span>가치</label>
         </dd>
       </dl>
-      <dl class="sch_element" :class="{'conceal' : getStatSetting.crossCalcValue != 2}" v-if="this.getStatSetting.showCrossCalc || this.getStatSetting.crossCalcValue == 2">
+      <dl class="sch_element" :class="{'conceal' : getStatSetting.crossCalcValue != 2}" v-if="getStatSetting.showCrossCalc || getStatSetting.crossCalcValue == 2">
         <dt>금액단위</dt>
         <dd>
           <input type="radio" id="numberScale_0" v-model="getStatSetting.numberScale" value="0"><label for="numberScale_0"><span></span>원</label>
@@ -143,6 +143,21 @@
 
         </dd>
       </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <dl class="sch_element">
         <dt>매체선택</dt>
         <dd id="media_group_select">
@@ -182,6 +197,22 @@
           </div>
         </dd>
       </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       <dl class="sch_element" v-if="getStatSetting.reportInTabView">
         <dt>선택된 보고서</dt>
@@ -393,45 +424,79 @@
 				<a class="btn_bl" @click="goSearch">검색</a>
 			</div>
 
-    <div class="sch_foot"><a @click="showSearchTotalItem" :class="{'ico_open':!this.getStatSetting.searchTotalItemOpen}">{{totalItemLabel}}</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="sch_foot"><a @click="showSearchTotalItem" :class="{'ico_open':!getStatSetting.searchTotalItemOpen}">{{totalItemLabel}}</a>
       <!-- 전체항목 펴기 할 때 display block-->
-      <div class="sch_val" v-show="this.getStatSetting.searchTotalItemOpen">
+      <div class="sch_val" v-show="getStatSetting.searchTotalItemOpen">
         <dl class="sch_value" v-show="selectMediaCount()>0">
           <dt>매체선택</dt>
           <dd v-if="stateMediaAll()"><b>전체선택</b></dd>
           <slot v-else>
-            <dd v-for="(medium,key) in this.getStatSetting.selectionMedium" :key="key" v-if="key!=='' && medium.length>0">
-              <b>{{key}}</b> -
-              <slot v-if="countMediaResult(key, medium)"><b>전체선택</b></slot>
-              <slot v-else>{{selectMediaResult(medium)}}</slot>
-            </dd>
+            <template v-for="(medium,key) in getStatSetting.selectionMedium">
+              <dd :key="key" v-if="1!=='' && (medium.length>0)">
+                <b>{{key}}</b> -
+                <slot v-if="countMediaResult(key, medium)"><b>전체선택</b></slot>
+                <slot v-else>{{selectMediaResult(medium)}}</slot>
+              </dd>
+            </template>
           </slot>
         </dl>
-        <dl class="sch_value" v-show="this.getStatSetting.evaluationItem0.length>0">
+        <dl class="sch_value" v-show="getStatSetting.evaluationItem0.length>0">
           <dt>자동평가 항목</dt>
-          <dd v-for="(eval0,key) in this.selectEval0Result()" :key="key">
+          <dd v-for="(eval0,key) in selectEval0Result()" :key="key">
             <b>{{key}}</b> - {{eval0.join(',')}}
           </dd>
         </dl>
-        <dl class="sch_value" v-show="this.getStatSetting.evaluationItem1.length>0">
+        <dl class="sch_value" v-show="getStatSetting.evaluationItem1.length>0">
           <dt>평가 1 항목</dt>
-          <dd v-for="(eval1,key) in this.selectEval1Result()" :key="key">
+          <dd v-for="(eval1,key) in selectEval1Result()" :key="key">
             <b>{{key}}</b> - {{eval1.join(',')}}
           </dd>
         </dl>
-        <dl class="sch_value" v-show="this.getStatSetting.evaluationItem2.length>0">
+        <dl class="sch_value" v-show="getStatSetting.evaluationItem2.length>0">
           <dt>평가 2 항목</dt>
-          <dd v-for="(eval2,key) in this.selectEval2Result()" :key="key">
+          <dd v-for="(eval2,key) in selectEval2Result()" :key="key">
             <b>{{key}}</b> - {{eval2.join(',')}}
           </dd>
         </dl>
       </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     <MediaSelection v-if="isMediaSelectionVisible"
                     @close="closeMediaSelection"
                     :value="getStatSetting.selectionMedium"
-                    @input="val => this.getStatSetting.selectionMedium = val"/>
+                    @input="val => getStatSetting.selectionMedium = val"/>
   </div>
 </template>
 
@@ -1279,7 +1344,7 @@
        * 매체선택 체크박스
        * @param $event
        */
-      selectMediaAll($event) {
+      selectMediaAll($event) { 
         if ($event.target.checked) {
           let groupList = this.getStatSetting.groupIsCategory ? this.categoryList : this.typeList, group;
           this.getStatSetting.mediaSelectionOptions = [];
@@ -1288,7 +1353,7 @@
             this.selectMediaGroup($event, v);
           }
         } else {
-          this.getStatSetting.selectionMedium = {};
+          this.getStatSetting.selectionMedium = [];
           this.getStatSetting.mediaSelectionOptions = [];
         }
       },
@@ -1296,18 +1361,19 @@
        * 매체선택 전체 선택 상태
        * @returns {boolean}
        */
-      stateMediaAll() {
+      stateMediaAll() { 
         if (this.getMediaList.length > 0) {
           let $result = [], group;
           this.getMediaList.forEach(cate => {
             group = this.getStatSetting.groupIsCategory ? cate.category_id : cate.media_type;
             $result.push(group);
           });
-          return $result.every(item => {
+          let me = $result.every(item => {
             if (this.getStatSetting.mediaSelectionOptions.indexOf(item) > -1) {
               return true;
             }
           });
+          return me;
         }
       },
 

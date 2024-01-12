@@ -89,7 +89,7 @@
         </div> <!-- set-object-wrap [End] -->
     </div>
 
-    <StatSearch></StatSearch>
+    <StatSearch v-if="showComp == 0"></StatSearch>
     <h2 class="no-data" v-if="noData">평가된 기사가 없음</h2>
     <div v-show="!noData">
       <MiddleManager v-if="SINGLE_TEMPLATE && SINGLE_TEMPLATE.config"  
@@ -113,7 +113,7 @@ export default {
     name: 'TemplateSetting'
     ,components: {draggable, StatSearch, MiddleManager, VsOjOption}
     ,model: {
-      prop: 'emp-option',
+      prop: ['emp-option'],
       event: 'set-option'
     },
     data() {
@@ -130,6 +130,7 @@ export default {
           
         }    
     }
+    ,props: {'showComp': Number}
 
     // 템플릿 리스트 초기화
     ,beforeMount() {

@@ -155,10 +155,10 @@
                 <label for="sch_media_all"><span></span>전체선택</label>
               </li>
               <li>
-                <input type="radio" id="gic_true" name="gic_true" :value="true" v-model="getStatSetting.groupIsCategory" @change="changeMediaGroup()">
-                <label for="gic_true"><span></span>분류</label>
-                <input type="radio" id="gic_false" name="gic_false" :value="false" v-model="getStatSetting.groupIsCategory" @change="changeMediaGroup()">
-                <label for="gic_false"><span></span>유형</label>
+                <input type="radio" id="gic_true_" name="gic_true_" :value="true" v-model="getStatSetting.groupIsCategory" @change="changeMediaGroup($event)" />
+                <label for="gic_true_"><span></span>분류</label>
+                <input type="radio" id="gic_false_" name="gic_false_" :value="false" v-model="getStatSetting.groupIsCategory" @change="changeMediaGroup($event)" />
+                <label for="gic_false_"><span></span>유형</label>
               </li>
             </ul>
             <p style="display:none">{{groupSelectList}}/{{partSelectMediaGroup}}</p>
@@ -357,7 +357,7 @@
     <MediaSelection v-if="isMediaSelectionVisible"
                     @close="closeMediaSelection"
                     :value="getStatSetting.selectionMedium"
-                    @input="val => this.getStatSetting.selectionMedium = val"/>
+                    @input="val => getStatSetting.selectionMedium = val"/>
   </div>
 </template>
 
@@ -733,7 +733,10 @@
 
         return result;
       },
-      changeMediaGroup() {
+      changeMediaGroup(e) {
+        if (e) {
+          console.log(e);
+        }
         let group = this.getStatSetting.groupIsCategory ? this.categoryList : this.typeList, subGroup = '', rtn = {};
         for (let [k,v] of Object.entries(group)) {
           rtn[v.name] = [];

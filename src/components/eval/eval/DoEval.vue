@@ -48,7 +48,7 @@
 					<slot v-if="visibleEvalList[3]">
 						<dt class="ellipsis">매체 중요도</dt>
 						<dd v-if="selectedArticle && Object.keys(autoMediaImportance).length > 0">
-							<select v-model="selEval2[autoMediaImportance.upper_cate_seq]"  @change="eval2Combo($event,autoMediaImportance.upper_cate_seq)" tabindex="3" v-if="Object.keys(autoMediaImportance).length > 0">
+							<select id="eval2-combo-3" v-model="selEval2[autoMediaImportance.upper_cate_seq]"  @change="eval2Combo($event,autoMediaImportance.upper_cate_seq)" tabindex="3" v-if="Object.keys(autoMediaImportance).length > 0">
 								<option value="null">선택</option>
 								<option v-for="val in autoMediaImportance.sub" :key="String(val.seq)" v-if="val.use === 'Y'" :value="String(val.seq)">{{val.name}}</option>
 							</select>
@@ -61,7 +61,7 @@
 					<slot v-if="visibleEvalList[5]">
 						<dt class="ellipsis">기사 위치</dt>
 						<dd v-if="selectedArticle && Object.keys(autoLocation).length > 0">
-							<select v-model="selEval2[autoLocation.upper_cate_seq]" tabindex="3" @change="eval2Combo($event, autoLocation.upper_cate_seq)">
+							<select id="eval2-combo-5" v-model="selEval2[autoLocation.upper_cate_seq]" tabindex="3" @change="eval2Combo($event, autoLocation.upper_cate_seq)">
 								<option value="null">선택</option>
 								<option v-for="val in autoLocation.sub" :key="String(val.seq)" v-if="val.use === 'Y'" :value="String(val.seq)">{{val.name}}</option>
 							</select>
@@ -83,7 +83,7 @@
 					<slot v-if="visibleEvalList[4]">
 						<dt class="ellipsis">취재원</dt>
 						<dd v-if="selectedArticle">
-							<select v-if="Object.keys(autoReporter).length > 0" v-model="selEval2[autoReporter.upper_cate_seq]" @change="eval2Combo($event, autoReporter.upper_cate_seq)" tabindex="3">
+							<select id="eval2-combo-4" v-if="Object.keys(autoReporter).length > 0" v-model="selEval2[autoReporter.upper_cate_seq]" @change="eval2Combo($event, autoReporter.upper_cate_seq)" tabindex="3">
 								<option value="null">선택</option>
 								<option v-for="val in autoReporter.sub" :key="String(val.seq)" :value="String(val.seq)">{{val.name}}</option>
 							</select>
@@ -94,7 +94,7 @@
 					<slot v-if="visibleEvalList[2]">
 						<dt class="ellipsis">기사 글자수</dt>
 						<dd v-if="selectedArticle">{{selectedArticle.article_length}}자
-							<select v-if="Object.keys(autoLetterCnt).length > 0" v-model="selEval2[autoLetterCnt.upper_cate_seq]" @change="eval2Combo($event, autoLetterCnt.upper_cate_seq)" tabindex="3">
+							<select id="eval2-combo-2" v-if="Object.keys(autoLetterCnt).length > 0" v-model="selEval2[autoLetterCnt.upper_cate_seq]" @change="eval2Combo($event, autoLetterCnt.upper_cate_seq)" tabindex="3">
 								<option value="null">선택</option>
 								<option v-for="val in autoLetterCnt.sub" :key="val.seq" v-if="val.use === 'Y'" :value="val.seq">{{val.name}}</option>
 							</select>
@@ -105,7 +105,7 @@
 					<slot v-if="visibleEvalList[1]">
 						<dt class="ellipsis">기사 크기</dt>
 						<dd v-if="selectedArticle">{{selectedArticle.article_size_own}}㎠ ({{ Math.trunc(selectedArticle.article_size_pixel / selectedArticle.page_size_pixel * 100 * 1000) / 1000}}%)
-							<select v-if="Object.keys(autoSize).length > 0" v-model="selEval2[autoSize.upper_cate_seq]" @change="eval2Combo($event, autoSize.upper_cate_seq)" tabindex="3">
+							<select id="eval2-combo-1" v-if="Object.keys(autoSize).length > 0" v-model="selEval2[autoSize.upper_cate_seq]" @change="eval2Combo($event, autoSize.upper_cate_seq)" tabindex="3">
 								<option value="null">선택</option>
 								<option v-for="val in autoSize.sub" :key="val.seq" v-if="val.use === 'Y'" :value="val.seq">{{val.name}}</option>
 							</select>
@@ -277,7 +277,7 @@
 		</div>
 		<div class="cont_btn" :class="{fold_inner : !listLayout1}">
 			<ul class="btn_left">
-				<li><a @click="reset">초기화</a></li>
+				<li><a @click="reset('o')">초기화</a></li>
 			</ul>
 			<ul class="btn_right">
 				<li class="btn_bl"><a @click="goSave('next')">저장&다음</a></li>
@@ -344,7 +344,10 @@
 				//평가1 항목 검색
 				fetchSearchData:[],
 
-				visibleEvalList: [] // 자동|평가1|평가2 표시사용여부
+				visibleEvalList: [], // 자동|평가1|평가2 표시사용여부
+
+				/* 원본 데이터를 저장하기 위한 변수 */
+				originArticle: null
 			}
 		},
 		computed: {
@@ -416,8 +419,13 @@
 			},
 		},
 		watch: {
-			//선택된 기사의 eval값 가져오는
-			selectedArticle() {
+			/* 선택된 기사의 eval값 가져오는 */
+			selectedArticle(article) {
+				if (article == undefined || article == null || 
+					(typeof article == "string" && article == "")) return ;
+				if (!this.originArticle || typeof article == "object"
+					&& article.article_serial != this.originArticle.article_serial)
+					this.originArticle = JSON.parse(JSON.stringify(article));
 				this.getEvalValue();
 			},
 			showDoEvalMulti(newVal){
@@ -574,7 +582,7 @@
 			},
 			eval1Combo(e, category) {
     			let middle = document.querySelector('#eval1-combo-2');
-    			let minor = document.querySelector('#eval1-combo-3');
+    			let minor = document.querySelector('#eval1-combo-3'); 
     			switch(category) {
 					case "major" :
 						this.selEval1 = e.target.value;
@@ -698,11 +706,15 @@
 				}).catch(e=>console.log(e));
 			},
 			//선택된 기사가 바뀔때마다 해당 기사의 평가정보 설정
-			async getEvalValue() {
+			async getEvalValue(resetArticle) {
+				if (this.selectedArticle && resetArticle 
+					&& resetArticle.article_serial == this.selectedArticle.article_serial) {
+					this.SET_SELECTED_ARTICLE(resetArticle);
+				}
 				this.isEvalChange=false;
 				this.isEval1Change=false;
 				this.isEval2Change=false;
-				await this.evalInfoReset();
+				await this.eval1InfoReset();
 				this.cateSeq.forEach(seq=>{
 					this.$set(this.selEval2, seq, null);
 					if(document.querySelector('#eval2-combo-'+seq)){
@@ -750,29 +762,29 @@
 								    doms[index].value = value;
 								})
 
-   								switch(values.length){
-   								case 3:
-   								    this.inputMajor = values[0];
-   								    this.inputMiddle = values[1];
-   								    this.inputMinor = values[2];
-   								    this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
-   								    this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
-   								    break;
-   								case 2:
-   									this.inputMajor = values[0];
+								switch(values.length) {
+									case 3:
+										this.inputMajor = values[0];
 										this.inputMiddle = values[1];
+										this.inputMinor = values[2];
+										this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
 										this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
 										break;
-									case 1:
+									case 2:
 										this.inputMajor = values[0];
-										this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
-										this.fetchEval1Minor = [];
-										break;
-									default:
-										this.inputMajor = "";
-										this.inputMiddle = "";
-										this.inputMinor = "";
-									}
+											this.inputMiddle = values[1];
+											this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
+											break;
+										case 1:
+											this.inputMajor = values[0];
+											this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
+											this.fetchEval1Minor = [];
+											break;
+										default:
+											this.inputMajor = "";
+											this.inputMiddle = "";
+											this.inputMinor = "";
+								}
 							}
 						}else{
                             this.fetchEval1Middle = [];
@@ -875,18 +887,34 @@
 				}
 			},
 			//평가항목1,2 초기화
-			reset() {
-				this.notAutoCateSeq.forEach(seq=>{
-					this.$set(this.selEval2, seq, null);
-					document.querySelector('#eval2-combo-'+seq).value = "";
-				});
-				this.eval1Change();
-				this.eval2Change();
-				this.evalInfoReset();
-				this.fetchEval1Middle = [];
-                this.fetchEval1Minor = [];
+			reset(type) {
+				if (type == undefined || type == null
+					|| !this.originArticle 
+					|| !this.originArticle.eval2) return ;
+				if (type === "o") {
+					this.getEvalValue(this.originArticle);
+				} else if (type === "n") {
+					this.autoEvalInfoReset();
+					this.eval2InfoReset();
+					this.eval1Change();
+					this.eval2Change();
+					this.eval1InfoReset();
+					this.fetchEval1Middle = [];
+					this.fetchEval1Minor = [];
+				}
 			},
-			evalInfoReset(){
+			autoEvalInfoReset() {
+				const that = this;
+				[this.autoSize.upper_cate_seq
+				, this.autoLetterCnt.upper_cate_seq
+				, this.autoMediaImportance.upper_cate_seq
+				, this.autoReporter.upper_cate_seq
+				, this.autoLocation.upper_cate_seq].forEach(e => {
+					that.selEval2[e] = null;
+				});
+			},
+			/* 기존 평가1 데이터 -> 원본 평가1 데이터 변경*/
+			eval1InfoReset(){
 				document.querySelector("#sch_eval1_text").value = "";
 				this.selEval1 = null;
 				if(this.evalLayout===0) {
@@ -901,6 +929,16 @@
 					this.fetchEval1Minor = this.getEval1ByCategory.minor;
 				}
 			},
+			/* 기존 평가2 데이터 -> 원본 평가2 데이터 변경*/
+			eval2InfoReset() {
+				this.notAutoCateSeq.forEach(seq=>{
+					let tag = document.querySelector('#eval2-combo-'+seq);
+					if (!tag) return;
+					this.$set(this.selEval2, seq, null);
+					tag.value = ""
+				});
+			},
+
 			//평가 저장
 			async goSave(flag) {
 				if (!await this.$store.dispatch('loginCheckGentleAPI')) {
@@ -1224,7 +1262,7 @@
 			async goSearch(eval1) {
 				const seq = eval1.seq;
 				if(this.evalLayout===0){
-				    await this.evalInfoReset();
+				    await this.eval1InfoReset();
 					const selData = this.getEval1ByCategory.all[seq];
 					let major,minor,middle;
 					major = document.querySelector('#eval1-combo-1');

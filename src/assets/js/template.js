@@ -119,14 +119,36 @@ const kewordMap = {
     ,"#{표시값}#":"calcValue-numberScaleDupe" // (건수/가치) 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
     // ,"#{금액단위}#":"-" // 선택 안할 수 있음(통계에서.. 템플릿에서 개별로 들어감)
 }
-const javaApi = '/' + (
+const javaApi = (
     process.env.VUE_APP_USE_SERVE_JAVA === undefined 
-        ? process.env.VUE_APP_JAVA_SERVE_CONTEXT
-        : 'javaApi'
+        ? process.env.VUE_APP_JAVA_SERVE_HOST+'/'+process.env.VUE_APP_JAVA_SERVE_CONTEXT
+        : '/javaApi'
 );
 const methods = {
+    checkUser: async function() {
+        let param = new URLSearchParams();
+        let res = null;
+        try {
+            param.append("premiumID", store.state.pid);
+            res = await axios.post(
+                javaApi+"/settings.premium"
+                , param
+            );
+            if (res.data.result == "SUCCESS") {
+                if (res.data.settingInfo.versionStat < 3) {
+                    alert("신프리미엄 사용 권한이 없습니다.");
+                    return false;
+                }
+                store.state.viewerUri 
+                    = res.data.settingInfo.webViewerUrl;
+                return true;
+            }
+        } catch(e) { console.error("checkUser() error: ", e) }
+        return false;
+    },
+
     /**
-     * @description 
+     * @description base API
      * @param {string} targetUrl 
      * @param {object} inputData 
      * @param {string} condition 

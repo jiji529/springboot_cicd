@@ -67,8 +67,8 @@
 	</div>
 </template>
 <script>
-	import store from '../../../store'
-	import {mapState,mapGetters,mapActions} from 'vuex'
+	import store from '../../../store';
+	import {mapState,mapGetters,mapActions} from 'vuex';
 	export default {
 		data() {
 			return{

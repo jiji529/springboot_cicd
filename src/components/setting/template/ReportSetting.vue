@@ -211,7 +211,7 @@
 
         
 
-        <StatSearch></StatSearch>
+        <StatSearch v-if="showComp == 1"></StatSearch>
         <h2 class="no-data" v-if="noData">평가된 기사가 없음</h2>
         <div v-show="!noData"> <!-- single-template을 감싸고 있는 태그 -->
             <template v-for="(temp, templIdx) in SINGLE_REPORT.config">
@@ -257,6 +257,7 @@ export default {
             dataScale: null
         }
     },
+    props: {'showComp': Number},
 
     watch: {
         'SINGLE_REPORT.config': function(value) {

@@ -166,7 +166,7 @@
 						<dt>매체선택</dt>
 						<dd v-if="stateMediaAll()"><b>전체선택</b></dd>
 						<slot v-else>
-							<dd v-for="(medium,key) in this.getStatSetting.selectionMedium" :key="key" v-if="key!=='' && medium.length>0">
+							<dd v-for="(medium,key) in getStatSetting.selectionMedium" :key="key" v-if="key!=='' && medium.length>0">
 								<b>{{key}}</b> -
 								<slot v-if="countMediaResult(key, medium)"><b>전체선택</b></slot>
 								<slot v-else>{{selectMediaResult(medium)}}</slot>
