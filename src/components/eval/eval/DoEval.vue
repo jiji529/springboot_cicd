@@ -423,7 +423,7 @@
 			selectedArticle(article) {
 				if (!this.originArticle || typeof article == "object"
 					&& article.article_serial != this.originArticle.article_serial)
-					this.originArticle = JSON.parse(JSON.stringify(article));
+					this.originArticle = JSON.parse(JSON.stringify(article)); 
 				this.getEvalValue();
 			},
 			showDoEvalMulti(newVal){
