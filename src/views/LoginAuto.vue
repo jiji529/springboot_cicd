@@ -37,7 +37,7 @@
           this.isLoading = true;
 
           let loginResult = await this.loginAutoAPI(params);
-          loginResult = loginResult && await this.$statConfig.checkUser();
+          // loginResult = loginResult && await this.$statConfig.checkUser();
           if (loginResult) {
             if (this.isPeUser) {
               let paramsP = new FormData();

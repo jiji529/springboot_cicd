@@ -421,8 +421,6 @@
 		watch: {
 			/* 선택된 기사의 eval값 가져오는 */
 			selectedArticle(article) {
-				if (article == undefined || article == null || 
-					(typeof article == "string" && article == "")) return ;
 				if (!this.originArticle || typeof article == "object"
 					&& article.article_serial != this.originArticle.article_serial)
 					this.originArticle = JSON.parse(JSON.stringify(article));

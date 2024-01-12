@@ -125,11 +125,11 @@ const javaApi = (
         : '/javaApi'
 );
 const methods = {
-    checkUser: async function() {
+    checkUser: async function(userId) {
         let param = new URLSearchParams();
         let res = null;
         try {
-            param.append("premiumID", store.state.pid);
+            param.append("smID", userId);
             res = await axios.post(
                 javaApi+"/settings.premium"
                 , param

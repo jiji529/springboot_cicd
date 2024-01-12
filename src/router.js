@@ -129,16 +129,16 @@ router.beforeEach((to, from, next) => {
         localStorage.setItem('is-new-mode', true);
         next();
       } else if (store.getters.getIsAuth) {
-        let estimatedPathArr = to.fullPath.split('/');
-        let estimatedPath = '/old/eval', estimatedPathTmp = '';
-        if (estimatedPathArr.length > 1) {
-          estimatedPathTmp = '/old/' + estimatedPathArr[1];
-          if (routeOldArr.includes(estimatedPathTmp)) {
-            estimatedPath = estimatedPathTmp;
-          }
-        }
-        localStorage.setItem('is-new-mode', false);
-        next(estimatedPath);
+        // let estimatedPathArr = to.fullPath.split('/');
+        // let estimatedPath = '/old/eval', estimatedPathTmp = '';
+        // if (estimatedPathArr.length > 1) {
+        //   estimatedPathTmp = '/old/' + estimatedPathArr[1];
+        //   if (routeOldArr.includes(estimatedPathTmp)) {
+        //     estimatedPath = estimatedPathTmp;
+        //   }
+        // }
+        // localStorage.setItem('is-new-mode', false);
+        // next(estimatedPath);
       } else {
         localStorage.setItem('is-new-mode', false);
         next('login');

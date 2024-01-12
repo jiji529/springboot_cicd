@@ -153,7 +153,7 @@
           this.isLoading = true;
 
           let loginResult = await this.loginAPI(params); // 로그인 성공 여부
-          loginResult = loginResult && await this.$statConfig.checkUser();
+          loginResult = loginResult && await this.$statConfig.checkUser(this.username);
           if (loginResult) {
             if (this.isPeUser) {
               let paramsP = new FormData();
