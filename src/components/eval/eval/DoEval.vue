@@ -815,9 +815,11 @@
 										//this.$set(this.selEval2, item.upper_cate_seq, selArticle.mediaAuto);
 										this.eval2Change();
 									}
-								} else {
-									this.$set(this.selEval2, item.upper_cate_seq, null);
 								}
+								/* 무슨 역할인지 모르겠음. 매체 중요도 값을 반복적으로 null 처리하여 주석처리함. */
+								// else {
+								// 	this.$set(this.selEval2, item.upper_cate_seq, null);
+								// }
 							} else if (item.upper_cate_name === "수록지면") {
 								if (location !== null) {
 									let etcSeq = '';
