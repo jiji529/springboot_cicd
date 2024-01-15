@@ -22,7 +22,7 @@ spec:
   
   # 생성할 레플리카 순서 / 변경시 기존 레플리카셋의 숫자도 맞춘다
   # EX. 1에서 4 변경시 기존 레플리카셋도 4개의 파드로 구성하고, 신규 파드도 4개를 구성한 뒤 기존 파드 제거함(신규파드 문제 없을 시)
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: eval-vue

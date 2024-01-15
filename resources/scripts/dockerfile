@@ -23,6 +23,10 @@ RUN ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
 RUN composer install
 RUN cp -rf vendor ../
 
+WORKDIR /var/www/html/evalPhp
+RUN chmod 777 log
+RUN chmod 777 lock 
+
 WORKDIR /var/www/html
 
 # sshd comand
