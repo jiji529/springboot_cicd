@@ -15,8 +15,8 @@
 		</div>
 		<ul class="pre_group_set">
 			<li>자동 평가 항목 사용</li>
-			<template v-if="evalList" v-for="(item,key) in evalList">
-				<li>
+			<template v-if="evalList">
+				<li v-for="(item,key) in evalList" :key="key+'aeiu'">
 					<input type="checkbox" :id="'grp0'+key" v-model="item.checkbox" @change="auto(item)" />
 					<label :for="'grp0'+key" >
 						<span></span>{{item.name}}

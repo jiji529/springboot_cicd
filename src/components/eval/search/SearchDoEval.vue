@@ -232,7 +232,7 @@
 		</div>
 		<div class="cont_btn" :class="{fold_inner : !listLayout1}">
 			<ul class="btn_left">
-				<li><a @click="reset">초기화</a></li>
+				<li><a @click="reset('o')">초기화</a></li>
 			</ul>
 			<ul class="btn_right">
 				<li class="btn_bl"><a @click="goSave('next')">저장&다음</a></li>
@@ -302,6 +302,9 @@
 
 				visibleEvalList: [] // 자동|평가1|평가2 표시사용여부
 				, configEval: []
+
+				/* 원본 데이터를 저장하기 위한 변수 */
+				, originArticle: null
 			}
 		},
 		computed: {
@@ -375,7 +378,10 @@
 		},
 		watch: {
 			//선택된 기사의 eval값 가져오는
-			searchSelectedArticle() {
+			searchSelectedArticle(article) { debugger;
+				if (!this.originArticle || typeof article == "object"
+					&& article.article_serial != this.originArticle.article_serial)
+					this.originArticle = JSON.parse(JSON.stringify(article)); 
 				this.getEvalValue();
 			},
 			showDoEvalMulti(newVal){
@@ -658,7 +664,11 @@
 				}).catch(e=>console.log(e));
 			},
 			//선택된 기사가 바뀔때마다 해당 기사의 평가정보 설정
-			async getEvalValue() {
+			async getEvalValue(resetArticle) {
+				if (this.selectedArticle && resetArticle 
+					&& resetArticle.article_serial == this.selectedArticle.article_serial) {
+					this.SET_SEARCH_SELECTED_ARTICLE(resetArticle);
+				}
 				this.isEvalChange=false;
 				this.isEval1Change=false;
 				this.isEval2Change=false;
@@ -689,51 +699,51 @@
 								// const subject = document.querySelector('input[id=search_do_eval1' + seq + ']');
 								// subject.attributes.wasChecked.value = 'true';
 							} else {
-									//평가1 콤보박스 일때 넣어주기
-																let majorDOM = document.querySelector('#sch-eval1-combo-1');
-																let middleDOM = document.querySelector('#sch-eval1-combo-2');
-																let minorDOM = document.querySelector('#sch-eval1-combo-3');
-																const doms = [majorDOM, middleDOM, minorDOM];
-																const values = [];
-																let sEval1 = eval1;
-																while(true){
-																		values.push(sEval1.eval1_seq);
-																		if(sEval1.eval1_upper == null) break;
-																		sEval1 = this.getEval1ByCategory.all[sEval1.eval1_upper];
-																}
-																values.reverse();
-																values.forEach(function(value, index){
-																		doms[index].value = value;
-																})
+								//평가1 콤보박스 일때 넣어주기
+								let majorDOM = document.querySelector('#sch-eval1-combo-1');
+								let middleDOM = document.querySelector('#sch-eval1-combo-2');
+								let minorDOM = document.querySelector('#sch-eval1-combo-3');
+								const doms = [majorDOM, middleDOM, minorDOM];
+								const values = [];
+								let sEval1 = eval1;
+								while(true){
+										values.push(sEval1.eval1_seq);
+										if(sEval1.eval1_upper == null) break;
+										sEval1 = this.getEval1ByCategory.all[sEval1.eval1_upper];
+								}
+								values.reverse();
+								values.forEach(function(value, index){
+										doms[index].value = value;
+								})
 
-																switch(values.length){
-																case 3:
-																		this.inputMajor = values[0];
-																		this.inputMiddle = values[1];
-																		this.inputMinor = values[2];
-																		this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
-																		this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
-																		break;
-																case 2:
-																		this.inputMajor = values[0];
-																		this.inputMiddle = values[1];
-																		this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
-																		break;
-																case 1:
-																		this.inputMajor = values[0];
-																		this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
-																		this.fetchEval1Minor = [];
-																		break;
-																default:
-																		this.inputMajor = "";
-																		this.inputMiddle = "";
-																		this.inputMinor = "";
-																}
-														}
-												}else{
-														this.fetchEval1Middle = [];
-														this.fetchEval1Minor = [];
-												}
+								switch(values.length){
+								case 3:
+										this.inputMajor = values[0];
+										this.inputMiddle = values[1];
+										this.inputMinor = values[2];
+										this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
+										this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
+										break;
+								case 2:
+										this.inputMajor = values[0];
+										this.inputMiddle = values[1];
+										this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
+										break;
+								case 1:
+										this.inputMajor = values[0];
+										this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
+										this.fetchEval1Minor = [];
+										break;
+								default:
+										this.inputMajor = "";
+										this.inputMiddle = "";
+										this.inputMinor = "";
+								}
+							}
+						}else{
+								this.fetchEval1Middle = [];
+								this.fetchEval1Minor = [];
+						}
 						if (this.searchEvalInfo[news_id].eval2Value !== null) {
 							let eval2Value = this.searchEvalInfo[news_id]['eval2Value'];
 							for (const index in eval2Value) {
@@ -828,17 +838,22 @@
 					this.searchSelectedArticle.eval_score = this.calcArticleValue(this.searchSelectedArticle);
 				}
 			},
-			//평가항목1,2 초기화
-			reset() {
-				this.notAutoCateSeq.forEach(seq=>{
-					this.$set(this.selEval2, seq, null);
-					document.querySelector('#sch-eval2-combo-'+seq).value = "";
-				});
-				this.eval1Change();
-				this.eval2Change();
-				this.evalInfoReset();
-				this.fetchEval1Middle = [];
-								this.fetchEval1Minor = [];
+			//평가항목 자동,1,2 초기화
+			reset(type) {
+				if (type == undefined || type == null
+					|| !this.originArticle 
+					|| !this.originArticle.eval2) return ;
+				if (type === "o") {
+					this.getEvalValue(this.originArticle);
+				} else if (type === "n") {
+					this.autoEvalInfoReset();
+					this.eval2InfoReset();
+					this.eval1Change();
+					this.eval2Change();
+					this.eval1InfoReset();
+					this.fetchEval1Middle = [];
+					this.fetchEval1Minor = [];
+				}
 			},
 			evalInfoReset(){
 				document.querySelector("#search_sch_eval1_text").value = "";

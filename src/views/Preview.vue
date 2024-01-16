@@ -33,13 +33,14 @@
           return false;
         }
 
-        if (result.data.success) {
+        if (result.data.success) { 
           this.viewerLogoutUri = result.data.tgtUrl;
         } else {
           this.SET_VIEWER_LOGOUT_URI(result.data.tgtUrl);
           this.viewerLogoutUri = this.purl+'/admin/adminLogin.do';
         }
-        
+        return true;
+
         // await this.viewerLogout();
         // return false;
       }

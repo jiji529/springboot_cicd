@@ -886,7 +886,7 @@
 					this.selectedArticle.eval_score = this.calcArticleValue(this.selectedArticle);
 				}
 			},
-			//평가항목1,2 초기화
+			//평가항목 자동,1,2 초기화
 			reset(type) {
 				if (type == undefined || type == null
 					|| !this.originArticle 

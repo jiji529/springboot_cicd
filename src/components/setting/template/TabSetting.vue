@@ -770,7 +770,7 @@ export default {
     .item_list li > div > div:nth-child(1) { width: 33.5%; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
     .item_list li > div > div:nth-child(2):not(.drag_area_border) { width: 32%;}
     .item_list li > div > div:nth-child(2) > p { width: 100%; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 5px;}
-    .item_list li > div > div:nth-child(3):not(.tagRegDate) { width: 5%; }/**/
+    .item_list li > div > div:nth-child(3):not(.tagRegDate) { width: 5.7%; }/**/
     .item_list li > div > div.tabSetting { width: 10%; }/**/
     .item_list li > div > div:nth-child(4) > div.upNdown { 
         width: 26px; height: 26px; background: url(../../../assets/images/ico_pre.png) 3px -283px no-repeat; margin: 4px 0px 0px 0px;}/**/

@@ -1148,7 +1148,7 @@ export default {
       line-height: 33px;
       margin: 0px 0px 5px 0px;
   }
-  .item_list > li > div > div:nth-child(1) { width: 40%; font-size: 13px; padding-right: 10px; cursor: pointer; }
+  .item_list > li > div > div:nth-child(1) { width: 40%; font-size: 13px; margin-right: 10px; cursor: pointer; }
   .item_list > li > div > div:nth-child(2) { width: 35%; font-size: 13px; cursor: pointer; }
   .item_list > li > div > div:nth-child(3) { width: 10%; }
   .item_list > li > div > div:nth-child(4) { width: 15%; display: flex; padding: 3px 0px 0px 0px; }
