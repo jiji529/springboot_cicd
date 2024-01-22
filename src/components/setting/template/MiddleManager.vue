@@ -230,11 +230,11 @@
           // end 간단한 파라미터 세팅
 
           // start 매체 파라미터 세팅
-          if (setting['selectionMedium']) {
+          if (setting['statSelectionMedium']) {
             // 선택된 매체의 전체 수 구하기
             let selectMediumCount = 0;
-            for (let key in setting['selectionMedium']) {
-              selectMediumCount += setting['selectionMedium'][key].length;
+            for (let key in setting['statSelectionMedium']) {
+              selectMediumCount += setting['statSelectionMedium'][key].length;
             }
 
             // [선택된 매체 수]와 [사용자의 전체 매체 수]를 비교
@@ -244,9 +244,9 @@
               params.append('m', '0');
             } else {
               let tmpMedia = [];
-              for (let key in setting['selectionMedium']) {
-                if (setting['selectionMedium'][key].length > 0) {
-                  setting['selectionMedium'][key].forEach(media => {
+              for (let key in setting['statSelectionMedium']) {
+                if (setting['statSelectionMedium'][key].length > 0) {
+                  setting['statSelectionMedium'][key].forEach(media => {
                     tmpMedia.push(media.media_id);
                   });
                 }

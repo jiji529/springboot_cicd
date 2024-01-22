@@ -400,7 +400,7 @@ export default {
             if (result.indexOf(e.trim()) < 0) result.push(e.trim());
           });
           this.getStatSetting.searchRange = result;
-          let sm = this.getStatSetting.selectionMedium;
+          let sm = this.getStatSetting.statSelectionMedium;
           let smc = 0;
           for (let key in sm) {
             smc += sm[key].length;

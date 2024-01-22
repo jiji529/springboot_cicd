@@ -356,8 +356,8 @@
     <!-- 평가2 끝-->
     <MediaSelection v-if="isMediaSelectionVisible"
                     @close="closeMediaSelection"
-                    :value="getStatSetting.selectionMedium"
-                    @input="val => getStatSetting.selectionMedium = val"/>
+                    :value="getStatSetting.statSelectionMedium"
+                    @input="val => getStatSetting.statSelectionMedium = val"/>
   </div>
 </template>
 
@@ -420,12 +420,12 @@
     watch: {
       getMediaList: function() {
         let result = [];
-        this.getStatSetting.selectionMedium = {};
+        this.getStatSetting.statSelectionMedium = {};
         for (let [k,v] of Object.entries(this.mediaLabel())) {
           if (v && v.media) {
             result = [];
             v.media.forEach(m => result.push(m));
-            this.getStatSetting.selectionMedium[v.name] = result;
+            this.getStatSetting.statSelectionMedium[v.name] = result;
           }
         }
       },
@@ -572,7 +572,7 @@
       },
       groupSelectList: function() {
         let group = this.getStatSetting.groupIsCategory ? this.categoryList : this.typeList, rtn = [], rtn2 = [];
-        for (let [k,v] of Object.entries(this.getStatSetting.selectionMedium)) {
+        for (let [k,v] of Object.entries(this.getStatSetting.statSelectionMedium)) {
           for (let [gk,gv] of Object.entries(group)) {
             if (k === gv.name) {
               if (gv.count === v.length) {
@@ -722,11 +722,11 @@
 
         if (group) {
           for (let [k,v] of Object.entries(group)) {
-            if (!this.getStatSetting.selectionMedium[v.name]) {
-              this.getStatSetting.selectionMedium[v.name] = [];
+            if (!this.getStatSetting.statSelectionMedium[v.name]) {
+              this.getStatSetting.statSelectionMedium[v.name] = [];
             }
             item = v;
-            item['countCur'] = this.getStatSetting.selectionMedium[v.name].length;
+            item['countCur'] = this.getStatSetting.statSelectionMedium[v.name].length;
             result.push(item);
           }
         }
@@ -741,13 +741,13 @@
         for (let [k,v] of Object.entries(group)) {
           rtn[v.name] = [];
         }
-        for (let [k,v] of Object.entries(this.getStatSetting.selectionMedium)) {
+        for (let [k,v] of Object.entries(this.getStatSetting.statSelectionMedium)) {
           v.forEach(m => {
             // subGroup = this.getStatSetting.groupIsCategory ? m.category_name : m.media_type_name;
             rtn[this.getStatSetting.groupIsCategory ? m.category_name : m.media_type_name].push(m);
           });
         }
-        this.getStatSetting.selectionMedium = rtn;
+        this.getStatSetting.statSelectionMedium = rtn;
       },
       /**
        * 항목 펴기
@@ -1214,7 +1214,7 @@
             this.selectMediaGroup($event, v);
           }
         } else {
-          this.getStatSetting.selectionMedium = {};
+          this.getStatSetting.statSelectionMedium = {};
           this.getStatSetting.mediaSelectionOptions = [];
         }
       },
@@ -1239,10 +1239,10 @@
 
       selectMediaCount() {
         let total = 0;
-        if (this.getStatSetting.selectionMedium) {
-          for (let key in this.getStatSetting.selectionMedium) {
-            if (this.getStatSetting.selectionMedium[key].length > 0) {
-              total += this.getStatSetting.selectionMedium[key].length;
+        if (this.getStatSetting.statSelectionMedium) {
+          for (let key in this.getStatSetting.statSelectionMedium) {
+            if (this.getStatSetting.statSelectionMedium[key].length > 0) {
+              total += this.getStatSetting.statSelectionMedium[key].length;
             }
           }
         }
@@ -1257,7 +1257,7 @@
       selectMediaGroup($event, group) {
         let result = [];
         if (group && group.media) {
-          this.getStatSetting.selectionMedium[group.name] = [];
+          this.getStatSetting.statSelectionMedium[group.name] = [];
           if (!$event.target.checked) {
             result = [];
           } else {
@@ -1265,7 +1265,7 @@
               result.push(media);
             });
           }
-          this.getStatSetting.selectionMedium[group.name] = result;
+          this.getStatSetting.statSelectionMedium[group.name] = result;
         }
       },
 

@@ -103,7 +103,7 @@ const kewordMap = {
     // ,"#{매체선택숫자T2}#":"-"
     ,"#{매체선택타입}#":"groupIsCategory"
 
-    ,"#{선택된매체정보}#":"selectionMedium"
+    ,"#{선택된매체정보}#":"statSelectionMedium"
     ,"#{선택된매체정보T1}#":"selectionMediumType"
     ,"#{선택된매체정보T2}#":"selectionMediumTypeCount"
     ,"#{선택된매체정보T3}#":"selectionMediumTypeRate"

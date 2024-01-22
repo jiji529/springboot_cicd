@@ -34,7 +34,8 @@ const statState = () => ({
   },
   groupIsCategory: true, // 매체 선택 옵션 분류||유형
   mediaSelectionOptions: [], // 매체 선택 옵션 분류||유형 groupId
-  selectionMedium: {}, // 선택 매체
+  evalSelectionMedium: {}, // 평가탭 선택 매체
+  statSelectionMedium: {}, // 통계탭 선택 매체
   evaluationItem0: [], // 자동평가
   evaluationItem1: [], // 평가 1
   evaluationItem2: [], // 평가 2
@@ -146,6 +147,7 @@ export default new Vuex.Store({
     getArticleListFromSearchParams: '',
     getArticleListFromHeaderPayload: '',
 
+    /* Eval -> SearchForm */
     searchConditionModel : {
       selectedDateStand : "0",
       selYear: newDate.getFullYear(),
@@ -166,6 +168,39 @@ export default new Vuex.Store({
       pageNo: -1,
       order_column: '',
       order: ''
+    },
+    /* SearchEval0.vue */
+    searchEval0: {
+      eval0Condition: 'OR',
+      selEval0: [],
+      selEval0AndDisplay: {}
+    },
+    /* SearchEval1.vue */
+    searchEval1: {
+      major : [],
+      mid : [],
+      minor : [],
+      selectedEval1: []
+    },
+    /* SearchEval2.vue */
+    searchEval2: {
+      eval2Condition: 'OR',
+      selEval2 : [],
+      selEval2AndDisplay : {}
+    },
+    /* Search.vue */
+    sendSearchData: {
+      oneRowEval0 : [],
+      eval0_condition: '',
+      oneRowEval1 : [],
+      oneRowEval2 : [],
+      eval2_condition: '',
+      isCheckedEval0: false,
+      eval0_presentChecked: [],
+      isCheckedEval1: false,
+      eval1_presentChecked: [],
+      isCheckedEval2: false,
+      eval2_presentChecked: [],
     },
     callApiSearch: false,
     searchFormSeen: false,
@@ -265,7 +300,8 @@ export default new Vuex.Store({
     },
     STAT_RESET(s, data) {
       s.statSetting = statState();
-      s.statSetting.selectionMedium = data;
+      s.statSetting.evalSelectionMedium = data;
+      s.statSetting.statSelectionMedium = data;
     },
     SET_NEWS_GROUP(state, data) {
       state.newsGroup = data;
@@ -1662,6 +1698,10 @@ export default new Vuex.Store({
     getIsPeUser: state => state.isPeUser,
     getMessage: state => state.message,
     getStatSetting: state => state.statSetting,
+    getSearchEval0: state => state.searchEval0,
+    getSearchEval1: state => state.searchEval1,
+    getSearchEval2: state => state.searchEval2,
+    getSearchData: state => state.sendSearchData,
     getNewsGroupInfo: state => state.newsGroup, // x
     getValueGroupInfo: state => state.valueGroup, // x
     getMediaCategoryOldList: state => state.mediaCategoryOldList,

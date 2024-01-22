@@ -7,8 +7,8 @@
 			<a @click="reset">초기화</a></div>
 		<div class="ft_cont">
 			<div class="ft1_top">
-				<div class="ft_tit" @click.prevent="eval1AllCheck($event, 'sch_ft1_a00', major, 'div')" @keydown.space.prevent="eval1AllCheck($event, 'sch_ft1_a00',major, 'div')">
-					<input type="checkbox" id="sch_ft1_a00" :checked="allCheck(major)" />
+				<div class="ft_tit" @click.prevent="eval1AllCheck($event, 'sch_ft1_a00', getSearchEval1.major, 'div')" @keydown.space.prevent="eval1AllCheck($event, 'sch_ft1_a00',getSearchEval1.major, 'div')">
+					<input type="checkbox" id="sch_ft1_a00" :checked="allCheck(getSearchEval1.major)" />
 					<label for="sch_ft1_a00"><span></span>대분류</label>
 				</div>
 				<div class="ft_tit" @click.prevent="eval1AllCheck($event, 'sch_ft1_b00',mid, 'div')" @keydown.space.prevent="eval1AllCheck($event, 'sch_ft1_b00',mid, 'div')">
@@ -23,20 +23,20 @@
 			<div class="ft1_box">
 				<div class="ft1_val" v-for="major in getEval1CategoryNew" :key="major.seq" v-if="major.isUse === 'Y' || showUnusedEvalItem" :class="major.isUse === 'N' ? 'wither' : ''" :title="major.isUse === 'N' ? major.name + ' (미사용)' : major.name">
 					<div class="ft_ch">
-						<input type="checkbox" :id="'search_'+major.name+major.seq" :value="major.seq" v-model="selectedEval1" />
+						<input type="checkbox" :id="'search_'+major.name+major.seq" :value="major.seq" v-model="getSearchEval1.selectedEval1" />
 						<label :for="'search_'+major.name+major.seq"><span></span>{{major.name}}</label>
 						<span class="btn_all" v-if="major.sub !== null"><a @click="eval1GroupAll(major)">ALL</a></span>
 					</div>
 					<dl class="ft1_li" v-if="major.sub != null && mid.isUse === 'Y' || showUnusedEvalItem" v-for="mid in major.sub" :key="mid.seq" :class="mid.isUse === 'N' ? 'wither' : ''" :title="mid.isUse === 'N' ? mid.name + ' (미사용)' : mid.name">
 						<dt>
-							<input type="checkbox" :id="'search_'+mid.name+mid.seq" :value="mid.seq" v-model="selectedEval1"/>
+							<input type="checkbox" :id="'search_'+mid.name+mid.seq" :value="mid.seq" v-model="getSearchEval1.selectedEval1"/>
 							<label :for="'search_'+mid.name+mid.seq"><span></span>{{mid.name}}</label>
 							<span class="btn_all" v-if="mid.sub !== null"><a @click="eval1GroupAll(mid)">ALL</a></span>
 						</dt>
 						<dd v-if="mid.sub != null">
 							<ul>
 								<li v-for="minor in mid.sub" :key="minor.seq" v-if="minor.isUse === 'Y' || showUnusedEvalItem" :class="minor.isUse === 'N' ? 'wither' : ''" :title="minor.isUse === 'N' ? minor.name + ' (미사용)' : minor.name">
-									<input type="checkbox" :id="'search_'+minor.name+minor.seq" :value="minor.seq" v-model="selectedEval1" />
+									<input type="checkbox" :id="'search_'+minor.name+minor.seq" :value="minor.seq" v-model="getSearchEval1.selectedEval1" />
 									<label :for="'search_'+minor.name+minor.seq"><span></span>{{minor.name}}</label>
 								</li>
 							</ul>
@@ -59,7 +59,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['getConfigEval']),
+			...mapGetters(['getConfigEval','getSearchEval1']),
 			getEval1CategoryNew() {
 				let rtn = [], tmpGroup, tmpItem, tmpData, tmpIdx = -1, tmpIds = [];
 				if (this.getConfigEval && this.getConfigEval['item'] && this.getConfigEval['item']['M1']) {
@@ -135,11 +135,11 @@
 						}
 					}
 				}
-				this.major = major;
-				this.mid = mid;
-				this.minor = minor;
+				this.getSearchEval1.major = major;
+				this.getSearchEval1.mid = mid;
+				this.getSearchEval1.minor = minor;
 			},
-			selectedEval1 () {
+			"getSearchEval1.selectedEval1": function () {
 				this.eval1Change();
 			}
 		},
@@ -153,13 +153,17 @@
 		},
 		methods : {
 			eval1Change() {
-				this.$emit('sendEval1', this.selectedEval1 , this.major, this.mid, this.minor);
+				this.$emit('sendEval1'
+				, this.getSearchEval1.selectedEval1
+				, this.getSearchEval1.major
+				, this.getSearchEval1.mid
+				, this.getSearchEval1.minor);
 			},
 			allCheck(list){
 				let $this = this;
 				if(list.length >0) {
 					return list.every(one => {
-						if ($this.selectedEval1.indexOf(one) > -1) {
+						if ($this.getSearchEval1.selectedEval1.indexOf(one) > -1) {
 							return true
 						}
 					})
@@ -174,13 +178,13 @@
 				let $this = this;
 				list.forEach(one => {
 					if(checkFlag){
-						if($this.selectedEval1.indexOf(one) === -1) {
-							this.selectedEval1.push(one);
+						if($this.getSearchEval1.selectedEval1.indexOf(one) === -1) {
+							this.getSearchEval1.selectedEval1.push(one);
 						}
 					} else {
-						const delIdx = this.selectedEval1.indexOf(one);
+						const delIdx = this.getSearchEval1.selectedEval1.indexOf(one);
 						if(delIdx > -1) {
-							this.selectedEval1.splice(delIdx, 1);
+							this.getSearchEval1.selectedEval1.splice(delIdx, 1);
 						}
 					}
 				});
@@ -188,7 +192,7 @@
 			},
 			eval1GroupAll(list) {
 				if (!list) return;
-				let _se1 = this.selectedEval1, majorIdx = _se1.indexOf(list.seq), midIdx, minorIdx;
+				let _se1 = this.getSearchEval1.selectedEval1, majorIdx = _se1.indexOf(list.seq), midIdx, minorIdx;
 				if (majorIdx === -1) {
 					_se1.push(list.seq);
 					if (list.sub) {
@@ -227,7 +231,7 @@
 				this.eval1Change();
 			},
 			reset() {
-				this.selectedEval1 = [];
+				this.getSearchEval1.selectedEval1 = [];
 				this.eval1Change();
 			}
 		}

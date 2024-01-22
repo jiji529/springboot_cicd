@@ -4,13 +4,13 @@
 			<h5>평가 2 항목</h5>
 			<a @click="reset">초기화</a>
 			<span class="option">
-				<input type="radio" id="sch_stat_and" name="src_stat" value="AND" v-model="eval2Condition" @click="eval2SearchCon('AND')">
+				<input type="radio" id="sch_stat_and" name="src_stat" value="AND" v-model="getSearchEval2.eval2Condition" @click="eval2SearchCon('AND')">
 					<label for="sch_stat_and">AND</label>
-				<input type="radio" id="sch_stat_or" name="src_stat" value="OR" v-model="eval2Condition" @click="eval2SearchCon('OR')">
+				<input type="radio" id="sch_stat_or" name="src_stat" value="OR" v-model="getSearchEval2.eval2Condition" @click="eval2SearchCon('OR')">
 					<label for="sch_stat_or">OR</label>
 			</span>
 		</div>
-		<div class="ft_cont" v-if="eval2Condition === 'OR'">
+		<div class="ft_cont" v-if="getSearchEval2.eval2Condition === 'OR'">
 			<template v-for="(one, key) in getEval2ClassNew">
 				<div v-if="one.upper_cate_use === 'Y' || showUnusedEvalItem" class="ft2_box" :class="one.upper_cate_use === 'N' ? 'wither' : ''">
 					<div class="ft_ch" :title="one.upper_cate_use === 'N' ? one.upper_cate_name+' (미사용)' : one.upper_cate_name">
@@ -19,20 +19,20 @@
 					</div>
 					<ul class="ft2_li">
 						<li v-for="(one2, k) in one.sub" :key="k" v-if="one2.use ==='Y' || showUnusedEvalItem" :class="one2.use === 'N' ? 'wither' : ''" :title="one2.use === 'N' ? one2.name + ' (미사용)' : one2.name">
-							<input type="checkbox" :id="'search_eval2_or_sub'+one2.name+one2.seq" :value="one2.seq" v-model="selEval2">
+							<input type="checkbox" :id="'search_eval2_or_sub'+one2.name+one2.seq" :value="one2.seq" v-model="getSearchEval2.selEval2">
 							<label :for="'search_eval2_or_sub'+one2.name+one2.seq"><span></span>{{one2.name}}</label>
 						</li>
 					</ul>
 				</div>
 			</template>
 		</div>
-		<div class="ft_cont" v-if="eval2Condition === 'AND'">
+		<div class="ft_cont" v-if="getSearchEval2.eval2Condition === 'AND'">
 			<template v-for="(one, key) in getEval2ClassNew">
 				<div v-if="one.upper_cate_use === 'Y' || showUnusedEvalItem" class="ft2_box" :class="one.upper_cate_use === 'N' ? 'wither' : ''">
 					<div class="ft_ch" :title="one.upper_cate_use === 'N' ? one.upper_cate_name+' (미사용)' : one.upper_cate_name">{{one.upper_cate_name}}</div>
 					<ul class="ft2_li">
 						<li v-for="(one2, k) in one.sub" :key="k" v-if="one2.use ==='Y' || showUnusedEvalItem" :class="one2.use === 'N' ? 'wither' : ''" :title="one2.use === 'N' ? one2.name + ' (미사용)' : one2.name">
-							<input type="radio" :name="'search_eval2_and'+one.upper_cate_seq" :id="'search_'+one2.seq" :value="one2.seq" @change.prevent="radioButtonToggle($event, one.upper_cate_seq, one2.seq)" v-model="selEval2AndDisplay[one.upper_cate_seq]">
+							<input type="radio" :name="'search_eval2_and'+one.upper_cate_seq" :id="'search_'+one2.seq" :value="one2.seq" @change.prevent="radioButtonToggle($event, one.upper_cate_seq, one2.seq)" v-model="getSearchEval2.selEval2AndDisplay[one.upper_cate_seq]">
 							<label :for="'search_'+one2.seq"><span></span>{{one2.name}}</label>
 						</li>
 					</ul>
@@ -42,7 +42,7 @@
 	</div>
 </template>
 <script>
-	import {mapGetters, mapActions} from 'vuex'
+	import {mapGetters} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -52,7 +52,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['getConfigEval', 'getEval2Class']),
+			...mapGetters(['getConfigEval', 'getEval2Class','getSearchEval2']),
 			getEval2ClassNew() {
 				let rtn = [], tmpGroup, tmpItem;
 				if (this.getConfigEval && this.getConfigEval['group'] && this.getConfigEval['group']['M2']) {
@@ -98,20 +98,20 @@
 			});
 		},
 		watch:{
-			selEval2() {
+			"getSearchEval2.selEval2": function () {
 				this.eval1Change();
 			}
 		},
 		methods: {
 			eval2SearchCon(con) {
-				this.eval2Condition = con;
-				this.selEval2 = [];
+				this.getSearchEval2.eval2Condition = con;
+				this.getSearchEval2.selEval2 = [];
 			},
 			checkSubList(list){
 				let $this = this;
 				if(list.sub.length>0) {
 					return list.sub.every( subOne => {
-						if($this.selEval2.indexOf(subOne.seq) > -1){
+						if($this.getSearchEval2.selEval2.indexOf(subOne.seq) > -1){
 							return true
 						}
 					})
@@ -124,31 +124,31 @@
 				if (list.sub.length > 0) {
 					list.sub.forEach(subOne => {
 						if (checkFlag) {
-							if (this.selEval2.indexOf(subOne.seq) === -1) {
-								this.selEval2.push(subOne.seq);
+							if (this.getSearchEval2.selEval2.indexOf(subOne.seq) === -1) {
+								this.getSearchEval2.selEval2.push(subOne.seq);
 							}
 						} else {
-							const delIdx = this.selEval2.indexOf(subOne.seq);
+							const delIdx = this.getSearchEval2.selEval2.indexOf(subOne.seq);
 							if (delIdx > -1) {
-								this.selEval2.splice(delIdx, 1);
+								this.getSearchEval2.selEval2.splice(delIdx, 1);
 							}
 						}
 					});
 				}
 			},
 			reset() {
-				this.selEval2 = [];
-				this.selEval2AndDisplay = {};
+				this.getSearchEval2.selEval2 = [];
+				this.getSearchEval2.selEval2AndDisplay = {};
 			},
 			eval1Change() {
-				this.$emit('sendEval2', this.selEval2 ,this.eval2Condition);
+				this.$emit('sendEval2', this.getSearchEval2.selEval2 ,this.getSearchEval2.eval2Condition);
 			},
 			//버튼 셀렉 및 해제 기능 (평가2 - and 조건일때)
 			radioButtonToggle(e, upperCateSeq, seq) {
-				this.selEval2AndDisplay[upperCateSeq] = seq;
-				this.selEval2 = [];
-				for (let v of Object.values(this.selEval2AndDisplay)) {
-					this.selEval2.push(v);
+				this.getSearchEval2.selEval2AndDisplay[upperCateSeq] = seq;
+				this.getSearchEval2.selEval2 = [];
+				for (let v of Object.values(this.getSearchEval2.selEval2AndDisplay)) {
+					this.getSearchEval2.selEval2.push(v);
 				}
 			}
 		}

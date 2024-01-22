@@ -135,9 +135,9 @@
 							</div>
 						</div>
 						<MediaSelection v-show="isMediaSelectionVisible"
-														 @close="closeMediaSelection"
-														 :value="getStatSetting.selectionMedium"
-														 @input="val => this.getStatSetting.selectionMedium = val" :key="someVar"/>
+														@close="closeMediaSelection"
+														:value="getStatSetting.evalSelectionMedium"
+														@input="val => this.getStatSetting.evalSelectionMedium = val" :key="someVar"/>
 					</dd>
 				</dl>
 				<dl class="sch_element">
@@ -166,33 +166,39 @@
 						<dt>매체선택</dt>
 						<dd v-if="stateMediaAll()"><b>전체선택</b></dd>
 						<slot v-else>
-							<dd v-for="(medium,key) in getStatSetting.selectionMedium" :key="key" v-if="key!=='' && medium.length>0">
+							<dd v-for="(medium,key) in getStatSetting.evalSelectionMedium" :key="key" v-if="key!=='' && medium.length>0">
 								<b>{{key}}</b> -
 								<slot v-if="countMediaResult(key, medium)"><b>전체선택</b></slot>
 								<slot v-else>{{selectMediaResult(medium)}}</slot>
 							</dd>
 						</slot>
 					</dl>
-					<dl class="sch_value" v-show="isCheckedEval0">
+					<dl class="sch_value" v-show="getSearchData.isCheckedEval0">
 						<dt>자동평가 항목</dt>
-						<dd v-for="eval0 in eval0_presentChecked" v-show="eval0.sub.length > 0">
-							<b>{{eval0.upper_cate_name}}</b> -
-							<span>{{eval0.sub.join()}}</span>
-						</dd>
+						<template v-for="(eval0, ky) in getSearchData.eval0_presentChecked">
+							<dd :key="ky+'auto-s-'" v-show="eval0.sub.length > 0">
+								<b>{{eval0.upper_cate_name}}</b> -
+								<span>{{eval0.sub.join()}}</span>
+							</dd>
+						</template>
 					</dl>
-					<dl class="sch_value" v-show="isCheckedEval1">
+					<dl class="sch_value" v-show="getSearchData.isCheckedEval1">
 						<dt>평가 1 항목</dt>
-						<dd v-for="category in eval1_presentChecked" v-show="category.items.length>0">
-							<b>{{category.cate}}</b> -
-							<span>{{category.items.join()}}</span>
-						</dd>
+						<template v-for="(category, ky) in getSearchData.eval1_presentChecked">
+							<dd :key="ky+'eval1-s-'"  v-show="category.items.length>0">
+								<b>{{category.cate}}</b> -
+								<span>{{category.items.join()}}</span>
+							</dd>
+						</template>
 					</dl>
-					<dl class="sch_value" v-show="isCheckedEval2">
+					<dl class="sch_value" v-show="getSearchData.isCheckedEval2">
 						<dt>평가 2 항목</dt>
-						<dd v-for="checked in eval2_presentChecked" v-show="checked.sub.length>0">
-							<b>{{checked.upper_cate_name}}</b> -
-							<span>{{checked.sub.join()}}</span>
-						</dd>
+						<template v-for="(checked, ky) in getSearchData.eval2_presentChecked">
+							<dd :key="ky+'eval2-s-'"  v-show="checked.sub.length>0">
+								<b>{{checked.upper_cate_name}}</b> -
+								<span>{{checked.sub.join()}}</span>
+							</dd>
+						</template>
 					</dl>
 				</div>
 			</div>
@@ -274,22 +280,8 @@
 					order_column: '',
 					order: ''
 				},
-				//searchData
-				oneRowEval0 : [],
-				oneRowEval1 : [],
-				oneRowEval2 : [],
-
 				searchCondition : [],
-				isCheckedEval1 : false,
 
-				eval1_presentChecked: [],
-				isCheckedEval2 : false,
-				isCheckedEval0 : false,
-
-				eval0_condition : '',
-				eval0_presentChecked: [],
-				eval2_condition : '',
-				eval2_presentChecked: [],
 				isMediaSelectionVisible: false,
 				totalItemLabel : '전체 항목 접기',
 				allCategoryFold : true,
@@ -309,7 +301,7 @@
 		name: 'Search',
 		computed: {
 			...mapState(['searchConditionModel','initSearchForm','callApiSearch','searchFormSeen','searchSelectedArticle','newsGroup']),
-			...mapGetters(['getEval1Category', 'getEval2Class', 'getStatSetting', 'getMediaList', 'getConfigEval']),
+			...mapGetters(['getSearchData','getEval1Category', 'getEval2Class', 'getStatSetting', 'getMediaList', 'getConfigEval']),
 			yearOldest() {
 				if (this.getConfigEval && this.getConfigEval['policy'] && this.getConfigEval['policy']['OY']) {
 					return Number(this.getConfigEval['policy']['OY']['value']);
@@ -331,7 +323,7 @@
 			groupSelectList: function() {
 				let group = this.getStatSetting.groupIsCategory ? this.categoryList : this.typeList, rtn = [], rtn2 = [];
 				// forEach문처럼 사용하기 위해서 사용하는가?
-				for (let [k,v] of Object.entries(this.getStatSetting.selectionMedium)) {
+				for (let [k,v] of Object.entries(this.getStatSetting.evalSelectionMedium)) {
 					for (let [gk,gv] of Object.entries(group)) {
 						if (k === gv.name) {
 							if (gv.count === v.length) {
@@ -420,22 +412,28 @@
 		},
 		watch: {
 			getMediaList: function() {
+				for(let [k,v] of Object.entries(this.getStatSetting.evalSelectionMedium)) {
+					if (v.length > 0) return ;
+				}
 				let result = [];
-				this.getStatSetting.selectionMedium = {};
+				this.getStatSetting.evalSelectionMedium = {};
 				for (let [k,v] of Object.entries(this.mediaLabel())) {
 					if (v && v.media) {
 						result = [];
 						v.media.forEach(m => result.push(m));
-						this.getStatSetting.selectionMedium[v.name] = result;
+						this.getStatSetting.evalSelectionMedium[v.name] = result;
 					}
 				}
 			}
-			,searchFormSeen(param) { // 검색접기 했을 때, 데이터가 없다면 검색.
+			, searchFormSeen(param) { // 검색접기 했을 때, 데이터가 없다면 검색.
 				if (!param) return;
 				if (this.callApiSearch && typeof this.searchSelectedArticle != 'object') {
 					this.goSearch();
 				}
 			}
+			// , "getStatSetting.mediaSelectionOptions": function (param) {
+			// 	console.log(param);
+			// }
 		},
 		created() {
 			this.SET_LOADING_GIF(true);
@@ -483,10 +481,10 @@
 			},
 			removeMediaAll() {
 				let newMediaList = {};
-				Object.keys(this.getStatSetting.selectionMedium).forEach(c => {
+				Object.keys(this.getStatSetting.evalSelectionMedium).forEach(c => {
 					newMediaList[c] = new Array();
 				});
-				this.getStatSetting.selectionMedium = newMediaList;
+				this.getStatSetting.evalSelectionMedium = newMediaList;
 			},
 			//매체선택
 			selectMediaAll($event) {
@@ -498,7 +496,7 @@
 						this.selectMediaGroup($event, v);
 					}
 				} else {
-					this.getStatSetting.selectionMedium = {};
+					this.getStatSetting.evalSelectionMedium = {};
 					this.getStatSetting.mediaSelectionOptions = [];
 				}
 			},
@@ -520,7 +518,7 @@
 			selectMediaGroup($event, group) {
 				let result = [];
 				if (group && group.media) {
-					this.getStatSetting.selectionMedium[group.name] = [];
+					this.getStatSetting.evalSelectionMedium[group.name] = [];
 					if (!$event.target.checked) {
 						result = [];
 					} else {
@@ -528,7 +526,7 @@
 							result.push(media);
 						});
 					}
-					this.getStatSetting.selectionMedium[group.name] = result;
+					this.getStatSetting.evalSelectionMedium[group.name] = result;
 				}
 			},
 			/**
@@ -541,11 +539,11 @@
 
 				if (group) {
 					for (let [k,v] of Object.entries(group)) {
-						if (!this.getStatSetting.selectionMedium[v.name]) {
-							this.getStatSetting.selectionMedium[v.name] = [];
+						if (!this.getStatSetting.evalSelectionMedium[v.name]) {
+							this.getStatSetting.evalSelectionMedium[v.name] = [];
 						}
 						item = v;
-						item['countCur'] = this.getStatSetting.selectionMedium[v.name].length;
+						item['countCur'] = this.getStatSetting.evalSelectionMedium[v.name].length;
 						result.push(item);
 					}
 				}
@@ -557,13 +555,13 @@
 				for (let [k,v] of Object.entries(group)) {
 					rtn[v.name] = [];
 				}
-				for (let [k,v] of Object.entries(this.getStatSetting.selectionMedium)) {
+				for (let [k,v] of Object.entries(this.getStatSetting.evalSelectionMedium)) {
 					v.forEach(m => {
 						// subGroup = this.getStatSetting.groupIsCategory ? m.category_name : m.media_type_name;
 						rtn[this.getStatSetting.groupIsCategory ? m.category_name : m.media_type_name].push(m);
 					});
 				}
-				this.getStatSetting.selectionMedium = rtn;
+				this.getStatSetting.evalSelectionMedium = rtn;
 			},
 			//검색하기 초기화
 			reset() { 
@@ -624,10 +622,10 @@
 			},
 			selectMediaCount() {
 				let total = 0;
-				if (this.getStatSetting.selectionMedium) {
-					for (let key in this.getStatSetting.selectionMedium) {
-						if (this.getStatSetting.selectionMedium[key].length > 0) {
-							total += this.getStatSetting.selectionMedium[key].length;
+				if (this.getStatSetting.evalSelectionMedium) {
+					for (let key in this.getStatSetting.evalSelectionMedium) {
+						if (this.getStatSetting.evalSelectionMedium[key].length > 0) {
+							total += this.getStatSetting.evalSelectionMedium[key].length;
 						}
 					}
 				}
@@ -653,8 +651,8 @@
 				transData.forEach(one => {
 					if (one !== null) { selEval0.push(one); }
 				});
-				this.oneRowEval0 = selEval0.join();
-				this.eval0_condition = eval0_condition;
+				this.getSearchData.oneRowEval0 = selEval0.join();
+				this.getSearchData.eval0_condition = eval0_condition;
 
 				//선택항목 보여주는 데이터
 				let presentChecked = [], ev0 = {};
@@ -671,17 +669,17 @@
 						}
 					}
 				}
-
-				this.eval0_presentChecked = presentChecked;
-				this.isCheckedEval0 = (transData.length > 0);
+				
+				this.getSearchData.eval0_presentChecked = presentChecked;
+				this.getSearchData.isCheckedEval0 = (transData.length > 0);
 			},
 			//eval1.vue에서 넘어온 평가1 검색 체크된 값 api 전달 파라미터로 만들기
 			getEval1(transData, major, mid, minor) {
 				let presentChecked = [{cate: '대분류' , items : []}, {cate: '중분류', items : []}, {cate: '소분류', items : []}];
 				let oneRow = transData, cfg = [], _depth, _cc, _cg;
 				Object.values(this.getConfigEval['item']['M1']).forEach(v => { cfg[v.seq] = v });
-				this.oneRowEval1 = transData;
-				this.isCheckedEval1 = (this.oneRowEval1.length > 0);
+				this.getSearchData.oneRowEval1 = transData;
+				this.getSearchData.isCheckedEval1 = (this.getSearchData.oneRowEval1.length > 0);
 				oneRow.forEach(v => {
 					_cc = cfg[v]; if (!_cc) return;
 					if (!_cc.group_seq) {
@@ -695,7 +693,7 @@
 						}
 					}
 				});
-				this.eval1_presentChecked = presentChecked;
+				this.getSearchData.eval1_presentChecked = presentChecked;
 			},
 			//eval2.vue에서 넘어온 평가2 검색 체크된 값 api 전달 파라미터로 만들기
 			getEval2 (transData, eval2_condition)	{
@@ -703,8 +701,8 @@
 				transData.forEach(one => {
 					if (one !== null) { selEval2.push(one); }
 				}),
-				this.oneRowEval2 = selEval2.join();
-				this.eval2_condition = eval2_condition;
+				this.getSearchData.oneRowEval2 = selEval2.join();
+				this.getSearchData.eval2_condition = eval2_condition;
 
 				//선택항목 보여주는 데이터
 				let presentChecked = [], ev2 = {};
@@ -722,8 +720,8 @@
 					}
 				}
 
-				this.eval2_presentChecked = presentChecked;
-				this.isCheckedEval2 = (transData.length > 0);
+				this.getSearchData.eval2_presentChecked = presentChecked;
+				this.getSearchData.isCheckedEval2 = (transData.length > 0);
 			},
 			//검색접기
 			schOff() {
@@ -749,7 +747,7 @@
 					}, 500);
 					return false;
 				}
-				let smp = this.getStatSetting.selectionMedium;
+				let smp = this.getStatSetting.evalSelectionMedium;
 				let selectMediumPreCount = 0;
 				for (let key in smp) {
 					selectMediumPreCount += smp[key].length;
@@ -770,11 +768,11 @@
 				}
 
 				let params = new FormData;
-				params.append('eval0', this.oneRowEval0);
-				params.append('eval0_condition', this.eval0_condition);
-				params.append('eval1', this.oneRowEval1);
-				params.append('eval2', this.oneRowEval2);
-				params.append('eval2_condition', this.eval2_condition);
+				params.append('eval0', this.getSearchData.oneRowEval0);
+				params.append('eval0_condition', this.getSearchData.eval0_condition);
+				params.append('eval1', this.getSearchData.oneRowEval1);
+				params.append('eval2', this.getSearchData.oneRowEval2);
+				params.append('eval2_condition', this.getSearchData.eval2_condition);
 				Object.keys(this.searchConditionModel).map(key => {
 					switch(key) {
 						case 'sDate':
@@ -788,9 +786,9 @@
 					}
 				});
 				let eval1Name = [];
-				if(Object.keys(this.eval1_presentChecked).length>0) {
-					Object.keys(this.eval1_presentChecked).forEach(key => {
-						this.eval1_presentChecked[key].items.forEach(name => {
+				if(Object.keys(this.getSearchData.eval1_presentChecked).length>0) {
+					Object.keys(this.getSearchData.eval1_presentChecked).forEach(key => {
+						this.getSearchData.eval1_presentChecked[key].items.forEach(name => {
 							eval1Name.push(name);
 						})
 					});
@@ -798,9 +796,9 @@
 				let eval1Str = eval1Name.join();
 				params.append('eval1Name', eval1Str);
 				let eval2Name = [];
-				if(Object.keys(this.eval2_presentChecked).length>0) {
-					Object.keys(this.eval2_presentChecked).forEach(key => {
-						this.eval2_presentChecked[key].sub.forEach(name => {
+				if(Object.keys(this.getSearchData.eval2_presentChecked).length>0) {
+					Object.keys(this.getSearchData.eval2_presentChecked).forEach(key => {
+						this.getSearchData.eval2_presentChecked[key].sub.forEach(name => {
 							eval2Name.push(name);
 						})
 					});
@@ -809,7 +807,7 @@
 				params.append('eval2Name', eval2Str);
 
 
-				let sm = this.getStatSetting.selectionMedium;
+				let sm = this.getStatSetting.evalSelectionMedium;
 				if (sm) {
 					let selectMediumCount = 0;
 					for (let key in sm) {

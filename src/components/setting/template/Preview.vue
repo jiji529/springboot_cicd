@@ -2478,7 +2478,7 @@
           res = res.slice(0, -3);
         }
         else if ('selectionMediumCount' === key) {
-          mid = this.getStatSetting['selectionMedium'];
+          mid = this.getStatSetting['statSelectionMedium'];
           let total = {};
           let dupl = {};
           // 전체 매체
@@ -2509,7 +2509,7 @@
         else if ('groupIsCategory' === key) {
           res = this.getStatSetting['groupIsCategory'] ? '분류' : '유형';
         }
-        else if ('selectionMedium' === key) { 
+        else if ('statSelectionMedium' === key) { 
           mid = this.getStatSetting[key];
           let txt = '';
           for (let [k,v] of Object.entries(mid)) {
@@ -2524,7 +2524,7 @@
           res = txt;
         }
         else if ('selectionMediumType' === key) {
-          mid = this.getStatSetting['selectionMedium'];
+          mid = this.getStatSetting['statSelectionMedium'];
           let dupl = {};
           for (let [k,v] of Object.entries(mid)) {
             v.forEach(el => { if (!dupl[el.media_type_name]) dupl[el.media_type_name] = k; });
@@ -2540,7 +2540,7 @@
           res = txt;
         }
         else if ('selectionMediumTypeCount' === key) {
-          mid = this.getStatSetting['selectionMedium'];
+          mid = this.getStatSetting['statSelectionMedium'];
           let dupl = {};
           for (let [k,v] of Object.entries(mid)) {
             v.forEach(el => { 
@@ -2558,7 +2558,7 @@
           res = txt;
         }
         else if ('selectionMediumTypeRate' === key) {
-          mid = this.getStatSetting['selectionMedium'];
+          mid = this.getStatSetting['statSelectionMedium'];
           let total = {};
           let dupl = {};
           // 전체 매체

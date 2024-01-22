@@ -423,21 +423,6 @@
 				<a class="btn_gr" @click="reset">초기화</a>
 				<a class="btn_bl" @click="goSearch">검색</a>
 			</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div class="sch_foot"><a @click="showSearchTotalItem" :class="{'ico_open':!getStatSetting.searchTotalItemOpen}">{{totalItemLabel}}</a>
       <!-- 전체항목 펴기 할 때 display block-->
       <div class="sch_val" v-show="getStatSetting.searchTotalItemOpen">
@@ -445,7 +430,7 @@
           <dt>매체선택</dt>
           <dd v-if="stateMediaAll()"><b>전체선택</b></dd>
           <slot v-else>
-            <template v-for="(medium,key) in getStatSetting.selectionMedium">
+            <template v-for="(medium,key) in getStatSetting.statSelectionMedium">
               <dd :key="key" v-if="1!=='' && (medium.length>0)">
                 <b>{{key}}</b> -
                 <slot v-if="countMediaResult(key, medium)"><b>전체선택</b></slot>
@@ -474,29 +459,10 @@
         </dl>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     <MediaSelection v-if="isMediaSelectionVisible"
                     @close="closeMediaSelection"
-                    :value="getStatSetting.selectionMedium"
-                    @input="val => getStatSetting.selectionMedium = val"/>
+                    :value="getStatSetting.statSelectionMedium"
+                    @input="val => getStatSetting.statSelectionMedium = val"/>
   </div>
 </template>
 
@@ -558,12 +524,12 @@
     watch: {
       getMediaList: function() {
         let result = [];
-        this.getStatSetting.selectionMedium = {};
+        this.getStatSetting.statSelectionMedium = {};
         for (let [k,v] of Object.entries(this.mediaLabel())) {
           if (v && v.media) {
             result = [];
             v.media.forEach(m => result.push(m));
-            this.getStatSetting.selectionMedium[v.name] = result;
+            this.getStatSetting.statSelectionMedium[v.name] = result;
           }
         }
       },
@@ -709,7 +675,7 @@
       },
       groupSelectList: function() {
         let group = this.getStatSetting.groupIsCategory ? this.categoryList : this.typeList, rtn = [], rtn2 = [];
-        for (let [k,v] of Object.entries(this.getStatSetting.selectionMedium)) {
+        for (let [k,v] of Object.entries(this.getStatSetting.statSelectionMedium)) {
           for (let [gk,gv] of Object.entries(group)) {
             if (k === gv.name) {
               if (gv.count === v.length) {
@@ -862,11 +828,11 @@
 
         if (group) {
           for (let [k,v] of Object.entries(group)) {
-            if (!this.getStatSetting.selectionMedium[v.name]) {
-              this.getStatSetting.selectionMedium[v.name] = [];
+            if (!this.getStatSetting.statSelectionMedium[v.name]) {
+              this.getStatSetting.statSelectionMedium[v.name] = [];
             }
             item = v;
-            item['countCur'] = this.getStatSetting.selectionMedium[v.name].length;
+            item['countCur'] = this.getStatSetting.statSelectionMedium[v.name].length;
             result.push(item);
           }
         }
@@ -878,13 +844,13 @@
         for (let [k,v] of Object.entries(group)) {
           rtn[v.name] = [];
         }
-        for (let [k,v] of Object.entries(this.getStatSetting.selectionMedium)) {
+        for (let [k,v] of Object.entries(this.getStatSetting.statSelectionMedium)) {
           v.forEach(m => {
             // subGroup = this.getStatSetting.groupIsCategory ? m.category_name : m.media_type_name;
             rtn[this.getStatSetting.groupIsCategory ? m.category_name : m.media_type_name].push(m);
           });
         }
-        this.getStatSetting.selectionMedium = rtn;
+        this.getStatSetting.statSelectionMedium = rtn;
       },
       /**
        * 항목 펴기
@@ -1353,7 +1319,7 @@
             this.selectMediaGroup($event, v);
           }
         } else {
-          this.getStatSetting.selectionMedium = [];
+          this.getStatSetting.statSelectionMedium = [];
           this.getStatSetting.mediaSelectionOptions = [];
         }
       },
@@ -1379,10 +1345,10 @@
 
       selectMediaCount() {
         let total = 0;
-        if (this.getStatSetting.selectionMedium) {
-          for (let key in this.getStatSetting.selectionMedium) {
-            if (this.getStatSetting.selectionMedium[key].length > 0) {
-              total += this.getStatSetting.selectionMedium[key].length;
+        if (this.getStatSetting.statSelectionMedium) {
+          for (let key in this.getStatSetting.statSelectionMedium) {
+            if (this.getStatSetting.statSelectionMedium[key].length > 0) {
+              total += this.getStatSetting.statSelectionMedium[key].length;
             }
           }
         }
@@ -1397,7 +1363,7 @@
       selectMediaGroup($event, group) {
         let result = [];
         if (group && group.media) {
-          this.getStatSetting.selectionMedium[group.name] = [];
+          this.getStatSetting.statSelectionMedium[group.name] = [];
           if (!$event.target.checked) {
             result = [];
           } else {
@@ -1405,7 +1371,7 @@
               result.push(media);
             });
           }
-          this.getStatSetting.selectionMedium[group.name] = result;
+          this.getStatSetting.statSelectionMedium[group.name] = result;
         }
       },
 
@@ -1575,7 +1541,7 @@
           if (result.indexOf(e.trim()) < 0) result.push(e.trim());
         });
         this.getStatSetting.searchRange = result;
-        let sm = this.getStatSetting.selectionMedium;
+        let sm = this.getStatSetting.statSelectionMedium;
         let smc = 0;
         for (let key in sm) {
           smc += sm[key].length;
