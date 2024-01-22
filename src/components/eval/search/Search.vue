@@ -231,28 +231,28 @@
 				lastDay : new Date(year, month, 0).getDate(),
 				totalCategoryId : [],
 
-				//검색 default값
-				searchConditionModel : {
-					selectedDateStand : "0",
-					selYear: year,
-					selMon: month,
-					selDay: day,
-					sDate: startDate,
-					eDate: startDate,
-					search_range: '0',
-					keyword: '',
-					keyword_condition: 'or',
-					ex_keyword: '',
-					ex_keyword_condition: 'or',
-					hUse: true,
-					news_comment: true,
-					sbUse: true,
-					selNewsMe : ["0"],
-					pageSize: 50,
-					pageNo: -1,
-					order_column: '',
-					order: ''
-				},
+				//검색 default값 -> Vue 전역변수(store)로 뺐음
+				// searchConditionModel : {
+				// 	selectedDateStand : "0",
+				// 	selYear: year,
+				// 	selMon: month,
+				// 	selDay: day,
+				// 	sDate: startDate,
+				// 	eDate: startDate,
+				// 	search_range: '0',
+				// 	keyword: '',
+				// 	keyword_condition: 'or',
+				// 	ex_keyword: '',
+				// 	ex_keyword_condition: 'or',
+				// 	hUse: true,
+				// 	news_comment: true,
+				// 	sbUse: true,
+				// 	selNewsMe : ["0"],
+				// 	pageSize: 50,
+				// 	pageNo: -1,
+				// 	order_column: '',
+				// 	order: ''
+				// },
 				searchConditionDefault : {
 					selectedDateStand : "0",
 					selYear: year,
@@ -308,7 +308,7 @@
 		},
 		name: 'Search',
 		computed: {
-			...mapState(['searchFormSeen','newsGroup']),
+			...mapState(['searchConditionModel','initSearchForm','callApiSearch','searchFormSeen','searchSelectedArticle','newsGroup']),
 			...mapGetters(['getEval1Category', 'getEval2Class', 'getStatSetting', 'getMediaList', 'getConfigEval']),
 			yearOldest() {
 				if (this.getConfigEval && this.getConfigEval['policy'] && this.getConfigEval['policy']['OY']) {
@@ -430,8 +430,15 @@
 					}
 				}
 			}
+			,searchFormSeen(param) { // 검색접기 했을 때, 데이터가 없다면 검색.
+				if (!param) return;
+				if (this.callApiSearch && typeof this.searchSelectedArticle != 'object') {
+					this.goSearch();
+				}
+			}
 		},
 		created() {
+			this.SET_LOADING_GIF(true);
 			this.$eventBus.$on('triggerSearch', params => {
 				this.goSearch();
 			});
@@ -449,6 +456,8 @@
 			await this.getEval2ClassAPI(params);
 			await this.newsGroupAPI();
 			this.searchRangeAllCheck({target: {checked: true}});
+			if (this.searchFormSeen && this.callApiSearch) await this.goSearch();
+			this.SET_LOADING_GIF(false);
 		},
 		beforeDestroy() {
 			this.$eventBus.$off('triggerSearch');
@@ -456,7 +465,7 @@
 		},
 		methods: {
 			...mapActions(['getConfigEvalAPI', 'getEval2ClassAPI', 'newsGroupAPI']),
-			...mapMutations(['SET_SEARCH_FORM_SEEN', 'SET_SELECTED_ARTICLE','SET_ARTICLE_LIST']),
+			...mapMutations(['SET_INIT_SEARCH_FORM','SET_SEARCH_FORM_SEEN','SET_CALL_API_SEARCH', 'SET_SELECTED_ARTICLE','SET_ARTICLE_LIST','SET_LOADING_GIF']),
 			lastDayCal(){
 				this.lastDay = new Date(this.searchConditionModel.selYear,this.searchConditionModel.selMon, 0).getDate();
 				if(this.searchConditionModel.selDay > this.lastDay) this.searchConditionModel.selDay = this.lastDay;
@@ -822,6 +831,7 @@
 				}
 				params.delete('pageNo');
 				this.$eventBus.$emit('fromSearchToArticleList', params);
+				this.SET_CALL_API_SEARCH(true);
 			},
 			/**
 			 * 특정 그룹으로 묶기

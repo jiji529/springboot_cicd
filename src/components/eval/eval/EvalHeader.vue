@@ -103,7 +103,6 @@
 			...mapMutations([
                 'SET_SEARCH_FORM_SEEN'
                 ,'TOGGLE_SHOW_POP_CALENDER'
-                ,'SET_ARTICLE_LIST'
                 ,'SET_SELECTED_ARTICLE'
                 ,'SET_SEL_DATE'
                 ,'SET_SELECTED_ARTICLE'

@@ -31,10 +31,10 @@
 									<div class="md col1-1" :class="{'conceal':item.isUse ==='N'}">
 										<span v-if="edit">
 										<input type="text"
-										       v-model="item.value"
-										       autocomplete="off"
-										       placeholder="항목명 입력"
-										       name="value">면</span>
+											v-model="item.value"
+											autocomplete="off"
+											placeholder="항목명 입력"
+											name="value">면</span>
 										<slot v-else>{{item.value}}{{!isNaN(item.value) ? '면' : ''}}</slot>
 									</div>
 									<div class="md col1-3" :class="{'conceal':item.isUse ==='N'}">

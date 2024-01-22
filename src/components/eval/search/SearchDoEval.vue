@@ -378,7 +378,7 @@
 		},
 		watch: {
 			//선택된 기사의 eval값 가져오는
-			searchSelectedArticle(article) { debugger;
+			searchSelectedArticle(article) {
 				if (!this.originArticle || typeof article == "object"
 					&& article.article_serial != this.originArticle.article_serial)
 					this.originArticle = JSON.parse(JSON.stringify(article)); 

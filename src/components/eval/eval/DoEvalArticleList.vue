@@ -169,7 +169,8 @@
 				this.SET_ARTICLE_LIST('');
 				this.selNewsMe = selNewsMe;
 				this.SET_ARTICLE_LIST_SOURCE('header');
-				if(selNewsMe.length>0) this.getArtListFromHeader(this.selDate, this.selNewsMe);
+				if(selNewsMe.length > 0 && !this.searchFormSeen) // 다른 탭을 갔다왔을 때
+					this.getArtListFromHeader(this.selDate, this.selNewsMe);
 				this.selArticles = ['선택된기사'];
 			});
 			//EvalHeader.vue에서 요청
@@ -202,6 +203,8 @@
 			await this.getArticleListToggle();
 		},
 		beforeDestroy() {
+			this.SET_SELECTED_ARTICLE('');
+            this.SET_ARTICLE_LIST([]);
 			this.$eventBus.$off('sendNewsMeToArtList');
 			this.$eventBus.$off('sendDateToArticleList');
 		},
@@ -211,6 +214,15 @@
 					this.news_id_local = this.selectedArticle.news_id;
 				} else {
 					this.news_id_local = 0;
+				}
+			},
+			searchFormSeen(param) { // 검색접기 했을 때, 데이터가 없다면 검색.
+				if (param) return;
+				if (this.articleList.length > 0) {
+					// 알아서 잘 됨.
+					return ;
+				} else {
+					this.getListWithAuth();
 				}
 			}
 		},
@@ -234,8 +246,8 @@
 				'selDate',
 				'listLayout0',
 				'listLayout1',
-				'listLayout2'
-				]),
+				'listLayout2',
+			]),
 			...mapGetters(['getPremiumID','getEvalInfo', 'getEval2Cnt']),
 			allLength() {
 				const data =this.articleList; 

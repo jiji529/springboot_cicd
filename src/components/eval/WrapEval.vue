@@ -48,12 +48,12 @@
 				}
 			}).catch(e=>console.error(e));
 			await this.$axios.get(ssdo + '/columnSettingJson.php').then(r => {
-        if (r.data.success) {
-          this.columnSettingWeb = r.data.column_setting;
-        } else {
-          alert('설정을 불러오지 못 했습니다!');
-        }
-      }).catch(e=>console.error(e));
+				if (r.data.success) {
+					this.columnSettingWeb = r.data.column_setting;
+				} else {
+					alert('설정을 불러오지 못 했습니다!');
+			}
+			}).catch(e=>console.error(e));
 		},
 		methods: {
 			...mapActions(['getMediaPolicyAPI']),
@@ -81,12 +81,12 @@
 		},
 		created() {
 			this.$eventBus.$off("kickOut");
-      this.$eventBus.$on("kickOut", () => {
-        alert('Logged out!');
-        this.$store.dispatch('LOGOUT').then(() =>
-          this.$router.push('/login')
-        );
-      });
+			this.$eventBus.$on("kickOut", () => {
+				alert('Logged out!');
+				this.$store.dispatch('LOGOUT').then(() =>
+					this.$router.push('/login')
+				);
+			});
 			this.SET_LOADING_GIF(false);
 		}
 	}

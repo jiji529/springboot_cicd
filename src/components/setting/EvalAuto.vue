@@ -46,8 +46,7 @@
 		},
 		async mounted(){
 			const data = await this.getEval2AutoAPI();
-			this.evalList = data.eval2;
-			this.nameEvalList = data.name_key_eval2;
+			this.setEval(data);
 		},
 		methods:{...mapActions(['getEval2AutoAPI']),
 			async auto(item) {
@@ -56,11 +55,30 @@
 				params.append('q' , JSON.stringify(auto));
 				const data = await this.getEval2AutoAPI(params);
 				if (data) {
-					this.evalList = data.eval2;
-					this.nameEvalList = data.name_key_eval2;
+					this.setEval(data);
 				} else {
 					this.$eventBus.$emit('kickOut');
 				}
+			}
+			,setEval(param) {
+				if (!param.eval2 || !param.name_key_eval2) return ;
+				/* 서버에서 인코딩 문제가 있을 경우. 사용되기 위해 */
+				let List = param.eval2;
+				let pos = null;
+				if ((pos = List.find(e => e.name == "수록지면")) != null) {
+					pos.name = "기사위치";
+				}
+				this.evalList = List;
+				List = null;
+
+				List = param.name_key_eval2;
+				pos = null;
+				if (List["수록지면"]) {
+					List["기사위치"] = List["수록지면"];
+					List["기사위치"].name = "기사위치";
+					delete List["수록지면"];
+				}
+				this.nameEvalList = List;
 			}
 		}
 	};

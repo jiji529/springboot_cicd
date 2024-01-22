@@ -146,7 +146,30 @@ export default new Vuex.Store({
     getArticleListFromSearchParams: '',
     getArticleListFromHeaderPayload: '',
 
+    searchConditionModel : {
+      selectedDateStand : "0",
+      selYear: newDate.getFullYear(),
+      selMon: (newDate.getMonth()+1),
+      selDay: newDate.getDate(),
+      sDate: newDate,
+      eDate: newDate,
+      search_range: '0',
+      keyword: '',
+      keyword_condition: 'or',
+      ex_keyword: '',
+      ex_keyword_condition: 'or',
+      hUse: true,
+      news_comment: true,
+      sbUse: true,
+      selNewsMe : ["0"],
+      pageSize: 50,
+      pageNo: -1,
+      order_column: '',
+      order: ''
+    },
+    callApiSearch: false,
     searchFormSeen: false,
+    initSearchForm: false,
     showDoEvalMulti: false,
 //    columnSettingWeb: ['w', 'e', 'b'],
 //    expandArticleList: false,
@@ -216,6 +239,7 @@ export default new Vuex.Store({
       state.domain = false;
       state.selectedArticle = '';
       state.searchFormSeen = false;
+      state.initSearchForm = false;
     },
 
     SET_PWD(state, data) {
@@ -278,6 +302,12 @@ export default new Vuex.Store({
     },
     SET_SEARCH_FORM_SEEN(state, data) {
       state.searchFormSeen = data;
+    },
+    SET_INIT_SEARCH_FORM(state, data) {
+      state.initSearchForm = data;
+    },
+    SET_CALL_API_SEARCH(state, data) {
+      state.callApiSearch = data;
     },
     SET_GET_ARTICLE_LIST_FROM_SEARCH_PARAMS(state, data) {
       state.getArticleListFromSearchParams = data;

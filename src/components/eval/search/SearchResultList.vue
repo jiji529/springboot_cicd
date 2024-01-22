@@ -286,6 +286,8 @@
 			});
 		},
 		beforeDestroy() {
+			this.SET_SEARCH_SELECTED_ARTICLE('');
+			this.SET_SEARCH_ARTICLE_LIST([]);
 			this.$eventBus.$off('fromSearchToArticleList');
 			this.$eventBus.$off("setSearchFormSeen");
 		},
