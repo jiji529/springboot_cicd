@@ -59,13 +59,17 @@
 						</div>
 						<div class="ft1_box">
 							<div class="ft1_val" v-for="major in getEval1Category" :key="major.seq">
+								<!--대분류-->
+								<!-- v-if="major.sub.length < 1" -->
 								<div class="ft_ch" :tabindex="major.sub.length  < 1 ? 0 : null" @keydown.space.prevent="pressSpace(major.seq, major.sub.length)" @click.prevent="pressSpace(major.seq, major.sub.length)" :id="'multi_eval1_focus'+major.seq">
-									<input type="radio" :id="'multi_do_eval1'+major.seq" v-if="major.sub.length < 1 " :value="major.seq" name="multi_eval1" v-model="selEval1" wasChecked="false"/>
+									<input type="radio" :id="'multi_do_eval1'+major.seq" :value="major.seq" name="multi_eval1" v-model="selEval1" wasChecked="false"/>
 									<label :for="'multi_do_eval1'+major.seq" :class="selClass(major.seq)"><span></span>{{major.name}}</label>
 								</div>
+								<!--중분류-->
+								<!-- v-if="mid.sub.length < 1" -->
 								<dl class="ft1_li" v-if="major.sub.length > 0 " v-for="mid in major.sub" :key="mid.seq">
 									<dt :tabindex="mid.sub.length < 1 ? 0 : null" @keydown.space.prevent="pressSpace(mid.seq, mid.sub.length)" @click.prevent="pressSpace(mid.seq, mid.sub.length)" :id="'multi_eval1_focus'+mid.seq">
-										<input type="radio" :id="'multi_do_eval1'+mid.seq" v-if="mid.sub.length < 1 " :value="mid.seq" name="multi_eval1" v-model="selEval1" wasChecked="false"/>
+										<input type="radio" :id="'multi_do_eval1'+mid.seq" :value="mid.seq" name="multi_eval1" v-model="selEval1" wasChecked="false"/>
 										<label :for="'multi_do_eval1'+mid.seq" :class="selClass(mid.seq)"><span></span>{{mid.name}}</label>
 									</dt>
 									<dd v-if="mid.sub.length > 0 ">
@@ -291,7 +295,7 @@
 			 * 평가항목1에 TAB 포커스 했을 시 스페이스바 PRESS로 해당항목 선택
 			 */
 			pressSpace(seq, subLength){
-				if(subLength ===0) {
+				if(subLength >= 0) {
 					const subject = document.querySelector('input[id=multi_do_eval1' + seq + ']');
 					if (subject.attributes.wasChecked.value === 'true') {
 						subject.attributes.wasChecked.value = 'false';

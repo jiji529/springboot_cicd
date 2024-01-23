@@ -1087,8 +1087,16 @@ export default new Vuex.Store({
             if (info.rel_seq[0] == info.rel_seq[1] && 
                 info.rel_seq[1] == info.rel_seq[2]) {
               L[ik] = info;
+              // 평가1 기본(전체)
+              if (!insertItem['M1-f'+info.rel_seq[0]]) {
+                let attr = JSON.parse(JSON.stringify(configEvalItem['M1'+info.rel_seq[0]]));
+                attr.value = info.value;
+                attr.group_seq = '100222';
+                attr.group_name = '평가별(평가1)';
+                insertItem['M1-f'+info.rel_seq[2]] = attr;
+              }
             }
-            // 중분류
+            // 중분류 + 상위포함(대분류)
             if (info.rel_seq[0] != info.rel_seq[1] && 
                 info.rel_seq[1] == info.rel_seq[2]) {
               M[ik] = info;
@@ -1101,8 +1109,16 @@ export default new Vuex.Store({
                 attr.group_name = '중분류(상위포함)';
                 insertItem['M1-m'+info.rel_seq[1]] = attr;
               }
+              // 평가1 기본(전체)
+              if (!insertItem['M1-f'+info.rel_seq[1]]) {
+                let attr = JSON.parse(JSON.stringify(configEvalItem['M1'+info.rel_seq[2]]));
+                attr.value = configEval['item']['M1'][info.rel_seq[0]].value + '-' + info.value;
+                attr.group_seq = '100222';
+                attr.group_name = '평가별(평가1)';
+                insertItem['M1-f'+info.rel_seq[2]] = attr;
+              }
             }
-            // 소분류
+            // 소분류 + 상위포함(중분류)
             if (info.rel_seq[0] != info.rel_seq[1] && 
                 info.rel_seq[1] != info.rel_seq[2]) {
               S[ik] = info;
@@ -1115,7 +1131,7 @@ export default new Vuex.Store({
                 attr.group_name = '소분류(상위포함)';
                 insertItem['M1-s'+info.rel_seq[2]] = attr;
               }
-              // 평가1(전체) 소분류
+              // 평가1 기본(전체)
               if (!insertItem['M1-f'+info.rel_seq[2]]) {
                 let attr = JSON.parse(JSON.stringify(configEvalItem['M1'+info.rel_seq[2]]));
                 attr.value = configEval['item']['M1'][info.rel_seq[0]].value + '-' 

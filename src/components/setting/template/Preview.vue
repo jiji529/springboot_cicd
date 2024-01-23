@@ -454,11 +454,12 @@
                 });
               } dupl_seq = null;
             } // if s.eval1_seq
-            
-            
+
+
             // 교차 기준에 있는 데이터 찾기
             ev2Objs = new Object();      // 임시 저장변수
-            s.eval2.forEach((v,i)=> {    // s: 기사 or v: eval2               
+            s.eval2.forEach((v,i)=> {    // s: 기사 or v: eval2
+              if (!copyConfigEvalItem[v.eval2_seq]) return ;
               /* 
                 s: (statValue-기사)
                   L v: (eval2)
@@ -3802,7 +3803,7 @@
               notEnterd['z'] = true; notEnterd['r'] = true;
               for (let [yRowHeader, yObject] of entr(xObject)) { // sec
                   if (Object.keys(yObject).length < 1) { try{
-                      dataProcessing[xRowHeader][yRowHeader] = yObject;}catch(e) {console.error(xRowHeader, yRowHeader,'::', e)}
+                      dataProcessing[xRowHeader][yRowHeader] = yObject;} catch(e) {console.error(xRowHeader, yRowHeader,'::', e)}
                       if (typeof(yObject) === 'number') { tempSum += yObject; tempColSum[yRowHeader] = yObject;}
                       else { tempSum += 0; }
                   } else {

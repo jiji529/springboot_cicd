@@ -202,14 +202,16 @@
 						<div class="ft1_box">
 							<div class="ft1_val" v-for="major in getEval1Category" :key="major.seq">
 								<!--대분류-->
-								<div class="ft_ch" :tabindex="major.sub.length  < 1 ? 3 : null" @keydown.space.prevent="pressSpace(major.seq, major.sub.length)" @click.prevent="pressSpace(major.seq, major.sub.length)" :id="'do_eval1_focus'+major.seq">
-									<input  type="radio" :id="'do_eval1'+major.seq" v-if="major.sub.length < 1 " :value="major.seq" name="eval1"  v-model="selEval1"  wasChecked="false"/>
+								<!-- v-if="major.sub.length < 1" -->
+								<div class="ft_ch" :tabindex="major.sub.length < 1 ? 3 : null" @keydown.space.prevent="pressSpace(major.seq, major.sub.length)" @click.prevent="pressSpace(major.seq, major.sub.length)" :id="'do_eval1_focus'+major.seq">
+									<input  type="radio" :id="'do_eval1'+major.seq" :value="major.seq" name="eval1"  v-model="selEval1" wasChecked="false"/>
 									<label :for="'do_eval1'+major.seq" :class="selClass(major.seq)"><span></span>{{major.name}}</label>
 								</div>
 								<!--중분류-->
+								<!-- v-if="mid.sub.length < 1" -->
 								<dl class="ft1_li" v-if="major.sub.length > 0 " v-for="mid in major.sub" :key="mid.seq" >
 									<dt :tabindex="mid.sub.length < 1 ? 3 : null" @keydown.space.prevent="pressSpace(mid.seq, mid.sub.length)" @click.prevent="pressSpace(mid.seq, mid.sub.length)" :id="'do_eval1_focus'+mid.seq">
-										<input type="radio" :id="'do_eval1'+mid.seq" v-if="mid.sub.length < 1 " :value="mid.seq" name="eval1" v-model="selEval1" wasChecked="false"/>
+										<input type="radio" :id="'do_eval1'+mid.seq" :value="mid.seq" name="eval1" v-model="selEval1" wasChecked="false"/>
 										<label :for="'do_eval1'+mid.seq" :class="selClass(mid.seq)"><span></span>{{mid.name}}</label>
 									</dt>
 									<dd v-if="mid.sub.length > 0 " >
@@ -515,7 +517,7 @@
 			 * 평가항목1에 TAB 포커스 했을 시 스페이스바 PRESS로 해당항목 선택
 			 */
 			pressSpace(seq, subLength){
-				if(subLength === 0) {
+				if(subLength >= 0) {
 					const subject = document.querySelector('input[id=do_eval1' + seq + ']');
 					if (subject.attributes.wasChecked.value === 'true') {
 						subject.attributes.wasChecked.value = 'false';
@@ -953,21 +955,22 @@
 					if (this.isEvalChange) {
 						selArticle.eval_score = this.calcArticleValue(selArticle);
 						selArticle.eval_score_db = selArticle.eval_score;
-						if(this.evalLayout===0) {
-							if (this.inputMajor) {
-								if (this.fetchEval1Middle.length > 0) {
-									if (!this.inputMiddle) {
-										alert('평가1 항목의 중항목을 선택해 주세요.');
-										document.getElementById('eval1-combo-2').focus();
-										return true;
-									} else if (this.fetchEval1Minor.length > 0 && !this.inputMinor) {
-										alert('평가1 항목의 소항목을 선택해 주세요');
-										document.getElementById('eval1-combo-3').focus();
-										return true;
-									}
-								}
-							}
-						}
+						/* 평가 중/소에 데이터가 있다면 필수로 선택할 수 있도록 */
+						// if(this.evalLayout===0) {
+						// 	if (this.inputMajor) {
+						// 		if (this.fetchEval1Middle.length > 0) {
+						// 			if (!this.inputMiddle) {
+						// 				alert('평가1 항목의 중항목을 선택해 주세요.');
+						// 				document.getElementById('eval1-combo-2').focus();
+						// 				return true;
+						// 			} else if (this.fetchEval1Minor.length > 0 && !this.inputMinor) {
+						// 				alert('평가1 항목의 소항목을 선택해 주세요');
+						// 				document.getElementById('eval1-combo-3').focus();
+						// 				return true;
+						// 			}
+						// 		}
+						// 	}
+						// }
 						let news_id = selArticle.news_id;
 						let eval2Arr = [];
 						let selEval2 = this.selEval2;
