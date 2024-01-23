@@ -11,12 +11,12 @@
 					<input type="checkbox" id="sch_ft1_a00" :checked="allCheck(getSearchEval1.major)" />
 					<label for="sch_ft1_a00"><span></span>대분류</label>
 				</div>
-				<div class="ft_tit" @click.prevent="eval1AllCheck($event, 'sch_ft1_b00',mid, 'div')" @keydown.space.prevent="eval1AllCheck($event, 'sch_ft1_b00',mid, 'div')">
-					<input type="checkbox" id="sch_ft1_b00"   :checked="allCheck(mid)"/>
+				<div class="ft_tit" @click.prevent="eval1AllCheck($event, 'sch_ft1_b00',getSearchEval1.mid, 'div')" @keydown.space.prevent="eval1AllCheck($event, 'sch_ft1_b00',getSearchEval1.mid, 'div')">
+					<input type="checkbox" id="sch_ft1_b00"   :checked="allCheck(getSearchEval1.mid)"/>
 					<label for="sch_ft1_b00" ><span></span>중분류</label>
 				</div>
-				<div class="ft_tit" @click.prevent="eval1AllCheck($event, 'sch_ft1_c00',minor, 'div')" @keydown.space.prevent="eval1AllCheck($event, 'sch_ft1_c00',minor, 'div')">
-					<input type="checkbox" id="sch_ft1_c00" :checked="allCheck(minor)"/>
+				<div class="ft_tit" @click.prevent="eval1AllCheck($event, 'sch_ft1_c00',getSearchEval1.minor, 'div')" @keydown.space.prevent="eval1AllCheck($event, 'sch_ft1_c00',getSearchEval1.minor, 'div')">
+					<input type="checkbox" id="sch_ft1_c00" :checked="allCheck(getSearchEval1.minor)"/>
 					<label for="sch_ft1_c00" ><span></span>소분류</label>
 				</div>
 			</div>
