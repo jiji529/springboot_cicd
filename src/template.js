@@ -1,5 +1,5 @@
 import axios from 'axios';
-import store from '../../store'
+import store from '@/store'
 
 const keywordSet = {
     // 목록 리스트

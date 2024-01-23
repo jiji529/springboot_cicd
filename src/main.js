@@ -11,7 +11,7 @@ import ko from 'vee-validate/dist/locale/ko.js'
 import AsyncComputed from 'vue-async-computed'
 import browserDetect from "vue-browser-detect-plugin";
 import common from './common.js'
-import statConfig from './assets/js/template.js'
+import statConfig from './template.js'
 
 ko.messages.required = (field) => `'${field}'은/는 필수입력란 입니다.`
 ko.messages.regex = (field) => `'${field}'의 형식이 올바르지 않습니다.`
