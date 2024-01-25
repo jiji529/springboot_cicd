@@ -802,7 +802,10 @@
 					 link.click();
 					 link.parentNode.removeChild(link);*/
 					this.SET_LOADING_GIF(false);
-				}).catch(e => console.log(e));
+				}).catch(e => {
+					console.log(e);
+					this.SET_LOADING_GIF(false);
+				});
 			},
 			async listPrint() {
 				if(this.searchNewsIdList.length >= 1) {

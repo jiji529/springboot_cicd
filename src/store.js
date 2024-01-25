@@ -275,6 +275,8 @@ export default new Vuex.Store({
       state.selectedArticle = '';
       state.searchFormSeen = false;
       state.initSearchForm = false;
+      state.evalSelectionMedium = {};
+      state.statSelectionMedium = {};
     },
 
     SET_PWD(state, data) {

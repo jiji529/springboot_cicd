@@ -215,98 +215,99 @@
 				this.isShowImage = true;
 				this.isMinimapActive = false;
 				const article = this.searchSelectedArticle;
-
-				if (this.isPaperOrOnline === 'no') {
-					this.isShowImage = false;
-				} else if (this.isPaperOrOnline === 'paper') {
-					if (article.news_file_name !== '') {
-						//기사 및 미니맵 이미지 경로
-						this.coordinateInfo = article.coordinate;
-						let pathdomain = '';
-						if(this.getDomain === false) {
-							pathdomain = 'https://premium.scrapmaster.co.kr/server/';
-						} else {
-							pathdomain = 'https://' + this.pid + '.scrapmaster.co.kr/server/';
-						}
-						if (article.news_file_name.match(pathdomain)) {
-							this.filePath = article.news_file_name;
-						} else {
-							this.filePath = pathdomain + article.news_file_name;
-						}
-						let miniMap = article.article_serial;
-						let miniMapPath = miniMap.substr(0, miniMap.length - 3);
-						this.miniMapPath = store.state.hiddenLink1 + '/paperDown.php?filepath=' + miniMapPath + '&userid=' + this.pid;
-						// if (article.article_date !== null) {
-						// 	let leg = article.article_date.length;
-						// 	article.article_date = article.article_date.substr(0, leg - 3);
-						// }
-						this.highLight = article.highLight;
-						this.isMinimapActive = true;
-					}
-				} else if (this.isPaperOrOnline === 'ht5') {
-					let year = article.article_date.substr(0, 4) + '/';
-					let month = article.article_date.substr(5, 2) + '/';
-					let day = article.article_date.substr(8, 2) + '/';
-					let pid = this.pid + '/';
-					let htmlAddress = '';
-					if(article.news_file_name !== '') {
-						htmlAddress = 'https://premium.scrapmaster.co.kr/server/' + article.news_file_name + '.html';
-					} else {
-						htmlAddress = 'https://premium.scrapmaster.co.kr/server/article/' + pid + year + month + day + article.guid + '.html';
-					}
-					this.htmlAddress = htmlAddress;
-					let ssdo = store.state.hiddenLink1;
-					let param = new FormData;
-					param.append('nid', article.news_id);
-					param.append('pid', this.pid);
-					await this.$axios.post(ssdo + '/getHtmlArticle.php',param)
-						.then((res) => {
-							let data = res.data;
-							if (data.success === false) {
-								this.$eventBus.$emit('kickOut');
+				try {
+					if (this.isPaperOrOnline === 'no') {
+						this.isShowImage = false;
+					} else if (this.isPaperOrOnline === 'paper') {
+						if (article.news_file_name !== '') {
+							//기사 및 미니맵 이미지 경로
+							this.coordinateInfo = article.coordinate;
+							let pathdomain = '';
+							if(this.getDomain === false) {
+								pathdomain = 'https://premium.scrapmaster.co.kr/server/';
 							} else {
-								this.htmlContents = data;
+								pathdomain = 'https://' + this.pid + '.scrapmaster.co.kr/server/';
 							}
-						}).catch(e => console.error(e));
-				} else if (this.isPaperOrOnline === 'aef') {
-					let year = article.scrap_date.substr(0, 4) + '/';
-					let month = article.scrap_date.substr(5, 2) + '/';
-					let day = article.scrap_date.substr(8, 2) + '/';
-					let pid = this.pid ;
-					let aefAddress = 'https://premium.scrapmaster.co.kr/server/article/' + pid + '/' + year + month + day + article.article_serial + '.aef';
-					let aefTitle = article.article_title;
-					let highLightWord = [];
-					let ssdo = store.state.hiddenLink1;
-					let param = new FormData;
-					param.append('url', aefAddress);
-					await this.$axios.post(ssdo + '/getAefImage.php',param)
-						.then(res => {
-							let data = res.data;
-							if (data.succes === false) {
-								this.$eventBus.$emit('kickOut');
+							if (article.news_file_name.match(pathdomain)) {
+								this.filePath = article.news_file_name;
 							} else {
-								this.aefImage = data;
+								this.filePath = pathdomain + article.news_file_name;
 							}
-						}).catch(e => console.error(e));
-					this.aefMediaLogo = store.state.hiddenLink1 + '/news_logo.php?q=' +article.media_name+'&u=' +pid;
-					this.aefMediaLogoString = article.media_name;
-					if(article.article_contents !== ',') {
-						this.contents = article.article_contents.replace(/\$n/gi, "<br>");
-						this.contents = this.contents.replace(/\$r/gi, "");
-					} else {
-						this.contents = '';
-					}
-					if(article.highLightWord !== null && article.highLightWord !== '')  {
-						highLightWord = article.highLightWord.split(' ');
-						for(const word in highLightWord) {
-							aefTitle = this.replaceAll(aefTitle, highLightWord[word], '<span style="background-color: rgba(255,0,0,0.3)">'+highLightWord[word]+'</span>');
-							this.contents = this.replaceAll(this.contents, highLightWord[word], '<span style="background-color: rgba(255,0,0,0.3)">'+highLightWord[word]+'</span>');
+							let miniMap = article.article_serial;
+							let miniMapPath = miniMap.substr(0, miniMap.length - 3);
+							this.miniMapPath = store.state.hiddenLink1 + '/paperDown.php?filepath=' + miniMapPath + '&userid=' + this.pid;
+							// if (article.article_date !== null) {
+							// 	let leg = article.article_date.length;
+							// 	article.article_date = article.article_date.substr(0, leg - 3);
+							// }
+							this.highLight = article.highLight;
+							this.isMinimapActive = true;
 						}
+					} else if (this.isPaperOrOnline === 'ht5') {
+						let year = article.article_date.substr(0, 4) + '/';
+						let month = article.article_date.substr(5, 2) + '/';
+						let day = article.article_date.substr(8, 2) + '/';
+						let pid = this.pid + '/';
+						let htmlAddress = '';
+						if(article.news_file_name !== '') {
+							htmlAddress = 'https://premium.scrapmaster.co.kr/server/' + article.news_file_name + '.html';
+						} else {
+							htmlAddress = 'https://premium.scrapmaster.co.kr/server/article/' + pid + year + month + day + article.guid + '.html';
+						}
+						this.htmlAddress = htmlAddress;
+						let ssdo = store.state.hiddenLink1;
+						let param = new FormData;
+						param.append('nid', article.news_id);
+						param.append('pid', this.pid);
+						await this.$axios.post(ssdo + '/getHtmlArticle.php',param)
+							.then((res) => {
+								let data = res.data;
+								if (data.success === false) {
+									this.$eventBus.$emit('kickOut');
+								} else {
+									this.htmlContents = data;
+								}
+							}).catch(e => console.error(e));
+					} else if (this.isPaperOrOnline === 'aef') {
+						let year = article.scrap_date.substr(0, 4) + '/';
+						let month = article.scrap_date.substr(5, 2) + '/';
+						let day = article.scrap_date.substr(8, 2) + '/';
+						let pid = this.pid ;
+						let aefAddress = 'https://premium.scrapmaster.co.kr/server/article/' + pid + '/' + year + month + day + article.article_serial + '.aef';
+						let aefTitle = article.article_title;
+						let highLightWord = [];
+						let ssdo = store.state.hiddenLink1;
+						let param = new FormData;
+						param.append('url', aefAddress);
+						await this.$axios.post(ssdo + '/getAefImage.php',param)
+							.then(res => {
+								let data = res.data;
+								if (data.succes === false) {
+									this.$eventBus.$emit('kickOut');
+								} else {
+									this.aefImage = data;
+								}
+							}).catch(e => console.error(e));
+						this.aefMediaLogo = store.state.hiddenLink1 + '/news_logo.php?q=' +article.media_name+'&u=' +pid;
+						this.aefMediaLogoString = article.media_name;
+						if(article.article_contents !== ',') {
+							this.contents = article.article_contents.replace(/\$n/gi, "<br>");
+							this.contents = this.contents.replace(/\$r/gi, "");
+						} else {
+							this.contents = '';
+						}
+						if(article.highLightWord !== null && article.highLightWord !== '')  {
+							highLightWord = article.highLightWord.split(' ');
+							for(const word in highLightWord) {
+								aefTitle = this.replaceAll(aefTitle, highLightWord[word], '<span style="background-color: rgba(255,0,0,0.3)">'+highLightWord[word]+'</span>');
+								this.contents = this.replaceAll(this.contents, highLightWord[word], '<span style="background-color: rgba(255,0,0,0.3)">'+highLightWord[word]+'</span>');
+							}
+						}
+						this.aefTitle = aefTitle;
+						this.newsTime = article.scrap_date;
+						this.isLogoImage = true;
 					}
-					this.aefTitle = aefTitle;
-					this.newsTime = article.scrap_date;
-					this.isLogoImage = true;
-				}
+				} catch(e) {}
 			},
 			replaceAll(str,searchStr, replaceStr){
 				return str.split(searchStr).join(replaceStr);

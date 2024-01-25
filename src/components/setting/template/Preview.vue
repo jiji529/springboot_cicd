@@ -988,7 +988,7 @@
         if (this.option['title'] !== undefined) {
           mainTitle = this.option.title.main.text;
           subTitle = this.option.title.sub.text;
-          if (mainTitle !== '' && mainTitle !== undefined) { // 제목 키워드 분석
+          if ( mainTitle !== undefined || mainTitle !== '' ) { // 제목 키워드 분석
             mainTitle = mainTitle.replace('#{제목}#', () => {
               let str = [];
               this.req_evg_seq.forEach((el, i) => {
@@ -997,10 +997,18 @@
               return "#{검색기간}# : " + str.join(' - ');
             });
             
-            chartTitleText = this.fnTitleCodeParser(mainTitle);  
+            chartTitleText = this.fnTitleCodeParser(mainTitle,evalItem);  
           }
-          if ( subTitle !== '' && subTitle !== undefined) {  // 부제목 키워드 분석
-            chartSubtitleText = this.fnTitleCodeParser(subTitle);
+          if ( subTitle !== undefined || subTitle !== '' ) {  // 부제목 키워드 분석
+            subTitle = subTitle.replace('#{제목}#', () => {
+              let str = [];
+              this.req_evg_seq.forEach((el, i) => {
+                str.push("#{통계항목"+(i+1)+"}#");
+              });
+              return "#{검색기간}# : " + str.join(' - ');
+            });
+
+            chartSubtitleText = this.fnTitleCodeParser(subTitle,evalItem);
             this.etcData['text']['subtitle'] = { // 차트로 부제목 전달
               message: chartSubtitleText
               ,color: 'gray'
@@ -1015,7 +1023,8 @@
         };
 
         if (!Object.keys(changeData).length) {
-          this.etcData['text']['title']['message'] = this.req_evg_name.join(' > ');
+          const msg = this.req_evg_name.join(' > ');
+          this.etcData['text']['title']['message'] = (msg == '') ? '교차기준을 선택해주세요' : msg;
         }
         
         // 스크랩 기사 통계를 구현하기 위한 날짜 로직

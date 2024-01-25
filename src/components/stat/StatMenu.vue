@@ -275,9 +275,11 @@
         }
         this.getStatSetting.reportInTabView = isStatReport;
         this.getStatSetting.crossInTabView  = isStatCustom;
-        this.getStatSetting.showCrossCalc = tabSettingValue.show;
-        this.getStatSetting.crossCalcValue = tabSettingValue.tabCalcType;
-        this.getStatSetting.numberScale = tabSettingValue.priceUnit;
+        if (tabSettingValue) {
+          this.getStatSetting.showCrossCalc = tabSettingValue.show;
+          this.getStatSetting.crossCalcValue = tabSettingValue.tabCalcType;
+          this.getStatSetting.numberScale = tabSettingValue.priceUnit;
+        }
       },  
 
       /**

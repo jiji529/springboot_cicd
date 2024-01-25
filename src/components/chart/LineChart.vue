@@ -105,16 +105,18 @@ export default {
     drawTitle() {
       const DIV = document.querySelector('.title-area' + this.etc.index);
       const SPAN_T = document.createElement('span');
-      const SPAN_ST = this.etc.text.subtitle ? document.createElement('span') : null;
+      const SPAN_ST = document.createElement('span');
+      
+      if (this.etc.text.title.message || this.etc.text.title.message != '') {
+        SPAN_T.textContent = this.etc.text.title.message;
+        SPAN_T.style.color = this.etc.text.title.color;
+        SPAN_T.style.fontWeight = this.etc.text.title.font.weight;
+        SPAN_T.style.fontSize = this.etc.text.title.font.size;
+        SPAN_T.style.margin = '0 0 10px 0';
+        DIV.appendChild(SPAN_T);
+      }
 
-      SPAN_T.textContent = this.etc.text.title.message;
-      SPAN_T.style.color = this.etc.text.title.color;
-      SPAN_T.style.fontWeight = this.etc.text.title.font.weight;
-      SPAN_T.style.fontSize = this.etc.text.title.font.size;
-      SPAN_T.style.margin = '0 0 10px 0';
-      DIV.appendChild(SPAN_T);
-
-      if (SPAN_ST !== null) {
+      if (this.etc.text.subtitle.message || this.etc.text.subtitle.message != '') {
         SPAN_ST.textContent = this.etc.text.subtitle.message;
         SPAN_ST.style.color = this.etc.text.subtitle.color;
         SPAN_ST.style.fontWeight = this.etc.text.subtitle.font.weight;
@@ -210,16 +212,18 @@ export default {
   mounted() {
     // 자식 컴포넌트까지 완료된 후..
     this.$nextTick(function() {
-      // chart object
-      this.myChart = ChartJS.getChart(this.chartId);
-      this.drawTitle();
-      if(this.etc.legend) this.drawLegend();
-      let chartDiv = document.getElementById('chartBox' + this.etc.index);
-      if (chartDiv) {
-        chartDiv.style.width = this.etc.size.width; // 부모
-        chartDiv.children[2].style.height
-         = this.etc.size.height == '0px' ? 'auto' : this.etc.size.height; // 자식
-      }
+      try {
+        // chart object
+        this.myChart = ChartJS.getChart(this.chartId);
+        this.drawTitle();
+        if(this.etc.legend) this.drawLegend();
+        let chartDiv = document.getElementById('chartBox' + this.etc.index);
+        if (chartDiv) {
+          chartDiv.style.width = this.etc.size.width; // 부모
+          chartDiv.children[2].style.height
+          = this.etc.size.height == '0px' ? 'auto' : this.etc.size.height; // 자식
+        }
+      } catch (e) {}
     });
   },
 };
