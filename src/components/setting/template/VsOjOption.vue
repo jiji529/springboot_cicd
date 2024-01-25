@@ -1810,6 +1810,7 @@ export default {
          * <교차-기준 적용하기>, <객체(테이블, 차트)> 버튼에도 적용해야 함.
          */
         chartOptionController(voo) {
+            if (!voo.rowList || !voo.columnList) return ;
             let max = voo.rowList.itemLen + voo.columnList.itemLen; // 최대 사이즈
             let cnt = 0; // 화면에 출력되는 옵션의 수
             let lastOption = 0; // 옵션의 마지막 인덱스
@@ -1831,6 +1832,20 @@ export default {
         }, // method chartOptionController
 
         copyObject(event, object, pos) {
+            let pointer = {
+                left: 0
+                , top: 0
+                , getPointer: function(elm) {
+                let parent = elm.offsetParent;
+                let bound = elm.getBoundingClientRect();
+                    let divbound = parent.getBoundingClientRect();
+                    this.left = bound.left - divbound.left;
+                    this.top = bound.top - divbound.top + bound.height;
+                    return [this.left, this.top];
+                }
+            }
+            let p = pointer.getPointer(event.currentTarget);
+
             this.optionPos.index = (pos+1);
             this.isText = object.name === "Text" ? true : false;
             const el = document.getElementById('copyOptPos');
@@ -1839,8 +1854,8 @@ export default {
             if (!el.checked) return;
             const modal = document.querySelector(".option-position");
             if (!modal) return; 
-            modal.style.top = event.y+'px';
-            modal.style.left = event.x+'px';
+            modal.style.top = p[1]+'px';
+            modal.style.left = p[0]+'px';
             this.copyVisualObj = JSON.parse(JSON.stringify(object)); // 객체 복사
         },
 
