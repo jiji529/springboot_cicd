@@ -609,8 +609,8 @@ input#customTemplate:checked + label + div {
 	display: block;
 	width: 900px; height: 470px;
 	background: white;
-	position: fixed; top: 50%; left: 50%;
-	transform: translate(-50%, -50%);
+	position: fixed; top: 25%; left: 27%;
+	/* transform: translate(-50%, -50%); */
 	transition-duration: 1s;
 }
 
