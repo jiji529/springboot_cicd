@@ -23,8 +23,9 @@ RUN ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
 RUN composer install
 RUN cp -rf vendor ../
 
-RUN cp /usr/lib/php/7.3/php.ini-development /usr/lib/php/7.3/php.ini
-RUN sed -i 's/session.gc_maxlifetime = 1440/session.gc_maxlifetime = 43200/g' /usr/lib/php/7.3/php.ini
+# modify php.ini
+# RUN cp /usr/lib/php/7.3/php.ini-development /usr/lib/php/7.3/php.ini
+# RUN sed -i 's/session.gc_maxlifetime = 1440/session.gc_maxlifetime = 43200/g' /usr/lib/php/7.3/php.ini
 
 WORKDIR /var/www/html/evalPhp
 RUN chmod 777 log
