@@ -5,7 +5,8 @@
       <button @click="tableToExcel('e', '.mm-line-group'+MMIdx, MMIdx)">엑셀다운</button>
       <button style="width:100px;" @click="tableToExcel('a', '.mm-line-group'+MMIdx)">엑셀다운(전체)</button>
       <button @click="print('.mm-line-group'+MMIdx)">인쇄</button>
-      <button @click="word('a')">워드다운</button>
+      <!-- 워드를 개별로 출력하고 싶다면 "A"를 제외한 아무 문자를 넣으면 된다. -->
+      <button @click="word('A')">워드다운</button>
     </div>
 
     <!-- 
@@ -496,8 +497,8 @@
         img.src = canvas.toDataURL();
       },
 
-      async word(type='e') {
-        await this.printPageLoad(type); 
+      async word(type="A") {
+        await this.printPageLoad(type=="A"?type:this.MMIdx); 
         await this.$nextTick();
         const that = this;
         setTimeout(function(){

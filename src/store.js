@@ -677,19 +677,33 @@ export default new Vuex.Store({
         if (count > -1) {
           setCommitCount(store, count);
         }
-        let list = {};
-        list[0] = articles;
-        let data = {};
-        data[0] = list;
+        
+        let newsIdList = [];
         if (res.status === 200 && !res.data.notice_code && !res.data.notice_message) {
+          let data = {};
+          const config = store.state.configEval;
+          let confEvalType = "0";
+          if (config.policy && config.policy.CL && config.policy.CL.value) {
+            confEvalType = config.policy.CL.value;
+          }
+          const ng = store.state.newsGroup;
+          if (Object.keys(ng).length > 0) {
+            for (let [code, _] of Object.entries(ng)) {
+              data[code] = {};
+            }
+          }
+          let foldername = "ALL";
+          for (let [name,v] of Object.entries(articles)) {
+            if (confEvalType=="1") foldername = name;
+            for (let art of v) {
+              if (!data[art.news_me]) data[art.news_me] = {};
+              if (!data[art.news_me][foldername]) data[art.news_me][foldername] = [];
+              data[art.news_me][foldername].push(art);
+              newsIdList.push(art.news_id);
+            }
+          }
           setCommit(store, data);
-          let newsIdList = [];
-          if(articles[0]) {
-            articles.forEach(one => {
-              if (one !== null) {
-                newsIdList.push(one.news_id);
-              }
-            });
+          if(evals) {
             setCommitEvalInfo(store, evals);
           }
           if (res.status === 200) {

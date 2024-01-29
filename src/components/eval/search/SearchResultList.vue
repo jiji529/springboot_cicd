@@ -52,10 +52,42 @@
 			</div>
 			<!--뉴스그룹-->
 			<div class="list_con" v-for=" (group, index) in searchArticleList" :key="index">
+
+				<!-- 그룹 -->
+				<div class="list_grp" v-if="checkingNewsGroup(index, group)" >
+					<input type="checkbox" :id="'news_group' + index" :checked="group2(group)" @change="checkGroup($event,group)"/>
+					<label :for="'news_group' + index"><div class="li_chk" ><span></span></div>
+						<div class="li_tit">{{newsGroup[index].sname}}</div>
+					</label>
+				</div>
+
 				<!-- 폴더명 : 신문,방송,인터넷검색기사 등-->
 				<div v-for=" (folder , foldername ) in group" :key="foldername">
+
+					<!-- 폴더 -->
+					<div class="list_media" v-if="getArticleListSource === 'searchForm' && foldername !== 'ALL'">
+						<input type="checkbox" :id="'folder_'+index+foldername" :checked="fold(folder)" @change="checkFolder($event, folder)"/>
+						<label :for="'folder_'+index+foldername">
+							<div class="li_chk"><span></span></div>
+							<div class="li_tit"><span class="ico li0"></span>
+								{{foldername}}
+							</div>
+						</label>
+					</div>
+
 					<ul class="list_ul">
 						<div v-for="(one, oneIdx) in folder" :key="oneIdx">
+							<!-- 소제목 -->
+							<div class="list_cate" v-if="getArticleListSource === 'searchForm' && one.subtitle" :key="oneIdx+'-o-'">
+								<input type="checkbox" :id="'subtitle_'+index+foldername+oneIdx" :checked="subtitle(one.subtitleHas, folder)" @change="checkSubtitle($event,one.subtitleHas,folder)"/>
+								<label :for="'subtitle_'+index+foldername+oneIdx">
+									<div class="li_chk"><span></span></div>
+									<div class="li_tit">
+										<span class="ico li11"></span>
+										{{one.subtitle}}
+									</div>
+								</label>
+							</div>
 							<!--기사 -->
 							<li class="list_li" :class="{'on': one.news_id === news_id_local, 'gray-bg':one.hidden}" v-if="!one.hidden || articleHiddenShow">
 								<div class="li_chk">
@@ -275,7 +307,7 @@
 		},
 		created() {
 			//검색하기에서 요청
-			this.$eventBus.$on('fromSearchToArticleList', params => { // 검색!! 리스트 출력하러 ㄱ
+			this.$eventBus.$on('fromSearchToArticleList', (params) => { // 검색!! 리스트 출력하러 ㄱ
 				this.searchForm = params;
 				let t = Number(params.get('pageNo'));
 				this.pageNoCurrent = isNaN(t) ? 0 : t;
@@ -292,7 +324,7 @@
 			this.$eventBus.$off("setSearchFormSeen");
 		},
 		watch: {
-			searchSelectedArticle(){
+			searchSelectedArticle() { 
 				if(this.searchSelectedArticle !== ''  && this.searchSelectedArticle !== undefined){
 					this.news_id_local = this.searchSelectedArticle.news_id;
 				} else {
@@ -349,6 +381,12 @@
 				'TOGGLE_HIDE_AND_SHOW_ARTICLE_LIST_SEARCH',
 				'SET_ARTICLE_LIST_SOURCE',
 			]),
+			checkingNewsGroup(index, group) {
+				return (this.getArticleListSource === 'searchForm' 
+						&& this.newsGroup[index] 
+						&& typeof(group) != null 
+						&& typeof(group) !== 'undefined');
+			},
 			getArticleClassName(news_comment, field) {
 				let rtn = field;
 				if (Number(news_comment) === 1) {

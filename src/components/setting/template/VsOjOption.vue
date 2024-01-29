@@ -1836,8 +1836,8 @@ export default {
                 left: 0
                 , top: 0
                 , getPointer: function(elm) {
-                let parent = elm.offsetParent;
-                let bound = elm.getBoundingClientRect();
+                    let parent = elm.offsetParent;
+                    let bound = elm.getBoundingClientRect();
                     let divbound = parent.getBoundingClientRect();
                     this.left = bound.left - divbound.left;
                     this.top = bound.top - divbound.top + bound.height;

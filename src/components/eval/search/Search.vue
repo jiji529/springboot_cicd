@@ -427,6 +427,7 @@
 			}
 			, searchFormSeen(param) { // 검색접기 했을 때, 데이터가 없다면 검색.
 				if (!param) return;
+				this.SET_ARTICLE_LIST_SOURCE('searchForm');
 				if (this.callApiSearch && typeof this.searchSelectedArticle != 'object') {
 					this.goSearch();
 				}
@@ -463,7 +464,14 @@
 		},
 		methods: {
 			...mapActions(['getConfigEvalAPI', 'getEval2ClassAPI', 'newsGroupAPI']),
-			...mapMutations(['SET_INIT_SEARCH_FORM','SET_SEARCH_FORM_SEEN','SET_CALL_API_SEARCH', 'SET_SELECTED_ARTICLE','SET_ARTICLE_LIST','SET_LOADING_GIF']),
+			...mapMutations(['SET_INIT_SEARCH_FORM',
+				'SET_SEARCH_FORM_SEEN',
+				'SET_ARTICLE_LIST_SOURCE',
+				'SET_CALL_API_SEARCH',
+				'SET_SELECTED_ARTICLE',
+				'SET_ARTICLE_LIST',
+				'SET_LOADING_GIF'
+			]),
 			lastDayCal(){
 				this.lastDay = new Date(this.searchConditionModel.selYear,this.searchConditionModel.selMon, 0).getDate();
 				if(this.searchConditionModel.selDay > this.lastDay) this.searchConditionModel.selDay = this.lastDay;
@@ -828,7 +836,7 @@
 					}
 				}
 				params.delete('pageNo');
-				this.$eventBus.$emit('fromSearchToArticleList', params);
+				this.$eventBus.$emit('fromSearchToArticleList', params, this.newsGroup);
 				this.SET_CALL_API_SEARCH(true);
 			},
 			/**

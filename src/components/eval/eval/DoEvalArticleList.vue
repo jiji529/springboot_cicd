@@ -43,15 +43,20 @@
 				</ul>
 			</div>
 			<!--뉴스그룹 -->
-			<div class="list_con" v-for="(group, index) in articleList" :key="index">
+			<div class="list_con" v-for="(group, index) in articleList" :key="index+'-n-'">
+
+				<!-- 그룹 -->
 				<div class="list_grp" v-if="checkingNewsGroup(index, group)" >
 					<input type="checkbox" :id="'news_group' + index" :checked="group2(group)" @change="checkGroup($event,group)"/>
 					<label :for="'news_group' + index"><div class="li_chk" ><span></span></div>
 						<div class="li_tit">{{newsGroup[index].sname}}</div>
 					</label>
 				</div>
+
 				<!-- 폴더명 : 신문,방송,인터넷검색기사 등-->
-				<div v-for=" (folder , foldername ) in group" :key="foldername">
+				<div v-for=" (folder , foldername ) in group" :key="foldername+'-f-'">
+
+					<!-- 폴더 -->
 					<div class="list_media" v-if="getArticleListSource === 'header' && foldername !== 'ALL'">
 						<input type="checkbox" :id="'folder_'+index+foldername" :checked="fold(folder)" @change="checkFolder($event, folder)"/>
 						<label :for="'folder_'+index+foldername">
@@ -61,10 +66,11 @@
 							</div>
 						</label>
 					</div>
+
 					<ul class="list_ul">
 						<slot v-for="(one, oneIdx) in folder">
 							<!--소제목 -->
-							<div class="list_cate" v-if="getArticleListSource === 'header' && one.subtitle">
+							<div class="list_cate" v-if="getArticleListSource === 'header' && one.subtitle" :key="oneIdx+'-o-'">
 								<input type="checkbox" :id="'subtitle_'+index+foldername+oneIdx" :checked="subtitle(one.subtitleHas, folder)" @change="checkSubtitle($event,one.subtitleHas,folder)"/>
 								<label :for="'subtitle_'+index+foldername+oneIdx">
 									<div class="li_chk"><span></span></div>
@@ -75,7 +81,7 @@
 								</label>
 							</div>
 							<!--기사 -->
-							<li class="list_li" :class="{ on : one.news_id === news_id_local }" >
+							<li class="list_li" :class="{ on : one.news_id === news_id_local }" :key="oneIdx+'art'">
 								<div class="li_chk">
 									<input type="checkbox" :value="one" :id="'article_checkbox'+one.news_id"  v-model="selArticles"/>
 									<label :for="'article_checkbox'+one.news_id" >
@@ -159,7 +165,17 @@
 				evalManualSetting: [],
 				softSortColumn: 'news_id',
 				softSortOrderIndex: 2,
-				softSortOrderValue: ['▲', '▼']
+				softSortOrderValue: ['▲', '▼'],
+				reComposition: {
+					cnt: 0,
+					oper: function() {
+						if (this.cnt >= 100) {
+							this.cnt = 0;
+							return ;
+						}
+						this.cnt++;
+					}
+				}
 			}
 		},
 		created() {
@@ -209,7 +225,7 @@
 			this.$eventBus.$off('sendDateToArticleList');
 		},
 		watch: {
-			selectedArticle(){
+			selectedArticle() {
 				if(this.selectedArticle !== '' && this.selectedArticle !== undefined){
 					this.news_id_local = this.selectedArticle.news_id;
 				} else {
@@ -218,6 +234,7 @@
 			},
 			searchFormSeen(param) { // 검색접기 했을 때, 데이터가 없다면 검색.
 				if (param) return;
+				this.SET_ARTICLE_LIST_SOURCE("header");
 				if (this.articleList.length > 0) {
 					// 알아서 잘 됨.
 					return ;
