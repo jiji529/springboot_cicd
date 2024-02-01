@@ -268,13 +268,8 @@
               cateList.push(item);
             });
           }
-          /*const cateIdx = this.getStatSetting.mediaSelectionOptions.indexOf(category.category_id);
-          if(cateIdx > -1) $this.getStatSetting.mediaSelectionOptions.splice(cateIdx,1);*/
 	        return cateList.every(function(item, idx) {
             if ($this.checkedMedia.indexOf(item) > -1) {
-              /*if(idx === (cateList.length-1)) {
-              	if(cateIdx === -1) $this.getStatSetting.mediaSelectionOptions.push(category.category_id);
-              }*/
               return true;
             }
           });

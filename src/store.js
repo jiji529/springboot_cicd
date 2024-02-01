@@ -32,9 +32,9 @@ const statState = () => ({
     includingNot: true,  // 평가 제외 기사 포함
     includingPrivate: true // 비공개 스크랩 포함
   },
-  groupIsCategory: true, // 매체 선택 옵션 분류||유형
-  mediaSelectionOptions: [], // 매체 선택 옵션 분류||유형 groupId
   evalSelectionMedium: {}, // 평가탭 선택 매체
+  groupIsCategory: true, // (공통) 매체 선택 옵션 분류||유형
+  mediaSelectionOptions: [], // 매체 선택 옵션 분류||유형 groupId
   statSelectionMedium: {}, // 통계탭 선택 매체
   evaluationItem0: [], // 자동평가
   evaluationItem1: [], // 평가 1
@@ -275,8 +275,9 @@ export default new Vuex.Store({
       state.selectedArticle = '';
       state.searchFormSeen = false;
       state.initSearchForm = false;
-      state.evalSelectionMedium = {};
-      state.statSelectionMedium = {};
+      state.statSetting.evalSelectionMedium = {};
+      state.statSetting.statSelectionMedium = {};
+      state.mediaList = [];
     },
 
     SET_PWD(state, data) {
@@ -1394,6 +1395,23 @@ export default new Vuex.Store({
 
       return store.getters.getConfigEval;
     },
+    // 재평가 설정 API
+    async setReAutoEvaluateAPI(store, params) {
+      const getAPI = () => {
+        return axios.post(phpApi + '/reAutoEvaluate.php', params);
+      }
+      
+      try {
+        const res = await getAPI(params);
+         if (res.status === 200 && res.data.success !== false) {
+          return true;
+        }
+        return false;
+      } catch (err) {
+        console.error(err);
+      }
+    },
+
     //평가 자동화 기사 크기 설정 API
     async getArticleSizeAPI(store, params) {
       // 요청

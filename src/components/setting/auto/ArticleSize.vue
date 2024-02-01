@@ -10,6 +10,7 @@
         </slot>
         <slot v-else>
           <a @click="edit=true" class="btn_gr">편집</a>
+          <a @click="reEval" class="btn_gr">재평가</a>
         </slot>
       </div>
     </div>
@@ -114,13 +115,14 @@
     </div>
     <!-- e: set_cont -->
     <div class="set_list_tf"><a @click="insertCategory">+ 항목추가</a></div>
+    <div class="loading" style="background-color:#ffffff45" v-if="loadingGif"><img class="loading-image" :src="require('@/assets/images/loading.gif')" alt="Loading..."/></div>
   </div>
 </template>
 
 <script>
   /* eslint-disable no-console */
 
-  import {mapActions} from 'vuex';
+  import {mapActions,mapState,mapMutations} from 'vuex';
 
   export default {
     name: 'ArticleSize',
@@ -136,6 +138,7 @@
       this.onSetting();
     },
     computed: {
+      ...mapState(['loadingGif']),
       showName: function () {
         let rtn = '자동산정';
         for (let [k,v] of Object.entries(this.evalList)) {
@@ -144,11 +147,12 @@
           }
         }
         return rtn;
-      }
+      },
     },
 
     methods: {
-      ...mapActions(['getArticleSizeAPI', 'getMediaPolicyAPI']),
+      ...mapMutations(['SET_LOADING_GIF']),
+      ...mapActions(['getArticleSizeAPI', 'getMediaPolicyAPI','setReAutoEvaluateAPI']),
       /**
        * 초기 API 요청
        **/
@@ -222,6 +226,8 @@
        * 편집 항목 저장
        **/
       async apply() {
+        alert("◇ 신규 등록된 기사부터 변경사항이 적용되어 평가됩니다.\n"
+          +"◇ 기존 등록된 기사에 적용하기 위해서는 재평가가 필요합니다.");
         try {
           if (!this.validationEval()) {
             let params = new FormData();
@@ -292,7 +298,35 @@
             return true;
           }
         }
-      }
+      },
+
+      async reEval() {
+				const sen1 = ""
+				+"재평가 시 등록된 모든 기사의 자동평가가 다시 수행됩니다."
+				+"\n"
+				+"수동으로 평가값을 변경한 기사에 대해서도 다시 평가되며,\n재평가 후에는 복구가 불가능합니다."
+				+"\n\n"
+				+"[크기]에 대한 재평가를 실시하시겠습니까?";
+				
+				const sen2 = ""
+				+"다시 확인해주세요."
+				+"\n\n"
+				+"재평가 시 등록된 모든 기사의 자동평가가 다시 수행됩니다."
+				+"\n"
+				+"수동으로 평가값을 변경한 기사에 대해서도 다시 평가되며,\n재평가 후에는 복구가 불가능합니다."
+				+"\n\n"
+				+"[크기]에 대한 재평가를  실시하시겠습니까?";
+				if (!confirm(sen1)) return;
+				if (!confirm(sen2)) return;
+				alert("등록된 기사에 따라 많은 시간이 소요될 수 있습니다.\n기본적으로 수 분이 소요됩니다.\n완료 시까지 기다려 주세요.");
+				this.SET_LOADING_GIF(true);
+				let params = new FormData();
+				params.append('evaluationSeq', 1);
+				if (await this.setReAutoEvaluateAPI(params)) {
+					alert("재평가가 완료 됐습니다.");
+				}
+				this.SET_LOADING_GIF(false);
+			}
     }
   };
 </script>

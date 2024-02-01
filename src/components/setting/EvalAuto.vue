@@ -22,6 +22,9 @@
 						<span></span>{{item.name}}
 					</label>
 				</li>
+				<li style="font-size: 11px; line-height: normal;">
+					◇ 신규 등록된 기사부터 변경사항이 적용되어 평가됩니다.
+					<br/>◇ 기존 등록된 기사에 적용하기 위해서는 재평가가 필요합니다.</li>
 			</template>
 		</ul>
 	</div>
