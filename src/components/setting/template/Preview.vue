@@ -943,6 +943,13 @@
         let crossDatasetsPieX = [], crossDatasetsPieY = [];
         let crossPieSumX=[], crossPieSumY=[], crossPieSumZ=[], originData=[];
         this.pivot1 = 0, this.pivot2 = 0;
+        const Exclude = {
+          ex : "기간",
+          run: function(gname, vname) {
+            if (!gname.includes(this.ex)) return gname+"-"+vname;
+            return vname;
+          }
+        }
 
         // 활성 상태인 교차-기준(항목) 옵션 뽑아내기
         let _itemOption = obOption.rowList.crossAxes.filter(e => {
@@ -1227,7 +1234,7 @@
               for (let [xk,xv] of Object.entries(crossDatasetsX)) {
                 xItemSequence = xv.replace(/[xyzr]/,''); 
                 xItem_info = evalItem[xItemSequence]; 
-                let xLabel = xItem_info['group_name'] + '-' + xItem_info['value'];
+                let xLabel = Exclude.run(xItem_info['group_name'], xItem_info['value']);
                 if(!checkLabel[xLabel]) { 
                   checkLabel[xLabel] = {};
                   crossLabelsBar.push(xLabel);
@@ -1241,7 +1248,7 @@
                 crossHoverBackgroundColorsBar.push(hoverBackgroundColors[yv]);
               } // x-for
               let tempObj = {
-                label: yItem_info['group_name'] + '-' + yItem_info['value'],
+                label: Exclude.run(yItem_info['group_name'], yItem_info['value']),
                 fill: false,
                 backgroundColor: crossBackgroundColorsBar,
                 backgroundColorArr: crossBackgroundColorsBar,
@@ -1283,7 +1290,7 @@
               pieInfoContainer.BGColor.push(backgroundColors[x]);
               pieInfoContainer.HVColor.push(hoverBackgroundColors[x]);
               // 서브 데이터
-              crossLabelsPieText.push(xItem_info['group_name'] + '-' + xItem_info['value']);
+              crossLabelsPieText.push(Exclude.run(xItem_info['group_name'], xItem_info['value']));
               crossLabelsPieKeys.push(x);
             });
             
@@ -1306,7 +1313,7 @@
               pieInfoContainer.BGColor.push(backgroundColors[x]);
               pieInfoContainer.HVColor.push(hoverBackgroundColors[x]);
               // 서브 데이터
-              crossLabelsPieText.push(xItem_info['group_name'] + '-' + xItem_info['value']);
+              crossLabelsPieText.push(Exclude.run(xItem_info['group_name'], xItem_info['value']));
               crossLabelsPieKeys.push(x);
             }); 
             crossDatasetsPie.unshift({ // pie-inner
@@ -1329,7 +1336,7 @@
                 pieInfoContainer.BGColor.push(backgroundColors[y]);
                 pieInfoContainer.HVColor.push(hoverBackgroundColors[y]);
                 // 서브 데이터
-                crossLabelsPieText.push(yItem_info['group_name'] + '-' + yItem_info['value']);
+                crossLabelsPieText.push(Exclude.run(yItem_info['group_name'], yItem_info['value']));
                 crossLabelsPieKeys.push(y);
               });
             });
@@ -1352,7 +1359,7 @@
               pieInfoContainer.BGColor.push(backgroundColors[x]);
               pieInfoContainer.HVColor.push(hoverBackgroundColors[x]);
               // 서브 데이터
-              crossLabelsPieText.push(xItem_info['group_name'] + '-' + xItem_info['value']);
+              crossLabelsPieText.push(Exclude.run(xItem_info['group_name'], xItem_info['value']));
               crossLabelsPieKeys.push(x);
             });
             crossDatasetsPie.unshift({ // pie-inner
@@ -1376,7 +1383,7 @@
                 pieInfoContainer.BGColor.push(backgroundColors[y]);
                 pieInfoContainer.HVColor.push(hoverBackgroundColors[y]);
                 // 서브 데이터
-                crossLabelsPieText.push(yItem_info['group_name'] + '-' + yItem_info['value']);
+                crossLabelsPieText.push(Exclude.run(yItem_info['group_name'], yItem_info['value']));
                 crossLabelsPieKeys.push(y);
               });
             });
@@ -1401,7 +1408,7 @@
                   pieInfoContainer.BGColor.push(backgroundColors[z]);
                   pieInfoContainer.HVColor.push(hoverBackgroundColors[z]);
                   // 서브 데이터
-                  crossLabelsPieText.push(zItem_info['group_name'] + '-' + zItem_info['value']);
+                  crossLabelsPieText.push(Exclude.run(zItem_info['group_name'], zItem_info['value']));
                   crossLabelsPieKeys.push(z);
                 });
               });
@@ -1427,7 +1434,7 @@
               pieInfoContainer.BGColor.push(backgroundColors[x]);
               pieInfoContainer.HVColor.push(hoverBackgroundColors[x]);
               // 서브 데이터
-              crossLabelsPieText.push(xItem_info['group_name'] + '-' + xItem_info['value']);
+              crossLabelsPieText.push(Exclude.run(xItem_info['group_name'], xItem_info['value']));
               crossLabelsPieKeys.push(x);
             });
             crossDatasetsPie.unshift({ // pie-inner
@@ -1451,7 +1458,7 @@
                 pieInfoContainer.BGColor.push(backgroundColors[y]);
                 pieInfoContainer.HVColor.push(hoverBackgroundColors[y]);
                 // 서브 데이터
-                crossLabelsPieText.push(yItem_info['group_name'] + '-' + yItem_info['value']);
+                crossLabelsPieText.push(Exclude.run(yItem_info['group_name'], yItem_info['value']));
                 crossLabelsPieKeys.push(y);
               });
             });
@@ -1477,7 +1484,7 @@
                   pieInfoContainer.BGColor.push(backgroundColors[z]);
                   pieInfoContainer.HVColor.push(hoverBackgroundColors[z]);
                   // 서브 데이터
-                  crossLabelsPieText.push(zItem_info['group_name'] + '-' + zItem_info['value']);
+                  crossLabelsPieText.push(Exclude.run(zItem_info['group_name'], zItem_info['value']));
                   crossLabelsPieKeys.push(z);
                 });
               });
@@ -1504,7 +1511,7 @@
                     pieInfoContainer.BGColor.push(backgroundColors[r]);
                     pieInfoContainer.HVColor.push(hoverBackgroundColors[r]);
                     // 서브 데이터
-                    crossLabelsPieText.push(rItem_info['group_name'] + '-' + rItem_info['value']);
+                    crossLabelsPieText.push(Exclude.run(rItem_info['group_name'], rItem_info['value']));
                     crossLabelsPieKeys.push(z);
                   });
                 });
@@ -1547,7 +1554,7 @@
               
               if (legendFlg && labelInsteadOfLegend) {
                 crossLabelsBar.push(isSPECIAL_GATEGORY 
-                  ? xItem_info['value'] : xItem_info['group_name'] + "-" + xItem_info['value']);
+                  ? xItem_info['value'] : Exclude.run(xItem_info['group_name'] + "-" + xItem_info['value']));
               } else {
                 crossLabelsBar.push(xItem_info['group_name']);
               }
@@ -1615,7 +1622,7 @@
               for (let [xk,xv] of Object.entries(crossDatasetsX)) {
                 xItemSequence = xv.replace(/[xyzr]/,'');
                 xItem_info = evalItem[xItemSequence];
-                let xLabel = xItem_info['group_name'] + '-' + xItem_info['value'];
+                let xLabel = Exclude.run(xItem_info['group_name'], xItem_info['value']);
                 if(!checkLabel[xLabel]) { 
                   checkLabel[xLabel] = {};
                   crossLabelsBar.push(xLabel);
@@ -1629,7 +1636,7 @@
                 crossHoverBackgroundColorsBar.push(hoverBackgroundColors[yv]);
               } // x-for
               let tempObj = {
-                label: yItem_info['group_name'] + '-' + yItem_info['value'],
+                label: Exclude.run(yItem_info['group_name'], yItem_info['value']),
                 fill: false,
                 backgroundColor: crossBackgroundColorsBar,
                 backgroundColorArr: crossBackgroundColorsBar,
@@ -1657,7 +1664,7 @@
             for (const [zk, zv] of Object.entries(crossDatasetsZ)) {
               zItemSequence = zv.replace(/[xyzr]/,'');
               zItem_info = evalItem[zItemSequence];
-              let t = zItem_info['group_name'] + '-' + zItem_info['value'];
+              let t = Exclude.run(zItem_info['group_name'], zItem_info['value']);
               
               crossDatasetsBar.push({
                 label: t,
@@ -1690,7 +1697,7 @@
                       yItem_info = evalItem[yItemSequence];
                       try { crossDatasetsBar[i].data.push(changeData[xv][yv][zv]); }
                       catch { crossDatasetsBar[i].data.push(0); }
-                      if (labelsFlag) crossLabelsBar.push(yItem_info['group_name'] + '-' + yItem_info['value']);
+                      if (labelsFlag) crossLabelsBar.push(Exclude.run(yItem_info['group_name'], yItem_info['value']));
                   }
               }
               i++; labelsFlag = false;
@@ -1699,7 +1706,7 @@
             for (let [xk,xv] of Object.entries(crossDatasetsX)) {
               xItemSequence = xv.replace(/[xyzr]/,'');
               xItem_info = evalItem[xItemSequence];
-              let xLabel = xItem_info['group_name'] + '-' + xItem_info['value'];
+              let xLabel = Exclude.run(xItem_info['group_name'], xItem_info['value']);
               if(!checkLabel[xLabel]) { 
                 checkLabel[xLabel] = {};
                 xPluginsLabel.push(xLabel);
@@ -1722,7 +1729,7 @@
             for (const [rk, rv] of Object.entries(crossDatasetsR)) {
               rItemSequence = rv.replace(/[xyzr]/,'');
               rItem_info = evalItem[rItemSequence];
-              let t = rItem_info['group_name'] + '-' + rItem_info['value'];
+              let t = Exclude.run(rItem_info['group_name'], rItem_info['value']);
               
               crossDatasetsBar.push({
                 label: t,
@@ -1768,7 +1775,7 @@
             for (let [xk,xv] of Object.entries(crossDatasetsX)) {
               xItemSequence = xv.replace(/[xyzr]/,'');
               xItem_info = evalItem[xItemSequence];
-              let xLabel = xItem_info['group_name'] + '-' + xItem_info['value'];
+              let xLabel = Exclude.run(xItem_info['group_name'], xItem_info['value']);
               if(!checkLabel[xLabel]) { 
                 checkLabel[xLabel] = {};
                 xPluginsLabel.push(xLabel);
@@ -1779,7 +1786,7 @@
               for (let [yk,yv] of Object.entries(crossDatasetsY)) {
                 yItemSequence = yv.replace(/[xyzr]/,'');
                 yItem_info = evalItem[yItemSequence];
-                yPluginsLabel.push(yItem_info['group_name'] + '-' + yItem_info['value']);
+                yPluginsLabel.push(Exclude.run(yItem_info['group_name'], yItem_info['value']));
               }
             }
             this.pivot1 = crossLabelsBar.length / yPluginsLabel.length;
@@ -2771,7 +2778,7 @@
           _code = 'EM-' + _media_id;
         }
         else {
-          _code = 'EM-' + media.media_id + '-' + media.media_type;
+          _code = 'EM-' + media.media_id+ '-' +media.media_type;
           if (mt && mt !== "지면") mnmt = mn + "("+mt+")";
           else mnmt = mn;
         }
@@ -3332,16 +3339,13 @@
       evalTitle(evalitem, headerName, pos, isCol=true) {
         const _itemCode = headerName.replace(/[xyzr]/,'');
         try { 
-          if (_itemCode.match( new RegExp(/^T/, 'g') ) !== null) return '< 기간 ><br/>';
-          else if (_itemCode.includes('t')) return '< 기간 ><br/>';
-          // 'emp'가 맨 앞으로 나오면 제목 처리가 달라짐.
-          else if (_itemCode.includes('emp')) { 
+          /* 기간-항목 앞에 "기간"이라는 태그를 붙임. */
+          if (_itemCode.match( new RegExp(/^T/, 'g') ) !== null) return '';//'< 기간 ><br/>';
+          else if (_itemCode.includes('t')) return '';//'< 기간 ><br/>';'< 기간 ><br/>';
+
+          /* 'emp'가 맨 앞으로 나오면 제목 처리가 달라짐. */
+          if (_itemCode.includes('emp')) { 
             return '< '+ this.option.optionName[pos].name +' ><br/>';
-            // if (isCol) {
-            //   return '< '+ this.option.optionName[pos].name +' ><br/>';
-            // } else {
-            //   return '< '+ this.option.optionName[pos].name +' ><br/>';
-            // }
           }
           else return '< '+evalitem[_itemCode]['group_name']+' ><br/>';
         } catch(e) {

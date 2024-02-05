@@ -10,7 +10,7 @@
 					<a @click="apply()" class="btn_na">저장</a>
 				</slot>
 				<slot v-else>
-					<a @click="edit=true" class="btn_gr">편집</a>
+					<a v-show="!add" @click="edit=true" class="btn_gr">편집</a>
 					<a @click="reEval" class="btn_gr">재평가</a>
 				</slot>
 			</div>
@@ -72,7 +72,7 @@
 										<div class="btn" :class="{'btn_bl':item.isUse==='N','btn_gr':item.isUse!=='N'}"><a
 												@click="reporter.isUse='N'">비사용</a></div>
 										<div class="btn btn_wh"><a
-												@click="$delete(addList,index);">취소</a>
+												@click="deleteItem(addList,index)">취소</a>
 										</div>
 										<div class="btn btn_na" v-if="!edit"><a @click="apply">저장</a></div>
 									</div>
@@ -87,7 +87,7 @@
 			</div>
 		</div>
 		<!-- e: set_cont -->
-		<div class="set_list_tf"><a @click="insertCategory">+ 항목추가</a></div>
+		<div v-show="!edit" class="set_list_tf"><a @click="insertCategory">+ 항목추가</a></div>
 		<div class="loading" style="background-color:#ffffff45" v-if="loadingGif"><img class="loading-image" :src="require('@/assets/images/loading.gif')" alt="Loading..."/></div>
 	</div>
 	<!-- e: set_auto_box -->
@@ -103,6 +103,7 @@
 		data() {
 			return {
 				edit: false,
+				add: false,
 				etc : { 'score' : 1 },
 				evalList: [],
 				addList: []
@@ -125,6 +126,10 @@
 				} catch (e) {
 					console.error(e);
 				}
+			},
+			deleteItem(addList, index) {
+				this.$delete(addList, index);
+				this.add = false;
 			},
 			/**
 			 * 편집 저장
@@ -157,6 +162,7 @@
 							this.evalList = result;
 							this.addList = [];
 							this.edit = false;
+							this.add = false;
 						} else {
 							this.$eventBus.$emit('kickOut');
 						}
@@ -207,7 +213,7 @@
 				 */
 			},
 			insertCategory() {
-				//this.edit = true;
+				this.add = !this.add;
 				if(this.edit === false) {
 					if (this.addList.length > 0) {
 						this.$delete(this.addList, 0);

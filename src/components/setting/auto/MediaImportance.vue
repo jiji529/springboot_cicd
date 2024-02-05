@@ -9,7 +9,7 @@
           <a @click="apply" class="btn_na">저장</a>
         </slot>
         <slot v-else>
-          <a @click="edit=true" class="btn_gr">편집</a>
+          <a v-show="!add" @click="edit=true" class="btn_gr">편집</a>
           <a @click="reEval" class="btn_gr">재평가</a>
         </slot>
       </div>
@@ -67,7 +67,7 @@
                 <div class="btn" :class="{'btn_bl':item.isUse==='N','btn_gr':item.isUse!=='N'}"><a
                     @click="reporter.isUse='N'">비사용</a></div>
                 <div class="btn btn_wh"><a
-                    @click="$delete(addList,index);">취소</a>
+                    @click="deleteItem(addList, index)">취소</a>
                 </div>
                 <div class="btn btn_na" v-if="!edit"><a @click="apply">저장</a></div>
               </div>
@@ -76,7 +76,7 @@
         </ul>
       </div>
       <!-- e: set_list_tb -->
-      <div class="set_list_tf"><a @click.prevent="insertCategory">+ 항목추가</a></div>
+      <div v-show="!edit" class="set_list_tf"><a @click.prevent="insertCategory">+ 항목추가</a></div>
 
       <div class="set_import_box">
         <div class="set_cont_head"><span>항목보기</span>
@@ -177,6 +177,7 @@
     data() {
       return {
         edit: false, // 편집 여부
+        add: false,
         evalList: [],  // 선택된 매체 목록
         addList: [],// 항목추가 매체 목록
         etcList: [],  // 미선택 매체 목록
@@ -289,7 +290,7 @@
        * 항목 추가 이벤트
        **/
       insertCategory() {
-        //this.edit = true;
+        this.add = !this.add;
         if(this.edit === false) {
           if (this.addList.length > 0) {
             this.$delete(this.addList, 0);
@@ -316,6 +317,11 @@
           }
         })
       },
+      deleteItem(addList, index) {
+        this.$delete(addList, index);
+        this.add = false;
+      },
+
       /**
        * 항목 추가 이벤트
        **/
@@ -349,7 +355,7 @@
             }
             this.addList = [];
             this.edit = false;
-            
+            this.add = false;
 
           } else {
             alert('항목명을 입력하세요.');
