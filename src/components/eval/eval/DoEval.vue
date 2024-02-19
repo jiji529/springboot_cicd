@@ -129,12 +129,11 @@
 							대/소제목
 						</dt>
 						<dd v-if="selectedArticle"> 
-							<span class="classTitleBtn" :class="{'on' : eval1Help}" :style="styleObj"  @click="helpMessage"></span>
+							<span :style="styleObj" @click="helpMessage"></span>
 							<select id="eval2-combo-7" v-if="Object.keys(autoArticleClassType).length > 0" v-model="selEval2[autoArticleClassType.upper_cate_seq]" @change="eval2Combo($event, autoArticleClassType.upper_cate_seq)" tabindex="3">
 								<option value="null">선택</option>
 								<option v-for="val in autoArticleClassType.sub" :key="String(val.seq)" :value="String(val.seq)">{{val.name}}</option>
 							</select>
-							<!-- <span class="classTitleBtn" :class="{'on' : eval1Help}" :style="styleObj"  @click="helpMessage"></span> -->
 						</dd><dd v-else>&nbsp;</dd>
 					</slot>
 				</dl>
@@ -334,7 +333,6 @@
 				oriEval1: '',
 				news_id: '',
 				subInfo: '',
-				eval1Help: false,
 				isEvalChange : false,
 				isEval1Change: false,
 				isEval2Change: false,
@@ -394,9 +392,6 @@
 					, margin:'2px 5px'
 					, textIndent:'-9999px'
 					, background:'url('+image+') 0 -400px no-repeat'
-				},
-				styleObjOn: {
-					backgroundPosition:'-30px -400px'
 				}
 			}
 		},
@@ -1398,7 +1393,15 @@
 	.selected {background-color: #5ca5e6; color:white;}
 	.ellipsis {text-overflow:ellipsis; white-space:nowrap; overflow:hidden}
 	.veiled {display:none;}
-	.cont_tit a {display: block; float: left; width: 28px; height: 38px; background: url(/img/ico_pre.467a0115.png) 0 -102px no-repeat; text-indent: -9999px;}
+	.cont_tit a{
+		display: block;
+		float: left;
+		width: 28px;
+		height: 38px;
+		background: url(/img/ico_pre.467a0115.png) 0 -102px no-repeat;
+		text-indent: -9999px;
+	}
+
 	.fold_inner {
 		height: 1px !important;
 		overflow: hidden !important;
@@ -1407,6 +1410,4 @@
 
 	.cont_wrap .val_wrap .set_val .val_grp .val_item .articleTit:before{content: ''; background:#f0f4f7; position: absolute;}
 
-	/* 대/소제목 설명창 */
-	.classTitleBtn.on{background-position: -30px -400px; }
-	.help.on{ background-position:-30px -400px; }
+</style>
