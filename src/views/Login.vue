@@ -137,7 +137,7 @@
       })
     },
     methods: {
-      ...mapActions(['loginAPI', 'getMediaPolicyAPI', 'getMediaValueAPI']),
+      ...mapActions(['loginAPI', 'setArticleClassTypeAPI', 'getMediaPolicyAPI', 'getMediaValueAPI']),
       async onSubmit() {
         try {
           let params = new FormData();
@@ -155,6 +155,11 @@
           let loginResult = await this.loginAPI(params); // 로그인 성공 여부
           loginResult = loginResult && await this.$statConfig.checkUser(this.username);
           if (loginResult) {
+
+            //개발자: 최지현
+            //로그인 성공 시 -> 대/소제목 목록 수정 사항 적용 API
+            await this.setArticleClassTypeAPI();
+
             if (this.isPeUser) {
               let paramsP = new FormData();
               paramsP.set('m', 'p');

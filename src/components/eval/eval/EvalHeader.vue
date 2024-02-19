@@ -197,7 +197,7 @@
 				//this.$eventBus.$emit('sendDateToArticleList');
 				this.searchArticleListWhyNot();
 			},
-			findFirstArticle(list){
+			findFirstArticle(list){ debugger;
                 if (this.allLength > 0) {
                     if (this.selectedArticle === '' || this.selectedArticle === undefined) {
                         let firstArticle = [];
@@ -223,7 +223,7 @@
                 this.SET_ARTICLE_LIST_SOURCE('header');
                 this.selArticles = ['선택된기사'];
             },
-            async getArtListFromHeader(openDate, selNewsMe) {
+            async getArtListFromHeader(openDate, selNewsMe) { debugger;
                 let payload = [];
                 payload['scrapDate'] = openDate;
                 payload['newsMe'] = selNewsMe;

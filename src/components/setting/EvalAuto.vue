@@ -12,6 +12,12 @@
 				<ArticleSize :class="{conceal : nameEvalList['크기'] && nameEvalList['크기']['isUse'] === 'N'}"></ArticleSize>
 				<ArticleCharLen :class="{conceal : nameEvalList['글자수'] && nameEvalList['글자수']['isUse'] === 'N'}"></ArticleCharLen>
 			</div>
+			<div class="set_box_area">
+				<ArticlePositiveDenial :class="{conceal : nameEvalList['긍/부정'] && nameEvalList['긍/부정']['isUse'] === 'N'}"></ArticlePositiveDenial>
+			</div>
+			<div class="set_box_area">
+				<ArticleTitle :class="{conceal : nameEvalList['대/소제목'] && nameEvalList['대/소제목']['isUse'] === 'N'}"></ArticleTitle>
+			</div>
 		</div>
 		<ul class="pre_group_set">
 			<li>자동 평가 항목 사용</li>
@@ -36,11 +42,13 @@
 	import MediaImportance from './auto/MediaImportance';
 	import Correspondent from './auto/Correspondent';
 	import ArticlePosition from './auto/ArticlePosition';
+	import ArticlePositiveDenial from './auto/ArticlePositiveDenial'
+	import ArticleTitle from './auto/ArticleTitle'
 	import {mapActions} from 'vuex';
 
 	export default {
 		name: 'EvalAuto',
-		components: {Correspondent, MediaImportance, ArticleCharLen, ArticleSize, ArticlePosition},
+		components: {Correspondent, MediaImportance, ArticleCharLen, ArticleSize, ArticlePosition, ArticlePositiveDenial, ArticleTitle},
 		data(){
 			return{
 				evalList : [],

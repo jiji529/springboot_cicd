@@ -6,7 +6,7 @@
 			<span v-show="!searchFormSeen"><span v-show="!hideAndShowArticleList">평가 목록</span></span>
 		</div>
 		<!-- s: 평가목록 -->
-		<div class="list" id="evalList" v-if="!hideAndShowArticleList" :class="{sch_list : searchFormSeen, fold_inner : !listLayout0}">
+		<div class="list" id="evalList" v-if="!hideAndShowArticleList" :class="{fold_inner : !listLayout0}">
 			<!-- s : 기사목록 -->
 			<div class="list_tit" v-if="classicViewMode">
 				<input type="checkbox" id="evalAllCheck" :checked="isAll()" @change="checkAll($event, articleList)"/>
@@ -42,6 +42,7 @@
 					</li>
 				</ul>
 			</div>
+			<!-- <<예시>> 조간, 석간, 조간+석간 데이터 담은 articleList: [{미분류:[{},{},{},...], 분류2:[{},{},{},...]},[],[]] -->
 			<!--뉴스그룹 -->
 			<div class="list_con" v-for="(group, index) in articleList" :key="index+'-n-'">
 
@@ -67,6 +68,7 @@
 						</label>
 					</div>
 
+					<!-- one : 기사 하나에 대한 정보 -->
 					<ul class="list_ul">
 						<slot v-for="(one, oneIdx) in folder">
 							<!--소제목 -->
@@ -127,7 +129,7 @@
 									</div>
 								</template>
 								<template v-for="(column, ci) in columnSettingWeb">
-									<div v-if="!(classicViewMode && (column.field === 'media_name' || column.field === 'article_title'))" class="li_item" :class="getArticleClassName(one.news_comment, column.field)" :key="one.news_id + ci" @click="oneCheck(one)">{{addComma(column.field, one[column.field])}}</div>
+									<div v-if="!(classicViewMode && (column.field === 'media_name' || column.field === 'article_title'))" class="li_item" :class="getArticleClassName(one.news_comment, column.field)" :key="one.news_id + ci" @click="oneCheck(one, 'col to event')">{{addComma(column.field, one[column.field])}}</div>
 								</template>
 							</li>
 						</slot>
@@ -142,6 +144,7 @@
 				<li><a @click="showEvalMulti">다중평가</a></li>
 				<li class="red"><a @click="excludeEval">평가제외</a></li>
 				<li><a @click="includeEval">평가제외해제</a></li>
+				<li><a @click="tempBtn">테스트 버튼</a></li>
 			</ul>
 			<ul class="btn_right">
 			</ul>
@@ -163,9 +166,11 @@
 				configEval: [],
 				columnSettingWeb: [],
 				evalManualSetting: [],
+				// 정렬에 쓰이는 값들
 				softSortColumn: 'news_id',
 				softSortOrderIndex: 2,
 				softSortOrderValue: ['▲', '▼'],
+				//
 				reComposition: {
 					cnt: 0,
 					oper: function() {
@@ -225,7 +230,8 @@
 			this.$eventBus.$off('sendDateToArticleList');
 		},
 		watch: {
-			selectedArticle() {
+			selectedArticle(next) {
+				console.log("watch: ", next);
 				if(this.selectedArticle !== '' && this.selectedArticle !== undefined){
 					this.news_id_local = this.selectedArticle.news_id;
 				} else {
@@ -268,6 +274,7 @@
 			...mapGetters(['getPremiumID','getEvalInfo', 'getEval2Cnt']),
 			allLength() {
 				const data =this.articleList; 
+
 				let allCnt = 0;
 				if(typeof data === "object" && data !== null) {
 					let list = Object.keys(data).map(e => data[e]);
@@ -293,6 +300,9 @@
 			}
 		},
 		methods: {
+			tempBtn() {
+				console.log(this.articleList);
+			},
 			...mapActions([
 				'getArticleListFromHeaderAPI',
 				'newsGroupAPI',
@@ -390,7 +400,7 @@
 				}
 				this.SET_LOADING_GIF(false);
 			},
-			async oneCheck(one) {
+			async oneCheck(one, msg) {
 				if (await this.$store.dispatch('loginCheckGentleAPI')) {
 					this.SET_SELECTED_ARTICLE(one);
 				} else {
@@ -711,9 +721,14 @@
 					this.$eventBus.$emit('kickOut');
 				}
 			},
+
+			//정렬방식 선택//
 			async softSort(column) {
+				//softSortOrderIndex가 2이고, softSortColumn이 'news_id'일 때 안 보이는 화살표 표현.
 				this.softSortOrderIndex = (this.softSortColumn === column) ? (this.softSortOrderIndex + 1) % 3 : 0;
 				this.softSortColumn = (this.softSortOrderIndex !== 2) ? column : 'news_id';
+
+				//기사 묶음(articleList)에 대한 정보 -> 배열(Array)
 				if (this.articleList && this.articleList.constructor.name === 'Array') {
 					function fancyComparator(column, order) {
 						return function(a, b) {
@@ -721,6 +736,7 @@
 						}
 					}
 					this.articleList.forEach(g => {
+						//기사 하나에 대한 정보 -> 객체(object)
 						if (g && g.constructor.name === 'Object') {
 							Object.values(g).forEach(c => {
 								c.sort(fancyComparator(this.softSortColumn, (this.softSortOrderIndex === 0)));

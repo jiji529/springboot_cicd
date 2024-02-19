@@ -5,11 +5,11 @@
 
   <groupId>com.dahami</groupId>
   <artifactId>eval-vue</artifactId>
-  <version>0.1.32</version>
+  <version>0.1.33</version>
   <packaging>pom</packaging>
   
   <properties>
-	  <eval.php.version>0.2.5</eval.php.version>
+	  <eval.php.version>0.2.8</eval.php.version>
   </properties>
 
   <build>

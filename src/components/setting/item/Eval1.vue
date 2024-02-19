@@ -17,7 +17,7 @@
           <h2>평가1 대중소 항목 설명</h2>
           <p>*대/중/소 항목 위치는 아래와 같습니다.<br>
             오른쪽에는 기사가치 값이 표기됩니다.</p>
-          <h2>항목 상태 설멍</h2>
+          <h2>항목 상태 설명</h2>
           <span class="state">사용 항목</span><span class=" state gray">비사용 항목</span>
           <div class="ex_box">
             <ul>

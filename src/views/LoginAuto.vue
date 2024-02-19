@@ -22,7 +22,7 @@
       })
     },
     methods: {
-      ...mapActions(['loginAutoAPI', 'getMediaPolicyAPI', 'getMediaValueAPI']),
+      ...mapActions(['loginAutoAPI', 'setArticleClassTypeAPI', 'getMediaPolicyAPI', 'getMediaValueAPI']),
       async onSubmit() {
         try {
           let params = new FormData();
@@ -39,7 +39,13 @@
           let loginResult = await this.loginAutoAPI(params);
           // loginResult = loginResult && await this.$statConfig.checkUser();
           if (loginResult) {
+            //개발자: 최지현
+            //대/소제목 데이터 동기화
+            await this.setArticleClassTypeAPI();
+
             if (this.isPeUser) {
+
+              //스크랩 기사 데이터 동기화
               let paramsP = new FormData();
               paramsP.set('m', 'p');
               let resultPolicy = await this.getMediaPolicyAPI(paramsP);

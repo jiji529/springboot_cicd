@@ -111,8 +111,40 @@
 							</select>
 						</dd><dd v-else>&nbsp;</dd>
 					</slot>
+
+					<!-- 개발자: 최지현 -->
+					<slot v-if="visibleEvalList[6]">
+						<dt class="ellipsis">긍/부정</dt>
+						<dd v-if="selectedArticle"> 
+							<select id="eval2-combo-6" v-if="Object.keys(autoPositiveDenial).length > 0" v-model="selEval2[autoPositiveDenial.upper_cate_seq]" @change="eval2Combo($event, autoPositiveDenial.upper_cate_seq)" tabindex="3">
+								<option value="null">선택</option>
+								<option v-for="val in autoPositiveDenial.sub" :key="String(val.seq)" :value="String(val.seq)">{{val.name}}</option>
+							</select>
+						</dd><dd v-else>&nbsp;</dd>
+					</slot>
+
+					<!-- 개발자: 최지현 -->
+					<slot v-if="visibleEvalList[7]" class="articleTit">
+						<dt class="ellipsis">
+							대/소제목
+						</dt>
+						<dd v-if="selectedArticle"> 
+							<span class="classTitleBtn" :class="{'on' : eval1Help}" :style="styleObj"  @click="helpMessage"></span>
+							<select id="eval2-combo-7" v-if="Object.keys(autoArticleClassType).length > 0" v-model="selEval2[autoArticleClassType.upper_cate_seq]" @change="eval2Combo($event, autoArticleClassType.upper_cate_seq)" tabindex="3">
+								<option value="null">선택</option>
+								<option v-for="val in autoArticleClassType.sub" :key="String(val.seq)" :value="String(val.seq)">{{val.name}}</option>
+							</select>
+							<!-- <span class="classTitleBtn" :class="{'on' : eval1Help}" :style="styleObj"  @click="helpMessage"></span> -->
+						</dd><dd v-else>&nbsp;</dd>
+					</slot>
 				</dl>
 			</div>
+			<!-- <div class="layer_pop" v-show="true">
+				<h2>대/소제목 설명</h2>
+				<p>*뷰어에서 새로운 대/소제목 생성 시 
+					<br>환경설정-자동평가설정 창에서 데이터 동기화 후 재평가를 해주어야 합니다.
+				</p>
+			</div> -->
 			<!-- e:기사정보 -->
 			<!-- s:eval1 -->
 			<div class="filter1" :class="{veiled : !evalManualSetting['M1']}">
@@ -291,6 +323,7 @@
 <script>
 	import store from '../../../store'
 	import {mapState, mapGetters, mapActions, mapMutations} from 'vuex'
+	import image from '../../../assets/images/ico_pre.png';
 
 	export default {
 		props: ['evalManualSetting', 'configEval'],
@@ -301,6 +334,7 @@
 				oriEval1: '',
 				news_id: '',
 				subInfo: '',
+				eval1Help: false,
 				isEvalChange : false,
 				isEval1Change: false,
 				isEval2Change: false,
@@ -314,6 +348,9 @@
 				autoReporter: [],
 				autoLetterCnt: [],
 				autoSize:[],
+				//개발자: 최지현
+				autoPositiveDenial:[],
+				autoArticleClassType:[],
 
 				sizeArray:[],
 				letterCntArray: [],
@@ -349,7 +386,18 @@
 				visibleEvalList: [], // 자동|평가1|평가2 표시사용여부
 
 				/* 원본 데이터를 저장하기 위한 변수 */
-				originArticle: null
+				originArticle: null,
+				styleObj: {
+					float: 'right'
+					, width:'14px'
+					, height:'14px'
+					, margin:'2px 5px'
+					, textIndent:'-9999px'
+					, background:'url('+image+') 0 -400px no-repeat'
+				},
+				styleObjOn: {
+					backgroundPosition:'-30px -400px'
+				}
 			}
 		},
 		computed: {
@@ -689,7 +737,14 @@
 									if(Number(a.refValue) - Number(b.refValue) === 0) return Number(b.seq) - Number(a.seq);
 									else return Number(a.refValue) - Number(b.refValue);
 								});
-							} else if (item.upper_cate_name === '수록지면') this.autoLocation = item;
+							} else if (item.upper_cate_name === '수록지면') {
+								this.autoLocation = item;
+							// 개발자: 최지현
+						 	} else if (item.upper_cate_name === '긍/부정') {
+								this.autoPositiveDenial = item;
+					 		} else if (item.upper_cate_name === '대/소제목') {
+								this.autoArticleClassType = item;
+							}
 							this.autoCateSeq.push(item.upper_cate_seq);
 						} else if( item.upper_cate_use === 'Y') {
 							this.notAutoCateSeq.push(item.upper_cate_seq);
@@ -911,7 +966,11 @@
 				, this.autoLetterCnt.upper_cate_seq
 				, this.autoMediaImportance.upper_cate_seq
 				, this.autoReporter.upper_cate_seq
-				, this.autoLocation.upper_cate_seq].forEach(e => {
+				, this.autoLocation.upper_cate_seq
+				//개발자: 최지현
+				, this.autoPositiveDenial.upper_cate_seq
+				, this.autoArticleClassType.upper_cate_seq
+				].forEach(e => {
 					that.selEval2[e] = null;
 				});
 			},
@@ -1132,7 +1191,8 @@
 				});
 				tmpEvalAutoSeqs.forEach(v => {
 					tmpCfgEvAt = configEval['item']['AT_M2'][v];
-					selArticle['eva_' + tmpCfgEvAt['group_seq']] = tmpCfgEvAt['value'];
+					selArticle['eva_' + tmpCfgEvAt['group_seq']] 
+						= (tmpCfgEvAt['group_seq'] == "7") ? tmpCfgEvAt['refValue']+"-"+tmpCfgEvAt['value'] : tmpCfgEvAt['value'];
 				});
 
 				tmpResultEval.eval1_seqs = this.getEval1NamesArray(this.selEval1);
@@ -1324,6 +1384,9 @@
 				} else {
 					return ' ';
 				}
+			},
+			helpMessage(){
+				alert("뷰어에서 새로운 대/소제목 생성 시 환경설정-자동평가설정 창에서 데이터 동기화 후 재평가를 해주어야 합니다.");
 			}
 		},
 	}
@@ -1335,17 +1398,15 @@
 	.selected {background-color: #5ca5e6; color:white;}
 	.ellipsis {text-overflow:ellipsis; white-space:nowrap; overflow:hidden}
 	.veiled {display:none;}
-	.cont_tit a {
-		display: block;
-    float: left;
-    width: 28px;
-    height: 38px;
-    background: url(/img/ico_pre.467a0115.png) 0 -102px no-repeat;
-    text-indent: -9999px;
-	}
+	.cont_tit a {display: block; float: left; width: 28px; height: 38px; background: url(/img/ico_pre.467a0115.png) 0 -102px no-repeat; text-indent: -9999px;}
 	.fold_inner {
 		height: 1px !important;
 		overflow: hidden !important;
 		width: 1px !important;
 	}
-</style>
+
+	.cont_wrap .val_wrap .set_val .val_grp .val_item .articleTit:before{content: ''; background:#f0f4f7; position: absolute;}
+
+	/* 대/소제목 설명창 */
+	.classTitleBtn.on{background-position: -30px -400px; }
+	.help.on{ background-position:-30px -400px; }

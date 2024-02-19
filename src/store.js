@@ -764,7 +764,7 @@ export default new Vuex.Store({
         }
         if (res.status === 200) {
           if(data !== null){
-            setCommit(store, data);
+            setCommit(store, data); //articleList에 데이터 담기
           }
         }
         let news_id_list = [];
@@ -868,8 +868,7 @@ export default new Vuex.Store({
           e1ByCate['subMinorCnt'] = e1ByCate.minor.length;
           for(let mj of e1ByCate.major) { mj['subCnt'] = mj.sub.length; }
           for(let md of e1ByCate.middle) { md['subCnt'] = md.sub.length; }
-          for(let mn of e1ByCate.minor) { mn['subCnt'] = mn.sub.length; }
-          
+          for(let mn of e1ByCate.minor) { mn['subCnt'] = mn.sub.length; }        
           setByCategoryCommit(store, resByCategory.data);
         }
         return store.getters.getEval1Category;
@@ -1497,6 +1496,58 @@ export default new Vuex.Store({
       }
       return rtn;
     },
+    //기사 긍/부정 설정 API
+    async getArticlePositiveDenialAPI(store, params) {
+      // 요청
+      const getAPI = (params) => {
+        return axios.post(phpApi+'/articlePositiveDenial.php', params);
+      };
+      let rtn = false;
+      try {
+        const res = await getAPI(params);
+        if (res.status === 200 && res.data.success !== false) {
+          rtn = res.data;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      return rtn;
+    },
+    //기사 대/소제목 초기 API
+    async setArticleClassTypeAPI(store, params) {
+      // 요청
+      const getAPI = (params) => {
+        return axios.post(phpApi+'/setClassType.php', params);
+      };
+      let rtn = false;
+      try {
+        const res = await getAPI(params);
+        if (res.status === 200 && res.data.success !== false) {
+          rtn = res.data;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      return rtn;
+    },
+    //기사 대/소제목 설정 API
+    async getArticleClassTypeAPI(store, params) {
+      // 요청
+      const getAPI = (params) => {
+        return axios.post(phpApi+'/articleClassType.php', params);
+      };
+      let rtn = false;
+      try {
+        const res = await getAPI(params);
+        if (res.status === 200 && res.data.success !== false) {
+          rtn = res.data;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      return rtn;
+    },
+
     //평가1 항목 설정  API
     async setEval1CategoryAPI(store, params) {
       // 요청

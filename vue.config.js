@@ -56,11 +56,11 @@ module.exports = {
     , port:443
 //	, host: 'eval.scrapmaster.co.kr'
 	, host: 'local.scrapmaster.co.kr'
-    , https: {
-      key: fs.readFileSync('ssl/star_scrapmaster_co_kr.key'),
-      cert: fs.readFileSync('ssl/star_scrapmaster_co_kr.crt'),
-      ca: fs.readFileSync('ssl/star_scrapmaster_co_kr.ca_root'),
-    }
+//    , https: {
+//      key: fs.readFileSync('ssl/star_scrapmaster_co_kr.key'),
+//      cert: fs.readFileSync('ssl/star_scrapmaster_co_kr.crt'),
+//      ca: fs.readFileSync('ssl/star_scrapmaster_co_kr.ca_root'),
+//    }
     // 끝 / https
   },
   

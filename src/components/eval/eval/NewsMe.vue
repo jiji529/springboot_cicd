@@ -13,28 +13,33 @@
 	export default {
 		data() {
 			return {
-				selNewsMe: [0],
+				selNewsMe: [],
 			}
 		},
 		computed: mapState(['newsGroup', 'searchFormSeen']),
 		async mounted(){
 			await this.newsGroupAPI();
 			let tmp = [];
+			// let newsGroupObject = Object.keys(this.newsGroup).map(e=>this.newsGroup[e]);
+			// for (let v of newsGroupObject) {
+			// 	tmp.push(Number(v.lvalue));
+			// }
 			for (let [k,v] of Object.entries(this.newsGroup)) {
 				tmp.push(Number(v.lvalue));
 			}
+
 			this.selNewsMe = tmp;
 			this.selGroupChange();
 		},
 		methods: {
 			...mapActions(['newsGroupAPI']),
 			async selGroupChange() {
-				if (await this.$store.dispatch('loginCheckGentleAPI')) {
+				//if (await this.$store.dispatch('loginCheckGentleAPI')) {
 					this.$eventBus.$emit('sendNewsMeToEvalHeader', this.selNewsMe);
 					this.$eventBus.$emit('sendNewsMeToArtList', this.selNewsMe);
-				} else {
-					this.$eventBus.$emit('kickOut');
-				}
+				//} else {
+				//	this.$eventBus.$emit('kickOut');
+				//}
 			}
 		}
 	}
