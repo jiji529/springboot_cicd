@@ -365,7 +365,8 @@
 				'inExcludeEvalAPI',
 				'getMediaPolicyAPI',
 				'setListLayout',
-				'toggleListLayout'
+				'toggleListLayout',
+				'getEval2ClassAPI'
 			]),
 			...mapMutations([
 				'SET_SEARCH_ARTICLE_LIST',

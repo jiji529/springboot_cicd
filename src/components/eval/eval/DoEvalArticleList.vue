@@ -308,7 +308,8 @@
 				'newsGroupAPI',
 				'inExcludeEvalAPI',
 				'getMediaPolicyAPI',
-				'toggleListLayout'
+				'toggleListLayout',
+				'getEval2ClassAPI'
 			]),
 			...mapMutations([
 				'SET_ARTICLE_LIST',
@@ -392,6 +393,7 @@
 				this.SET_LOADING_GIF(true);
 				this.SET_GET_ARTICLE_LIST_FROM_HEADER_PAYLOAD(payload);
 				if (await this.getArticleListFromHeaderAPI(payload)) {
+					await this.getEval2ClassAPI();
 					if (selNewsMe !== 'none') {
 						this.findFirstArticle(this.articleList);
 					}

@@ -54,7 +54,7 @@
       }
     },
     methods: {
-      ...mapActions(['getStatValueAPI']),
+      ...mapActions(['getStatValueAPI', 'getEval2ClassAPI']),
 
       repOption() {
         this.reRenPreview = this.reRenPreview > 100 ? 0 : this.reRenPreview+1;

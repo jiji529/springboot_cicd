@@ -64,7 +64,7 @@
 							<div class="ft1_val" v-for="major in getEval1Category" :key="major.seq">
 								<!--대분류-->
 								<!-- v-if="major.sub.length < 1" -->
-								<div class="ft_ch" :tabindex="major.sub.length  < 1 ? 0 : null" @keydown.space.prevent="pressSpace(major.seq, major.sub.length)" @click.prevent="pressSpace(major.seq, major.sub.length)" :id="'multi_eval1_focus'+major.seq">
+								<div class="ft_ch" :tabindex="major.sub.length  < 1 ? 0 : null" @keydown.space.prevent="pressSpace(major.seq, major.sub.length)" @click.prevent="pressSpace(major.seq, major.sub.length)" :id="'multi_eval1_focus'+major.seq">			
 									<input type="radio" :id="'multi_do_eval1'+major.seq" :value="major.seq" name="multi_eval1" v-model="selEval1" wasChecked="false"/>
 									<label :for="'multi_do_eval1'+major.seq" :class="selClass(major.seq)"><span></span>{{major.name}}</label>
 								</div>
@@ -75,6 +75,7 @@
 										<input type="radio" :id="'multi_do_eval1'+mid.seq" :value="mid.seq" name="multi_eval1" v-model="selEval1" wasChecked="false"/>
 										<label :for="'multi_do_eval1'+mid.seq" :class="selClass(mid.seq)"><span></span>{{mid.name}}</label>
 									</dt>
+									<!-- 소분류 나오는 경우-->
 									<dd v-if="mid.sub.length > 0 ">
 										<ul>
 											<li v-for="minor in mid.sub" :key="minor.seq" tabindex="0" @keydown.space.prevent="pressSpace(minor.seq, minor.sub.length)" @click.prevent="pressSpace(minor.seq, minor.sub.length)" :id="'multi_eval1_focus'+minor.seq">

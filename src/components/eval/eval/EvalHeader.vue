@@ -98,7 +98,8 @@
 		},
 		methods: {
 			...mapActions([
-                    'getArticleListFromHeaderAPI'
+                    'getArticleListFromHeaderAPI',
+					'getEval2ClassAPI'
             ]),
 			...mapMutations([
                 'SET_SEARCH_FORM_SEEN'
