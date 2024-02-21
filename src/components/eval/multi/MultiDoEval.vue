@@ -307,6 +307,8 @@ import { nextTick } from 'process'
 			//유지 라디오 버튼 재클릭시 선택 해제 기능
 			radioChange(){
 				this.selEval1 = "";
+				this.isEval1Change = !this.isEval1Change;
+				this.isEvalChange = !this.isEvalChange;
 			},
 			radioChange2(event, groupSeq){ 
 				if (groupSeq == null) return ;
@@ -315,6 +317,8 @@ import { nextTick } from 'process'
 				} else {
 					this.selEval2[groupSeq] = "maintainValue";
 				}
+				this.isEval2Change = true;
+				this.isEvalChange = true;
 
 				/* 렌더링을 위한 코드 */
 				this.renderNum++
