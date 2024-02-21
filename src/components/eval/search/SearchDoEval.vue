@@ -1100,7 +1100,9 @@
 				});
 				tmpEvalAutoSeqs.forEach(v => {
 					tmpCfgEvAt = configEval['item']['AT_M2'][v];
-					selArticle['eva_' + tmpCfgEvAt['group_seq']] = tmpCfgEvAt['value'];
+					//selArticle['eva_' + tmpCfgEvAt['group_seq']] = tmpCfgEvAt['value'];
+					selArticle['eva_' + tmpCfgEvAt['group_seq']] 
+						= (tmpCfgEvAt['group_seq'] == "7") ? tmpCfgEvAt['refValue']+"-"+tmpCfgEvAt['value'] : tmpCfgEvAt['value'];
 				});
 
 				tmpResultEval.eval1_seqs = this.getEval1NamesArray(this.selEval1);
@@ -1317,6 +1319,6 @@
 		width: 1px !important;
 	}
 
-	.cont_wrap .val_wrap .set_val .val_grp .val_item .articleTit:before{content: ''; background:#f0f4f7; position: absolute;}
+		.cont_wrap .val_wrap .set_val .val_grp .val_item .articleTit:before{content: ''; background:#f0f4f7; position: absolute;}
 
 </style>
