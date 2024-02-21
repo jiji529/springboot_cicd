@@ -802,8 +802,6 @@
        */
       selectEval0Type() {
         this.getStatSetting.evaluationItem0 = [];
-        // console.log('and:: ', document.querySelector('#sch_stat_auto_and_').checked, ', data::', this.getStatSetting.evaluation0Options);
-        // console.log('or:: ', document.querySelector('#sch_stat_auto_or_').checked, ', data::', this.getStatSetting.evaluation0Options);
       },
       /**
        * 평가2 and or 타입 변경

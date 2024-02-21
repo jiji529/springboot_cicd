@@ -462,7 +462,6 @@ export default {
                     }
                 }
             }
-            // console.log(this.getConfigEvalGroup);
             // this.findTemplate(this.dragEvent.seq) 
         },
 

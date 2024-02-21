@@ -432,9 +432,6 @@
 					this.goSearch();
 				}
 			}
-			// , "getStatSetting.mediaSelectionOptions": function (param) {
-			// 	console.log(param);
-			// }
 		},
 		created() {
 			this.SET_LOADING_GIF(true);

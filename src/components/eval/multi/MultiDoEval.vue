@@ -412,7 +412,6 @@ import { nextTick } from 'process'
 						break;
 					case "middle" :
 						this.selEval1 = e.target.value;
-						console.log("나와봐"+this.selEval1);
 						this.inputMiddle = e.target.value;
 						if (this.getEval1ByCategory.all[this.selEval1]) {
 							var eval1 = this.getEval1ByCategory.all[this.selEval1];
@@ -423,7 +422,6 @@ import { nextTick } from 'process'
 						break;
 					case "minor" :
 						this.selEval1 = e.target.value;
-						console.log("나와봐"+this.selEval1);
 						this.inputMinor = e.target.value;
 						break;
 					default : break;
@@ -539,7 +537,6 @@ import { nextTick } from 'process'
 							switch (values.length) {
 								case 3 :
 									this.inputMajor = values[0];
-									console.log();
 									this.inputMiddle = values[1];
 									this.inputMinor = values[2];
 									this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
@@ -561,8 +558,6 @@ import { nextTick } from 'process'
 						this.fetchEval1Middle = [];
 						this.fetchEval1Minor = [];
 					}
-
-					console.log(eval1);
 					//DOM이 완성된 후 '유지' 선택 경우 추가
 					const that = this;
 					this.$nextTick(() => {
@@ -671,12 +666,10 @@ import { nextTick } from 'process'
 					}
 					//개발자: 최지현
 					//평가2항목 값 있으면 값, 화면 넣어주기
-					console.log(this.selEval2);
 					this.$nextTick(() => {
 						for (const [groupSeq, flag] of Object.entries(that.duplArr)) {
 							const tag = document.querySelector('#multi-eval2-combo-' + groupSeq)
 							if (that.evalLayout === 0 && tag){ /* SELECTBOX BUTTON */
-								// console.log(tag.childNodes);
 								//개발자: 지현
 								if (flag) {
 									if (evalInfo[newsId]["eval2Value"][groupSeq] != null) {
@@ -785,9 +778,6 @@ import { nextTick } from 'process'
 						this.isEval1Change = false;
 					}
 
-					console.log(eval2Str);
-					console.log(this.cateSubSeq);
-
 					let params = new FormData();
 					params.append('eval1', this.selEval1);
 					params.append('eval1Change', this.isEval1Change);
@@ -818,7 +808,7 @@ import { nextTick } from 'process'
 					//eval 값 저장
 					this.isLoading=true;
 					let ssdo = store.state.hiddenLink1;
-					await this.$axios.post(ssdo + '/saveMultiEval.php',params).then(/*res=>console.log(res.data)*/).catch(e => console.log(e));
+					await this.$axios.post(ssdo + '/saveMultiEval.php',params).then().catch(e => console.log(e));
 					let paramsA = new FormData();
 					let paramsB = new FormData();
 					paramsA.append('news_id', this.newsIdList);

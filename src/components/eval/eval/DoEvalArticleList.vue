@@ -144,7 +144,6 @@
 				<li><a @click="showEvalMulti">다중평가</a></li>
 				<li class="red"><a @click="excludeEval">평가제외</a></li>
 				<li><a @click="includeEval">평가제외해제</a></li>
-				<li><a @click="tempBtn">테스트 버튼</a></li>
 			</ul>
 			<ul class="btn_right">
 			</ul>
@@ -231,7 +230,6 @@
 		},
 		watch: {
 			selectedArticle(next) {
-				console.log("watch: ", next);
 				if(this.selectedArticle !== '' && this.selectedArticle !== undefined){
 					this.news_id_local = this.selectedArticle.news_id;
 				} else {
@@ -300,9 +298,6 @@
 			}
 		},
 		methods: {
-			tempBtn() {
-				console.log(this.articleList);
-			},
 			...mapActions([
 				'getArticleListFromHeaderAPI',
 				'newsGroupAPI',

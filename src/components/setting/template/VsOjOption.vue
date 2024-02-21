@@ -1268,7 +1268,6 @@ export default {
         },
 
         insteadOfLegend() {
-            // console.log(this.tableOrChart[this.TCIndex].crossAxesLength != 1 && !this.setDetails[0].legendFlag);
             return (this.tableOrChart[this.TCIndex].crossAxesLength !== 1  
                 || (this.setDetails && !this.setDetails[0].legendFlag));
         }

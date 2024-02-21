@@ -170,7 +170,7 @@ export default {
         // li.onclick = (click) => {
         //   for (let [key, value] of Object.entries(fadeGroup)) {
         //     if (text === key) {
-        //       for (let i = 0; i < value.length; i++) { console.log('key, value: ', key, value[i]);
+        //       for (let i = 0; i < value.length; i++) { 
         //         // visible=true -> hedden=false
         //         const isHidden = !this.myChart.isDatasetVisible(value[i]);
         //         this.myChart.setDatasetVisibility(value[i], isHidden);

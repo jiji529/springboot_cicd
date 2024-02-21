@@ -2699,7 +2699,7 @@
                 _media_ids_empty.push(i);
               }
             });
-            // if (this.mapIndex.mid[_media_ids_exists].media_name.includes("조선비즈")) console.log(___t);
+            // if (this.mapIndex.mid[_media_ids_exists].media_name.includes("조선비즈")) 
             if (!_media_ids_exists && _media_ids_empty[0]) {
               let ___t = this.mapIndex.mid[_media_ids_empty[0]];
               // let ___t_for_mn = null;
