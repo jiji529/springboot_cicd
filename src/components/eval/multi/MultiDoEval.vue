@@ -63,7 +63,7 @@
 							<!-- 유지버튼 / 개발자: 최지현 -->
 							<div class="ft1_val">	
 								<div class="ft_ch">
-									<input type="radio" id="maintainYn-eval1-radio" name="eval1" v-model="selEval1" wasChecked="false" value="maintainValue"/>
+									<input type="radio" id="maintainYn-eval1-radio" name="eval1" v-model="selEval1" wasChecked="false" value="maintainValue" @click="radioChange()"/>
 									<label class="maintainRadio" for="maintainYn-eval1-radio" :class="{ sel : selEval1 === 'maintainValue' }"><span></span>유지</label>
 								</div>
 							</div>
@@ -116,12 +116,12 @@
 					</dl>
 					<!--평가2 라디오 버튼-->
 					<div class="ft_cont" v-if="showEval2 && evalLayout===1">
-						<div class="ft2_box" v-for="(one, key) in getEval2Class" :key="key" v-if="one.auto === 'N'">
+						<div class="ft2_box" v-for="(one, key) in getEval2Class" :key="key+'ren'+renderNum" v-if="one.auto === 'N'">
 							<div class="ft_ch">{{one.upper_cate_name}}</div>
 							<ul class="ft2_li"  >
 								<!-- 유지버튼 / 개발자: 최지현 -->
 								<li tabindex="0">
-									<input type="radio" :id="'maintainYn-radio'+one.upper_cate_seq" :name="'multi_eval2'+one.upper_cate_seq" v-model="selEval2[one.upper_cate_seq]" wasChecked="false" value="maintainValue"/>
+									<input type="radio" :id="'maintainYn-radio'+one.upper_cate_seq" :name="'multi_eval2'+one.upper_cate_seq" v-model="selEval2[one.upper_cate_seq]" wasChecked="false" value="maintainValue" @click="radioChange2($event, one.upper_cate_seq)"/>
 									<label :for="'maintainYn-radio'+one.upper_cate_seq" :class="{ sel : selEval2 === 'maintainValue' }"><span></span>유지</label>
 								</li>
 
@@ -158,6 +158,8 @@ import { nextTick } from 'process'
 		props: ['evalManualSetting'],
 		data() {
 			return{
+				renderNum: 0,
+
 				//개발자: 최지현
 				conditionMajor: null,
 				conditionMiddle: null,
@@ -301,6 +303,26 @@ import { nextTick } from 'process'
 				'SET_SEARCH_EVAL_INFO',
 				'TOGGLE_SHOW_DO_EVAL_MULTI'
 			]),
+			//개발자: 최지현
+			//유지 라디오 버튼 재클릭시 선택 해제 기능
+			radioChange(){
+				this.selEval1 = "";
+			},
+			radioChange2(event, groupSeq){ 
+				if (groupSeq == null) return ;
+				if (this.selEval2[groupSeq] == "maintainValue") {
+					this.selEval2[groupSeq] = "";
+				} else {
+					this.selEval2[groupSeq] = "maintainValue";
+				}
+
+				/* 렌더링을 위한 코드 */
+				this.renderNum++
+				if (this.renderNum > 100) {
+					this.renderNum = 0;
+				}
+			},
+
 			addKeyup(){
 				window.addEventListener('keydown', this.arrowKeyup);
 			},
