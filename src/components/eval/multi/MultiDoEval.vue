@@ -31,27 +31,25 @@
 						<dt>대</dt>
 						<dd>
 							<select id="multi-eval1-combo-1" @change="eval1Combo($event, 'major')">
-								<option value="maintainValue">유지</option>
+								<option v-if="hiddenEval1" value="maintainValue">유지</option>
 								<option value="">선택</option>
 								<option v-for="major in fetchEval1Major" :key="major.name+major.seq" :value="major.seq"> {{major.name}}</option>
 							</select>
 						</dd>
 						<dt>중</dt>
-						<dd v-if="disappearEvalMiddleAndMinor">
-							<select id="multi-eval1-combo-2" @change="eval1Combo($event, 'middle')" :required="fetchEval1Middle.length>0">
-								<option value="maintainValue">유지</option>
+						<dd v-show="!hiddenEval1"> 
+							<select id="multi-eval1-combo-2" @change="eval1Combo($event, 'middle')" :required="fetchEval1Middle.length>0" >
 								<option value="">선택</option>
 								<option v-for="mid in fetchEval1Middle" :key="mid.name+mid.seq" :value="mid.seq"> {{mid.name}}</option>
 							</select>
-						</dd><dd v-else>&nbsp;</dd>
+						</dd><dd v-show="hiddenEval1">&nbsp;</dd>
 						<dt>소</dt>
-						<dd v-if="disappearEvalMiddleAndMinor">
-							<select id="multi-eval1-combo-3" @change="eval1Combo($event, 'minor')" :required="fetchEval1Minor.length>0">
-								<option value="maintainValue">유지</option>
+						<dd v-show="!hiddenEval1">
+							<select id="multi-eval1-combo-3" @change="eval1Combo($event, 'minor')" :required="fetchEval1Minor.length>0" >
 								<option value="">선택</option>
 								<option v-for="minor in fetchEval1Minor" :key="minor.name+minor.seq" :value="minor.seq"> {{minor.name}}</option>
 							</select>
-						</dd><dd v-else>&nbsp;</dd>
+						</dd><dd v-show="hiddenEval1">&nbsp;</dd>
 					</dl>
 					<!--평가1 라디오 버튼-->
 					<div class="ft_cont" v-if="showEval1 && evalLayout===1" >
@@ -161,11 +159,12 @@ import { nextTick } from 'process'
 		data() {
 			return{
 				//개발자: 최지현
-				defaultConditionMajor: '',
-				defaultConditionMiddle: '',
-				defaultConditionMinor: '',
+				conditionMajor: null,
+				conditionMiddle: null,
+				conditionMinor: null,
+				conditionEval1: null,
 				duplArr: {},
-				disappearEvalMiddleAndMinor: true,
+				hiddenEval1: true,
 
 				selEval1 : [],
 				selEval2 : [],
@@ -388,15 +387,16 @@ import { nextTick } from 'process'
 				}
 			},
 			eval1Combo(e, category) { 
-
-				let middle = document.querySelector('#eval1-combo-2');
-				let minor = document.querySelector('#eval1-combo-3');
-
+				
+				/* maintainValue == "유지" */
+				if (e.target.value == "maintainValue") {
+					this.hiddenEval1 = true;
+				} else {
+					this.hiddenEval1 = false;
+				}
+				
 				//개발자: 최지현
 				//평가 1항목 중, 소 셀렉트박스 없는 경우 -> 클릭 시 다시 생기도록.
-				this.disappearEvalMiddleAndMinor = true;
-
-				if(this.eval1_seq)
 				switch (category) {
 					case "major" :
 						this.selEval1 = e.target.value; // 라디오 버튼
@@ -426,6 +426,9 @@ import { nextTick } from 'process'
 						break;
 					default : break;
 				}
+
+console.log(this.selEval1);
+
 				this.eval1Change();
 				return false;
 			},
@@ -472,13 +475,14 @@ import { nextTick } from 'process'
 
 
 			async getEvalValue(resetArticle) {
-
+				/* 초기화 또는 선택에 따른 기사 세팅  */
 				if (this.multiSelectedArticle && resetArticle 
 					&& resetArticle.article_serial == this.multiSelectedArticle.article_serial) {
 					this.SET_MULTI_SELECTED_ARTICLE(resetArticle);
 				} else if (resetArticle == "mounted") {
 					this.originArticle = JSON.parse(JSON.stringify(this.multiSelectedArticle));
 				}
+				/* 특정 옵션값 초기화 */
 				this.isEvalChange = false;
 				this.isEval1Change = false;
 				this.isEval2Change = false;
@@ -489,14 +493,17 @@ import { nextTick } from 'process'
 						document.querySelector('#multi-eval2-combo-' + seq).value = "";
 					}
 				});
+
+				/* 값 세팅 */
 				const selArticle = this.multiSelectedArticle;
-				
 				if(selArticle) {
 					const newsId = selArticle.news_id;
 					let evalInfo = [];
-					if (this.searchFormSeen) evalInfo = this.searchEvalInfo;
-					//this.evalInfo <- /getEvalInfo.php 값.
-					else evalInfo = this.evalInfo;
+					if (this.searchFormSeen) {
+						evalInfo = this.searchEvalInfo;
+					} else { 
+						evalInfo = this.evalInfo;
+					}
 					//라디오버튼일때 각 항목의 wasChecked false 로 바꿔줌
 					if (this.evalLayout === 1) {
 						const eval1CateList = document.querySelectorAll('input[name=multi_eval1]');
@@ -520,12 +527,31 @@ import { nextTick } from 'process'
 
 					if (eval1.eval1_seq !== null) {
 						this.selEval1 = eval1.eval1_seq;
+						// //대
+						// this.conditionMajor = this.multiEvalArticleList.every(
+						// 	function(multiEvalArticles) {return multiEvalArticles.ev1_big == selArticle.ev1_big;}
+						// )
+						// //중
+						// this.conditionMiddle = this.multiEvalArticleList.every(
+						// 	function(multiEvalArticles) {return multiEvalArticles.ev1_mid == selArticle.ev1_mid;}
+						// )
+						// //소
+						// this.conditionMinor = this.multiEvalArticleList.every(
+						// 	function(multiEvalArticles) {return multiEvalArticles.ev1_sml == selArticle.ev1_sml;}
+						// )
+						
+						this.conditionEval1 
+							= this.multiEvalArticleList.every((ma) => {
+								return (ma.ev1_big == selArticle.ev1_big
+									&& ma.ev1_mid == selArticle.ev1_mid
+									&& ma.ev1_sml == selArticle.ev1_sml);
+							}); // every()
+						
 						//평가1 라디오버튼일때
 						if (this.evalLayout === 1) {
 							// const subject = document.querySelector('input[id=multi_do_eval1' + seq + ']');
 							// subject.attributes.wasChecked.value = 'true';
 						} else {
-							
 							let sEval1 = eval1;
 							while (true) {
 								values.push(sEval1.eval1_seq);
@@ -533,7 +559,6 @@ import { nextTick } from 'process'
 								sEval1 = this.getEval1ByCategory.all[sEval1.eval1_upper];
 							}
 							values.reverse();
-							
 							switch (values.length) {
 								case 3 :
 									this.inputMajor = values[0];
@@ -553,6 +578,10 @@ import { nextTick } from 'process'
 									this.fetchEval1Minor = [];
 									break;
 							}
+							/* "유지" 상태라면 SELECTBOX는 하나만 */
+							if (this.conditionEval1) {
+								this.hiddenEval1 = false;
+							}
 						}
 					} else {
 						this.fetchEval1Middle = [];
@@ -564,21 +593,10 @@ import { nextTick } from 'process'
 						values.forEach(function(value, index) {
 							doms[index].value = value;
 						})
-						//개발자: 최지현
-						//평가 1항목 - 중, 소 셀렉트박스 없애는 경우
-						if(eval1.eval1_seq != null){
-							if(this.selEval1 == 1 || this.selEval1 == 2 || this.selEval1 == 13){
-								this.disappearEvalMiddleAndMinor = false;
-							}
-						}
 
 						//개발자: 최지현
 						//평가1항목 중복 비교
-						//대
-						this.defaultConditionMajor = this.multiEvalArticleList.every(
-							function(multiEvalArticles) {return multiEvalArticles.ev1_big == selArticle.ev1_big;}
-						)
-						if(!this.defaultConditionMajor){
+						if(!this.conditionEval1){
 							let combo = document.querySelector('#multi-eval1-combo-1');
 							let radio = document.querySelector('#maintainYn-eval1-radio');
 							if (combo) {
@@ -588,36 +606,29 @@ import { nextTick } from 'process'
 								that.selEval1 = "maintainValue"
 							}
 						}
-						//중
-						this.defaultConditionMiddle = this.multiEvalArticleList.every(
-							function(multiEvalArticles) {return multiEvalArticles.ev1_mid == selArticle.ev1_mid;}
-						)
-						if(!this.defaultConditionMiddle){
-							// document.querySelector('#multi-eval1-combo-2').value = "maintainValue";
-							let combo = document.querySelector('#multi-eval1-combo-2');
-							let radio = document.querySelector('#maintainYn-eval1-radio');
-							if (combo) {
-								combo.value = "maintainValue";
-							}
-							if (radio) {
-								that.selEval1 = "maintainValue"
-							}
-						}
-						//소
-						this.defaultConditionMinor = this.multiEvalArticleList.every(
-							function(multiEvalArticles) {return multiEvalArticles.ev1_sml == selArticle.ev1_sml;}
-						)
-						if(!this.defaultConditionMinor){
-							// document.querySelector('#multit-eval1-combo-3').value = "maintainValue";
-							let combo = document.querySelector('#multi-eval1-combo-3');
-							let radio = document.querySelector('#maintainYn-eval1-radio');
-							if (combo) {
-								combo.value = "maintainValue";
-							}
-							if (radio) {
-								that.selEval1 = "maintainValue"
-							}
-						}
+						// if(!this.conditionMiddle){
+						// 	// document.querySelector('#multi-eval1-combo-2').value = "maintainValue";
+						// 	let combo = document.querySelector('#multi-eval1-combo-2');
+						// 	let radio = document.querySelector('#maintainYn-eval1-radio');
+						// 	if (combo) {
+						// 		combo.value = "maintainValue";
+						// 	}
+						// 	if (radio) {
+						// 		that.selEval1 = "maintainValue"
+						// 	}
+						// }
+						
+						// if(!this.conditionMinor){
+						// 	// document.querySelector('#multit-eval1-combo-3').value = "maintainValue";
+						// 	let combo = document.querySelector('#multi-eval1-combo-3');
+						// 	let radio = document.querySelector('#maintainYn-eval1-radio');
+						// 	if (combo) {
+						// 		combo.value = "maintainValue";
+						// 	}
+						// 	if (radio) {
+						// 		that.selEval1 = "maintainValue"
+						// 	}
+						// }
 						/* 평가1의 모든 값이 동일하면 "유지" 라디오버튼 숨기기 */
 						if (that.evalLayout == 1 && that.selEval1 != "maintainValue") {
 							document.querySelector("#maintainYn-eval1-radio")
@@ -625,7 +636,7 @@ import { nextTick } from 'process'
 								.parentNode
 								.style.display = "none";
 						}
-					});
+					}); // $nextTick()
 
 
 
@@ -695,10 +706,10 @@ import { nextTick } from 'process'
 								}
 							}
 						}
-					});
+					}); // $nextTick()
 
-				}
-			},
+				} // if(selArticle)
+			}, // getEvalValue
 
 
 			closeEvalMulti() {

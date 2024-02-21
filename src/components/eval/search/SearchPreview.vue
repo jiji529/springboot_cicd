@@ -588,7 +588,6 @@
 					aefDiv = aefDiv.replace('<h1 data-v-fa94b05a=""><span data-v-fa94b05a="" style="width: 30px;"> &nbsp;</span></h1>', '');
 					aefDiv = aefDiv.replace('<h1 data-v-fa94b05a=""><span data-v-fa94b05a="" style="width: 30px;"> &nbsp;</span></h1>', '<br>');
 					let print = window.open('기사인쇄','기사인쇄', 'width=800, height=600');
-					/*console.log(aefAndHtPrint(aefDiv));*/
 					print.document.open();
 					print.document.write(aefAndHtPrint(aefDiv));
 					print.document.close();
