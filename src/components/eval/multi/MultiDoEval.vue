@@ -31,7 +31,7 @@
 						<dt>대</dt>
 						<dd>
 							<select id="multi-eval1-combo-1" @change="eval1Combo($event, 'major')">
-								<option v-if="hiddenEval1" value="maintainValue">유지</option>
+								<option v-if="!conditionEval1" value="maintainValue">유지</option>
 								<option value="">선택</option>
 								<option v-for="major in fetchEval1Major" :key="major.name+major.seq" :value="major.seq"> {{major.name}}</option>
 							</select>
@@ -426,9 +426,6 @@ import { nextTick } from 'process'
 						break;
 					default : break;
 				}
-
-console.log(this.selEval1);
-
 				this.eval1Change();
 				return false;
 			},
@@ -525,68 +522,69 @@ console.log(this.selEval1);
 					const doms = [majorDOM, middleDOM, minorDOM];
 					const values = [];
 
-					if (eval1.eval1_seq !== null) {
-						this.selEval1 = eval1.eval1_seq;
-						// //대
-						// this.conditionMajor = this.multiEvalArticleList.every(
-						// 	function(multiEvalArticles) {return multiEvalArticles.ev1_big == selArticle.ev1_big;}
-						// )
-						// //중
-						// this.conditionMiddle = this.multiEvalArticleList.every(
-						// 	function(multiEvalArticles) {return multiEvalArticles.ev1_mid == selArticle.ev1_mid;}
-						// )
-						// //소
-						// this.conditionMinor = this.multiEvalArticleList.every(
-						// 	function(multiEvalArticles) {return multiEvalArticles.ev1_sml == selArticle.ev1_sml;}
-						// )
-						
-						this.conditionEval1 
-							= this.multiEvalArticleList.every((ma) => {
-								return (ma.ev1_big == selArticle.ev1_big
-									&& ma.ev1_mid == selArticle.ev1_mid
-									&& ma.ev1_sml == selArticle.ev1_sml);
-							}); // every()
-						
-						//평가1 라디오버튼일때
-						if (this.evalLayout === 1) {
-							// const subject = document.querySelector('input[id=multi_do_eval1' + seq + ']');
-							// subject.attributes.wasChecked.value = 'true';
-						} else {
-							let sEval1 = eval1;
-							while (true) {
-								values.push(sEval1.eval1_seq);
-								if (sEval1.eval1_upper == null) break;
-								sEval1 = this.getEval1ByCategory.all[sEval1.eval1_upper];
-							}
-							values.reverse();
-							switch (values.length) {
-								case 3 :
-									this.inputMajor = values[0];
-									this.inputMiddle = values[1];
-									this.inputMinor = values[2];
-									this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
-									this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
-									break;
-								case 2:
-									this.inputMajor = values[0];
-									this.inputMiddle = values[1];
-									this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
-									break;
-								default:
-									this.inputMajor = values[0];
-									this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
-									this.fetchEval1Minor = [];
-									break;
-							}
-							/* "유지" 상태라면 SELECTBOX는 하나만 */
-							if (this.conditionEval1) {
-								this.hiddenEval1 = false;
-							}
-						}
+					this.selEval1 = eval1.eval1_seq == null ? "" : eval1.eval1_seq;
+					// //대
+					// this.conditionMajor = this.multiEvalArticleList.every(
+					// 	function(multiEvalArticles) {return multiEvalArticles.ev1_big == selArticle.ev1_big;}
+					// )
+					// //중
+					// this.conditionMiddle = this.multiEvalArticleList.every(
+					// 	function(multiEvalArticles) {return multiEvalArticles.ev1_mid == selArticle.ev1_mid;}
+					// )
+					// //소
+					// this.conditionMinor = this.multiEvalArticleList.every(
+					// 	function(multiEvalArticles) {return multiEvalArticles.ev1_sml == selArticle.ev1_sml;}
+					// )
+					
+					this.conditionEval1 
+						= this.multiEvalArticleList.every((ma) => {
+							return (ma.ev1_big == selArticle.ev1_big
+								&& ma.ev1_mid == selArticle.ev1_mid
+								&& ma.ev1_sml == selArticle.ev1_sml);
+						}); // every()
+					
+					//평가1 라디오버튼일때
+					if (this.evalLayout === 1) {
+						// const subject = document.querySelector('input[id=multi_do_eval1' + seq + ']');
+						// subject.attributes.wasChecked.value = 'true';
 					} else {
-						this.fetchEval1Middle = [];
-						this.fetchEval1Minor = [];
+						let sEval1 = eval1;
+						while (true) {
+							if (sEval1.eval1_seq == null) break;
+							values.push(sEval1.eval1_seq);
+							if (sEval1.eval1_upper == null) break;
+							sEval1 = this.getEval1ByCategory.all[sEval1.eval1_upper];
+						}
+						values.reverse();
+						switch (values.length) {
+							case 3 :
+								this.inputMajor = values[0];
+								this.inputMiddle = values[1];
+								this.inputMinor = values[2];
+								this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
+								this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
+								break;
+							case 2:
+								this.inputMajor = values[0];
+								this.inputMiddle = values[1];
+								this.fetchEval1Minor = this.getEval1ByCategory.all[values[1]].sub;
+								break;
+							case 1:
+								this.inputMajor = values[0];
+								this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
+								this.fetchEval1Minor = [];
+								break;
+							default:
+								this.fetchEval1Middle = [];
+								this.fetchEval1Minor = [];
+								break;
+						}
+						/* "conditionEval1==false==유지" 상태라면 SELECTBOX는 하나만 */
+						if (this.conditionEval1) {
+							this.hiddenEval1 = false;
+						}
 					}
+
 					//DOM이 완성된 후 '유지' 선택 경우 추가
 					const that = this;
 					this.$nextTick(() => {
