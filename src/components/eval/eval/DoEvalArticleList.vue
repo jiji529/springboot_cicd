@@ -333,7 +333,8 @@
 				return (this.getArticleListSource === 'header' 
 						&& this.newsGroup[index] 
 						&& typeof(group) != null 
-						&& typeof(group) !== 'undefined');
+						&& typeof(group) !== 'undefined'
+						&& Object.keys(group).length > 0);
 			},
 			getArticleClassName(news_comment, field) {
 				let rtn = field;
