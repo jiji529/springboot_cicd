@@ -113,6 +113,27 @@
 							<dd v-else>&nbsp;</dd>
 						</dd>
 					</slot>
+
+					<slot v-if="visibleEvalList[6]">
+						<dt class="ellipsis">긍/부정</dt>
+						<dd v-if="searchSelectedArticle"> 
+							<select id="eval2-combo-6" v-if="Object.keys(autoPositiveDenial).length > 0" v-model="selEval2[autoPositiveDenial.upper_cate_seq]" @change="eval2Combo($event, autoPositiveDenial.upper_cate_seq)" tabindex="3">
+								<option value="null">선택</option>
+								<option v-for="val in autoPositiveDenial.sub" :key="String(val.seq)" :value="String(val.seq)">{{val.name}}</option>
+							</select>
+						</dd><dd v-else>&nbsp;</dd>
+					</slot>
+
+					<slot v-if="visibleEvalList[7]" class="articleTit">
+						<dt class="ellipsis">대/소제목</dt>
+						<dd v-if="searchSelectedArticle"> 
+							<select id="eval2-combo-7" v-if="Object.keys(autoArticleClassType).length > 0" v-model="selEval2[autoArticleClassType.upper_cate_seq]" @change="eval2Combo($event, autoArticleClassType.upper_cate_seq)" tabindex="3">
+								<option value="null">선택</option>
+								<option v-for="val in autoArticleClassType.sub" :key="String(val.seq)" :value="String(val.seq)">{{val.name}}</option>
+							</select>
+						</dd><dd v-else>&nbsp;</dd>
+					</slot>
+
 				</dl>
 			</div>
 			<!-- e:기사정보 -->
@@ -269,6 +290,9 @@
 				autoReporter: [],
 				autoLetterCnt: [],
 				autoSize:[],
+
+				autoPositiveDenial:[],
+				autoArticleClassType:[],
 
 				sizeArray:[],
 				letterCntArray: [],
@@ -650,7 +674,13 @@
 									if(Number(a.refValue) - Number(b.refValue) === 0) return Number(b.seq) - Number(a.seq);
 									else return Number(a.refValue) - Number(b.refValue);
 								});
-							} else if (item.upper_cate_name === '수록지면') this.autoLocation = item;
+							} else if (item.upper_cate_name === '수록지면') {
+								this.autoLocation = item;
+							} else if (item.upper_cate_name === '긍/부정') {
+								this.autoPositiveDenial = item;
+					 		} else if (item.upper_cate_name === '대/소제목') {
+								this.autoArticleClassType = item;
+							}
 							this.autoCateSeq.push(item.upper_cate_seq);
 						} else if( item.upper_cate_use === 'Y') {
 							this.notAutoCateSeq.push(item.upper_cate_seq);
@@ -1286,4 +1316,7 @@
 		overflow: hidden !important;
 		width: 1px !important;
 	}
+
+	.cont_wrap .val_wrap .set_val .val_grp .val_item .articleTit:before{content: ''; background:#f0f4f7; position: absolute;}
+
 </style>

@@ -67,10 +67,7 @@
                 </ul>
             </slot>
             <slot v-else>
-                <ul class="btn_right">
-                    <p>*대/소제목 목록 갱신이 필요하면 데이터 동기화를 해주세요.</p>
-                    <li><a @click="dataSynchronization">데이터 동기화</a></li>
-                </ul>
+                <p class="class_title_description">*뷰어에서 새로 추가된 대/소제목 목록은 평가/검색 이후에 항목이 갱신됩니다.</p>
             </slot>
         </div>
         <div class="loading" style="background-color:#ffffff45" v-if="loadingGif"><img class="loading-image" :src="require('@/assets/images/loading.gif')" alt="Loading..."/></div>
@@ -130,27 +127,6 @@
                     } else {
                         this.$eventBus.$emit('kickOut');
                     }
-                } catch (e) {
-                    console.error(e);
-                }
-            },
-            /*
-             * 데이터 동기화
-             */
-            async dataSynchronization(){
-                try {
-                    //대/소제목 목록 수정 사항 적용 API
-                    await this.setArticleClassTypeAPI();
-
-                    //db값 목록으로 가져오기
-                    const a = await this.getArticleClassTypeAPI();
-                    if(a) {
-                        this.titleList = a;
-                    } else {
-                        alert("동기화 실패했습니다.");
-                    }
-                    alert("새로운 대/소제목이 동기화되었습니다.");
-                    
                 } catch (e) {
                     console.error(e);
                 }
@@ -266,8 +242,7 @@
 .cont_title_btn ul li{float:left; padding:0 10px; height:26px; line-height:22px; font-size:12px; font-weight:bold; background:#f2f2f2; border:1px #aeaeae solid; margin:0 3px;}
 .cont_title_btn ul li a{color:#333;}
 
-.cont_title_btn .btn_right{float: right; height:24px !important;}
-.cont_title_btn .btn_right a{line-height: 24px;}
+.cont_title_btn .class_title_description{float: right; height:24px !important; margin-top: 10px; font-size: 11px; color:#808080;}
 
 .cont_title_btn .move{padding:0; border:0; width:24px; height:24px;}
 .cont_title_btn .move *{width:24px; height:24px; padding:0; background:url(../../../assets/images/ico_pre.png) no-repeat; text-indent:-9999px;}

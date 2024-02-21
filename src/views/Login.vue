@@ -156,10 +156,6 @@
           loginResult = loginResult && await this.$statConfig.checkUser(this.username);
           if (loginResult) {
 
-            //개발자: 최지현
-            //로그인 성공 시 -> 대/소제목 목록 수정 사항 적용 API
-            await this.setArticleClassTypeAPI();
-
             if (this.isPeUser) {
               let paramsP = new FormData();
               paramsP.set('m', 'p');

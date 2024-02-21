@@ -39,9 +39,6 @@
           let loginResult = await this.loginAutoAPI(params);
           // loginResult = loginResult && await this.$statConfig.checkUser();
           if (loginResult) {
-            //개발자: 최지현
-            //대/소제목 데이터 동기화
-            await this.setArticleClassTypeAPI();
 
             if (this.isPeUser) {
 

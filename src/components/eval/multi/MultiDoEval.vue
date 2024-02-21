@@ -31,6 +31,7 @@
 						<dt>대</dt>
 						<dd>
 							<select id="multi-eval1-combo-1" @change="eval1Combo($event, 'major')">
+								<option value="maintainValue">유지</option>
 								<option value="">선택</option>
 								<option v-for="major in fetchEval1Major" :key="major.name+major.seq" :value="major.seq"> {{major.name}}</option>
 							</select>
@@ -38,6 +39,7 @@
 						<dt>중</dt>
 						<dd>
 							<select id="multi-eval1-combo-2" @change="eval1Combo($event, 'middle')" :required="fetchEval1Middle.length>0">
+								<option value="maintainValue">유지</option>
 								<option value="">선택</option>
 								<option v-for="mid in fetchEval1Middle" :key="mid.name+mid.seq" :value="mid.seq"> {{mid.name}}</option>
 							</select>
@@ -45,6 +47,7 @@
 						<dt>소</dt>
 						<dd>
 							<select id="multi-eval1-combo-3" @change="eval1Combo($event, 'minor')" :required="fetchEval1Minor.length>0">
+								<option value="maintainValue">유지</option>
 								<option value="">선택</option>
 								<option v-for="minor in fetchEval1Minor" :key="minor.name+minor.seq" :value="minor.seq"> {{minor.name}}</option>
 							</select>
@@ -96,6 +99,7 @@
 							<dt class="ellipsis">{{eval2.upper_cate_name}}</dt>
 							<dd>
 								<select :id="'multi-eval2-combo-'+eval2.upper_cate_seq" @change="eval2Combo($event,eval2.upper_cate_seq)">
+									<option value="maintainValue">유지</option>
 									<option value="">선택</option>
 									<option v-for="cate in eval2.sub" :value="cate.seq">{{cate.name}}</option>
 								</select>
@@ -135,10 +139,17 @@
 <script>
 	import store from '../../../store'
 	import {mapGetters, mapMutations, mapState, mapActions} from 'vuex'
+import { nextTick } from 'process'
 	export default {
 		props: ['evalManualSetting'],
 		data() {
 			return{
+				//개발자: 최지현
+				defaultConditionMajor: '',
+				defaultConditionMiddle: '',
+				defaultConditionMinor: '',
+				duplArr: {},
+
 				selEval1 : [],
 				selEval2 : [],
 				showEval1 : true,
@@ -155,7 +166,8 @@
 				searchData : [],
 
 				notAutoCateSeq : [],
-				autoCateSubSeq : [],
+				cateSubSeq : [],
+				cateGroupSeq : {},
 				cateSeq: [],
 
 				evalLayout: 0,
@@ -252,9 +264,13 @@
 			const display = await this.getLayoutSettingAPI();
 			this.evalLayout = Number(display.layout);
 			this.getEvalValue("mounted");
+			//개발자: 최지현
+			// this.getEvalSetting();
 			this.isEvalChange = false;
+			// 대 평가항목
 			this.fetchEval1Major = this.getEval1ByCategory.major;
 			this.fetchSearchData = this.getEval1SearchList();
+
 		},
 		methods: {
 			...mapActions([
@@ -356,12 +372,12 @@
 					}
 				}
 			},
-			eval1Combo(e, category) {
+			eval1Combo(e, category) { 
 				let middle = document.querySelector('#eval1-combo-2');
 				let minor = document.querySelector('#eval1-combo-3');
 				switch (category) {
 					case "major" :
-						this.selEval1 = e.target.value;
+						this.selEval1 = e.target.value; // 라디오 버튼
 						this.inputMajor = e.target.value;
 						if (this.getEval1ByCategory.all[this.selEval1]) {
 							var eval1 = this.getEval1ByCategory.all[this.selEval1];
@@ -374,6 +390,7 @@
 						break;
 					case "middle" :
 						this.selEval1 = e.target.value;
+						console.log("나와봐"+this.selEval1);
 						this.inputMiddle = e.target.value;
 						if (this.getEval1ByCategory.all[this.selEval1]) {
 							var eval1 = this.getEval1ByCategory.all[this.selEval1];
@@ -384,6 +401,7 @@
 						break;
 					case "minor" :
 						this.selEval1 = e.target.value;
+						console.log("나와봐"+this.selEval1);
 						this.inputMinor = e.target.value;
 						break;
 					default : break;
@@ -418,18 +436,23 @@
 					this.getEval2Class.forEach(item => {
 						if (item.auto === 'N') {
 							this.notAutoCateSeq.push(item.upper_cate_seq);
-						} else {
-							if (item.sub !== null) {
-								item.sub.forEach(subItem => {
-									this.autoCateSubSeq.push(subItem.seq);
-								});
-							}
+						} 
+						if (item.sub !== null) {
+							item.sub.forEach(subItem => {
+								this.cateSubSeq.push(subItem.seq);
+								if (!this.cateGroupSeq[item.upper_cate_seq])
+									this.cateGroupSeq[item.upper_cate_seq] = [];
+								this.cateGroupSeq[item.upper_cate_seq].push(subItem.seq);
+							});
 						}
 						this.cateSeq.push(item.upper_cate_seq);
 					});
 				}
 			},
+
+
 			async getEvalValue(resetArticle) {
+
 				if (this.multiSelectedArticle && resetArticle 
 					&& resetArticle.article_serial == this.multiSelectedArticle.article_serial) {
 					this.SET_MULTI_SELECTED_ARTICLE(resetArticle);
@@ -447,10 +470,12 @@
 					}
 				});
 				const selArticle = this.multiSelectedArticle;
+				
 				if(selArticle) {
 					const newsId = selArticle.news_id;
 					let evalInfo = [];
 					if (this.searchFormSeen) evalInfo = this.searchEvalInfo;
+					//this.evalInfo <- /getEvalInfo.php 값.
 					else evalInfo = this.evalInfo;
 					//라디오버튼일때 각 항목의 wasChecked false 로 바꿔줌
 					if (this.evalLayout === 1) {
@@ -460,7 +485,19 @@
 							one.attributes.wasChecked.value = 'false';
 						});
 					}
+
+					////////////////////////////////////
+					//해당 기사에 대한 평가 정보를 eval1에 넣어주는 부분.
 					const eval1 = evalInfo[newsId].eval1;
+
+					//개발자: 최지현
+					//평가1 콤보박스 일때 넣어주기
+					let majorDOM = document.querySelector('#multi-eval1-combo-1');
+					let middleDOM = document.querySelector('#multi-eval1-combo-2');
+					let minorDOM = document.querySelector('#multi-eval1-combo-3');
+					const doms = [majorDOM, middleDOM, minorDOM];
+					const values = [];
+
 					if (eval1.eval1_seq !== null) {
 						this.selEval1 = eval1.eval1_seq;
 						//평가1 라디오버튼일때
@@ -468,12 +505,7 @@
 							const subject = document.querySelector('input[id=multi_do_eval1' + seq + ']');
 							subject.attributes.wasChecked.value = 'true';
 						} else {
-							//평가1 콤보박스 일때 넣어주기
-							let majorDOM = document.querySelector('#multi-eval1-combo-1');
-							let middleDOM = document.querySelector('#multi-eval1-combo-2');
-							let minorDOM = document.querySelector('#multi-eval1-combo-3');
-							const doms = [majorDOM, middleDOM, minorDOM];
-							const values = [];
+							
 							let sEval1 = eval1;
 							while (true) {
 								values.push(sEval1.eval1_seq);
@@ -481,15 +513,11 @@
 								sEval1 = this.getEval1ByCategory.all[sEval1.eval1_upper];
 							}
 							values.reverse();
-							this.$nextTick(() => {
-								values.forEach(function(value, index) {
-									doms[index].value = value;
-								})
-							});
-
+							
 							switch (values.length) {
 								case 3 :
 									this.inputMajor = values[0];
+									console.log();
 									this.inputMiddle = values[1];
 									this.inputMinor = values[2];
 									this.fetchEval1Middle = this.getEval1ByCategory.all[values[0]].sub;
@@ -511,18 +539,104 @@
 						this.fetchEval1Middle = [];
 						this.fetchEval1Minor = [];
 					}
-					//평가2항목 값 있으면 넣어주기
-					if (evalInfo[newsId].eval2Value !== null) {
-						let eval2Value = evalInfo[newsId]['eval2Value'];
-						for (const index in eval2Value) {
-							if (eval2Value[index]) this.selEval2[index] = eval2Value[index].eval2_seq;
-							if (this.evalLayout === 0)
-								if (document.querySelector('#multi-eval2-combo-' + index))
-									document.querySelector('#multi-eval2-combo-' + index).value = eval2Value[index].eval2_seq;
+					//DOM이 완성된 후 '유지' 선택 경우 추가
+					this.$nextTick(() => {
+						values.forEach(function(value, index) {
+							doms[index].value = value;
+						})
+
+						//개발자: 최지현
+						//평가1항목 중복 비교
+						//대
+						this.defaultConditionMajor = this.multiEvalArticleList.every(
+							function(multiEvalArticles) {return multiEvalArticles.ev1_big == selArticle.ev1_big;}
+						)
+						if(!this.defaultConditionMajor){
+							document.querySelector('#multi-eval1-combo-1').value = "maintainValue";
+						}
+						//중
+						this.defaultConditionMiddle = this.multiEvalArticleList.every(
+							function(multiEvalArticles) {return multiEvalArticles.ev1_mid == selArticle.ev1_mid;}
+						)
+						if(!this.defaultConditionMiddle){
+							document.querySelector('#multi-eval1-combo-2').value = "maintainValue";
+						}
+						//소
+						this.defaultConditionMinor = this.multiEvalArticleList.every(
+							function(multiEvalArticles) {return multiEvalArticles.ev1_sml == selArticle.ev1_sml;}
+						)
+						if(!this.defaultConditionMinor){
+							document.querySelector('#multi-eval1-combo-3').value = "maintainValue";
+						}
+
+						
+						console.log("값: ", this.duplArr);
+					});
+
+
+					//개발자: 최지현
+					//평가2항목 중복 비교.
+					const list = {}; 
+					for (let klass of this.getEval2Class) {
+						if (klass.auto !== "Y") {
+							list[klass.upper_cate_seq] = [];
 						}
 					}
+					console.log(evalInfo, this.multiEvalArticleList);
+					for (let art of this.multiEvalArticleList) {
+						let e2 = evalInfo[art.news_id]["eval2Value"]
+						for (let [groupSeq, value] of Object.entries(e2)) {
+							if (!list[groupSeq]) continue;
+							list[groupSeq].push(value.eval2_seq);
+						}
+					}
+					let totalCnt = this.multiEvalArticleList.length;
+					for (let [groupSeq, evalSeq] of Object.entries(list)) {
+						let partCnt = evalSeq.length;
+						if (totalCnt != partCnt) {
+							let remain = totalCnt - partCnt
+							for (let i=0; i<remain; i++) {
+								evalSeq.push(-1);
+							}
+						}
+						for (let [idx1, value1] of Object.entries(evalSeq)) {
+							let dupl = true;
+							for (let [idx2, value2] of Object.entries(evalSeq)) {
+								if (idx1 != idx2 && value1 != value2) {
+									dupl = false;
+									break;
+								}
+							}
+							this.duplArr[groupSeq] = dupl;
+						}
+					}
+					//개발자: 최지현
+					//평가2항목 값 있으면 값, 화면 넣어주기
+					this.$nextTick(() => {
+						for (const [groupSeq, flag] of Object.entries(this.duplArr)) {
+							if (this.evalLayout === 0) {
+								const tag = document.querySelector('#multi-eval2-combo-' + groupSeq)
+								if (tag){
+									//개발자: 지현
+									if (flag) {
+										if (evalInfo[newsId]["eval2Value"][groupSeq] != null) {
+											tag.value = evalInfo[newsId]["eval2Value"][groupSeq]["eval2_seq"];
+										} else {
+											tag.value = "";
+										}
+										
+									} else {
+										tag.value = "maintainValue";
+									}
+								}
+							}
+						}
+					});
+
 				}
 			},
+
+
 			closeEvalMulti() {
 				this.SET_SHOW_DO_EVAL_MULTI(false);
 			},
@@ -551,10 +665,11 @@
 					this.$el.querySelector('#multi-eval1-combo-1').value = '';
 					this.$el.querySelector('#multi-eval1-combo-2').value = '';
 					this.$el.querySelector('#multi-eval1-combo-3').value = '';
-					this.inputMajor = null;
+					//this.inputMajor = null;
 					this.inputMiddle = null;
 					this.inputMinor = null;
 					this.fetchEval1Major = this.getEval1ByCategory.major;
+
 					this.fetchEval1Middle = this.getEval1ByCategory.middle;
 					this.fetchEval1Minor = this.getEval1ByCategory.minor;
 					this.notAutoCateSeq.forEach(e => {
@@ -575,20 +690,62 @@
 					//eval2 string 만들기
 					let eval2 = this.selEval2;
 					let eval2Arr = [];
+					const that = this;
+
+					console.log("eval2: ", eval2);
+					console.log("group: ", this.cateGroupSeq);
+					console.log("seq: ", this.cateSubSeq);
+
+
 					this.notAutoCateSeq.forEach(seq => {
-						if(eval2[seq] != null) {
+						if(eval2[seq] != null && eval2[seq] != "" && eval2[seq] != "maintainValue") { // 삭제, 삽입
 							eval2Arr.push(eval2[seq]);
+
+							for (let [k, v] of Object.entries(that.cateGroupSeq[seq])) {
+								let i = that.cateSubSeq.indexOf(v);
+								that.cateSubSeq.splice(i, 1);
+							}
+						} else if (eval2[seq] != null && eval2[seq] == "") { // 삭제
+							for (let [k, v] of Object.entries(that.cateGroupSeq[seq])) {
+								let i = that.cateSubSeq.indexOf(v);
+								that.cateSubSeq.splice(i, 1);
+							}
 						}
 					});
 					let eval2Str = eval2Arr.join();
 					let newsIdStr = this.multiNewsIdList.join();
+
+					console.log(eval2Str);
+					console.log(this.cateSubSeq);
+					debugger;
+
 					let params = new FormData();
 					params.append('eval1', this.selEval1);
 					params.append('eval1Change', this.isEval1Change);
 					params.append('eval2', eval2Str);
 					params.append('eval2Change', this.isEval2Change);
 					params.append('news_id', newsIdStr);
-					params.append('autoCateSubSeq', this.autoCateSubSeq);
+					params.append('autoCateSubSeq', this.cateSubSeq);
+
+					
+
+/*
+					유지
+						[1001:주목도]
+						eval2: -
+						autoCateSubSeq: 17 18 19 20 21
+					
+					삭제
+						[1001:주목도]
+						eval2: -
+						autoCateSubSeq: -
+					
+					삽입
+						[1001:주목도]
+						eval2: 17
+						autoCateSubSeq: -
+					
+*/
 
 					//eval 값 저장
 					this.isLoading=true;

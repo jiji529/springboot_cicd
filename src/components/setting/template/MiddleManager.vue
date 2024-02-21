@@ -139,6 +139,7 @@
         let params = await this.makeFormData(); // API 던질 검색 옵션 값들
         this.getStatSetting.statValue 
           = Object.freeze((await this.getStatValueAPI(params)).data); // 검색 조건에 따른 데이터 수집
+          await this.getEval2ClassAPI();
       },
 
       /**

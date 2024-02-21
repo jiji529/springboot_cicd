@@ -362,7 +362,6 @@
 		methods: {
 			...mapActions([
 				'getArticleListFromSearchAPI',
-				'getArticleListFromHeaderAPI',
 				'inExcludeEvalAPI',
 				'getMediaPolicyAPI',
 				'setListLayout',
@@ -480,6 +479,7 @@
 				this.SET_LOADING_GIF(true);
 				this.SET_GET_ARTICLE_LIST_FROM_SEARCH_PARAMS(params);
 				if (await this.getArticleListFromSearchAPI(params)) { // 여기서 setting searchArticleList
+					await this.getEval2ClassAPI(); // 대소제목 때문에 추가
 					this.findFirstArticle(this.searchArticleList);
 					let idx = -1;
 					if (this.searchArticleList && this.searchArticleList[0] && this.searchArticleList[0][0] && this.searchArticleList[0][0].constructor.name === 'Array') {

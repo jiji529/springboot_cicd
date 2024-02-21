@@ -112,7 +112,6 @@
 						</dd><dd v-else>&nbsp;</dd>
 					</slot>
 
-					<!-- 개발자: 최지현 -->
 					<slot v-if="visibleEvalList[6]">
 						<dt class="ellipsis">긍/부정</dt>
 						<dd v-if="selectedArticle"> 
@@ -123,13 +122,11 @@
 						</dd><dd v-else>&nbsp;</dd>
 					</slot>
 
-					<!-- 개발자: 최지현 -->
 					<slot v-if="visibleEvalList[7]" class="articleTit">
 						<dt class="ellipsis">
 							대/소제목
 						</dt>
 						<dd v-if="selectedArticle"> 
-							<span :style="styleObj" @click="helpMessage"></span>
 							<select id="eval2-combo-7" v-if="Object.keys(autoArticleClassType).length > 0" v-model="selEval2[autoArticleClassType.upper_cate_seq]" @change="eval2Combo($event, autoArticleClassType.upper_cate_seq)" tabindex="3">
 								<option value="null">선택</option>
 								<option v-for="val in autoArticleClassType.sub" :key="String(val.seq)" :value="String(val.seq)">{{val.name}}</option>
@@ -138,12 +135,6 @@
 					</slot>
 				</dl>
 			</div>
-			<!-- <div class="layer_pop" v-show="true">
-				<h2>대/소제목 설명</h2>
-				<p>*뷰어에서 새로운 대/소제목 생성 시 
-					<br>환경설정-자동평가설정 창에서 데이터 동기화 후 재평가를 해주어야 합니다.
-				</p>
-			</div> -->
 			<!-- e:기사정보 -->
 			<!-- s:eval1 -->
 			<div class="filter1" :class="{veiled : !evalManualSetting['M1']}">
@@ -346,7 +337,6 @@
 				autoReporter: [],
 				autoLetterCnt: [],
 				autoSize:[],
-				//개발자: 최지현
 				autoPositiveDenial:[],
 				autoArticleClassType:[],
 
@@ -384,15 +374,7 @@
 				visibleEvalList: [], // 자동|평가1|평가2 표시사용여부
 
 				/* 원본 데이터를 저장하기 위한 변수 */
-				originArticle: null,
-				styleObj: {
-					float: 'right'
-					, width:'14px'
-					, height:'14px'
-					, margin:'2px 5px'
-					, textIndent:'-9999px'
-					, background:'url('+image+') 0 -400px no-repeat'
-				}
+				originArticle: null
 			}
 		},
 		computed: {
@@ -734,7 +716,6 @@
 								});
 							} else if (item.upper_cate_name === '수록지면') {
 								this.autoLocation = item;
-							// 개발자: 최지현
 						 	} else if (item.upper_cate_name === '긍/부정') {
 								this.autoPositiveDenial = item;
 					 		} else if (item.upper_cate_name === '대/소제목') {
@@ -962,7 +943,6 @@
 				, this.autoMediaImportance.upper_cate_seq
 				, this.autoReporter.upper_cate_seq
 				, this.autoLocation.upper_cate_seq
-				//개발자: 최지현
 				, this.autoPositiveDenial.upper_cate_seq
 				, this.autoArticleClassType.upper_cate_seq
 				].forEach(e => {
@@ -1379,9 +1359,6 @@
 				} else {
 					return ' ';
 				}
-			},
-			helpMessage(){
-				alert("뷰어에서 새로운 대/소제목 생성 시 환경설정-자동평가설정 창에서 데이터 동기화 후 재평가를 해주어야 합니다.");
 			}
 		},
 	}

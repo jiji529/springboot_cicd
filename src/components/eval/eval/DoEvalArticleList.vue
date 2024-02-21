@@ -413,7 +413,7 @@
 					this.$eventBus.$emit('kickOut');
 					return false;
 				}
-				if (this.selArticles.length > 1) {
+				if (this.selArticles.length > 1) { 
 					let newsIdList = [];
 					let origin = this.selArticles;
 					let multilist = [];
