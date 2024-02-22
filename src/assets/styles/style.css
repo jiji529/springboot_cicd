@@ -1277,7 +1277,7 @@ div.stat_tc_area.total_table { overflow-x: auto; }
 .cont_wrap .set_box_area .set_auto_box .set_cont .set_report_val dt{ float:left; width:25%; background:#f2f2f2; padding:0 10px;}
 .cont_wrap .set_box_area .set_auto_box .set_cont .set_report_val dd{ float:left; width:25%;padding:7px 10px; line-height:20px;}
 
-.cont_wrap .set_report_box{ float:left; width:100%; margin-top:20px; position:relative;}
+.cont_wrap .set_report_box{ float:left; width:100%; margin-top:10px; position:relative;}
 .cont_wrap .set_box_area .set_auto_box.box3 .ft_sch input[type=text]{ width:250px; margin:0;}
 .cont_wrap .set_box_area .set_auto_box.box3 .ft_sch button{  top:1px; right:1px;}
 

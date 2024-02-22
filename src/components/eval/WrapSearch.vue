@@ -33,6 +33,9 @@
 		},
 		computed:mapState(['hideAndShowArticleListSearch', 'listLayout0', 'listLayout1', 'listLayout2', 'loadingGif']),
 		async mounted() {
+			//개발자: 최지현
+			await this.maintainSearchSize();
+
 			await this.getEvalManualSetting();
 			await this.getNsConfigEvalAPI();
 		},
@@ -40,6 +43,32 @@
 			...mapActions([
 				'getMediaPolicyAPI', 'getNsConfigEvalAPI'
 			]),
+			//개발자: 최지현
+			//다른 탭 다녀와도 3분할된 컴포넌트 하나당 크기 유지.
+			async maintainSearchSize(){
+				let widths = [];
+				if (this.listLayout0 && this.listLayout1 && this.listLayout2) { // 1 O O O
+					widths = ['30%', '25%', '45%'];
+				} else if (this.listLayout0 && this.listLayout1 && !this.listLayout2) {
+					widths = ['calc(75% - 30px)', '25%', '30px'];
+				} else if (this.listLayout0 && !this.listLayout1 && this.listLayout2) {
+					widths = ['calc(55% - 30px)', '30px', '45%'];
+				} else if (this.listLayout0 && !this.listLayout1 && !this.listLayout2) {
+					widths = ['calc(100% - 60px)', '30px', '30px'];
+				} else if (!this.listLayout0 && this.listLayout1 && this.listLayout2) {
+					widths = ['30px', '25%', 'calc(75% - 30px)'];
+				} else if (!this.listLayout0 && this.listLayout1 && !this.listLayout2) {
+					widths = ['30px', 'calc(100% - 60px)', '30px'];
+				} else if (!this.listLayout0 && !this.listLayout1 && this.listLayout2) {
+					widths = ['30px', '30px', 'calc(100% - 60px)'];
+				} else if (!this.listLayout0 && !this.listLayout1 && !this.listLayout2) {
+					widths = ['30px', '30px', '30px'];
+				}
+
+				document.getElementById('searchListWrap').style.width = widths[0];
+				document.getElementById('searchValWrap').style.width = widths[1];
+				document.getElementById('searchPreviewWrap').style.width = widths[2];
+			},
 			async getEvalManualSetting() {
 				const params = new FormData();
 				params.append('m', 'e');

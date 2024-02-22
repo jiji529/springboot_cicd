@@ -38,6 +38,9 @@
 		},
 		computed:mapState(['hideAndShowArticleList', 'listLayout0', 'listLayout1', 'listLayout2', 'loadingGif']),
 		async mounted() {
+			//개발자: 최지현
+			await this.maintainEvalSize();
+
 			let ssdo = store.state.hiddenLink1;
 			await this.getEvalManualSetting();
 			await this.$axios.get(ssdo + '/getConfigEvalJson.php').then(r => {
@@ -56,8 +59,34 @@
 			}).catch(e=>console.error(e));
 		},
 		methods: {
-			...mapActions(['getMediaPolicyAPI']),
+			...mapActions(['getMediaPolicyAPI', 'toggleListLayout']),
 			...mapMutations(['LOGIN', 'SET_LOADING_GIF']),
+			//개발자: 최지현
+			//다른 탭 다녀와도 3분할된 컴포넌트 하나당 크기 유지.
+			async maintainEvalSize(){
+				let widths = [];
+				if (this.listLayout0 && this.listLayout1 && this.listLayout2) { // 1 O O O
+					widths = ['30%', '25%', '45%'];
+				} else if (this.listLayout0 && this.listLayout1 && !this.listLayout2) {
+					widths = ['calc(75% - 30px)', '25%', '30px'];
+				} else if (this.listLayout0 && !this.listLayout1 && this.listLayout2) {
+					widths = ['calc(55% - 30px)', '30px', '45%'];
+				} else if (this.listLayout0 && !this.listLayout1 && !this.listLayout2) {
+					widths = ['calc(100% - 60px)', '30px', '30px'];
+				} else if (!this.listLayout0 && this.listLayout1 && this.listLayout2) {
+					widths = ['30px', '25%', 'calc(75% - 30px)'];
+				} else if (!this.listLayout0 && this.listLayout1 && !this.listLayout2) {
+					widths = ['30px', 'calc(100% - 60px)', '30px'];
+				} else if (!this.listLayout0 && !this.listLayout1 && this.listLayout2) {
+					widths = ['30px', '30px', 'calc(100% - 60px)'];
+				} else if (!this.listLayout0 && !this.listLayout1 && !this.listLayout2) {
+					widths = ['30px', '30px', '30px'];
+				}
+
+				document.getElementById('evalListWrap').style.width = widths[0];
+				document.getElementById('evalValWrap').style.width = widths[1];
+				document.getElementById('evalPreviewWrap').style.width = widths[2];
+			},
 			async getEvalManualSetting() {
 				const params = new FormData();
 				params.append('m', 'e');

@@ -1513,7 +1513,7 @@ export default new Vuex.Store({
       }
       return rtn;
     },
-    //기사 대/소제목 초기 API
+    //기사 목차분류 초기 API
     async setArticleClassTypeAPI(store, params) {
       // 요청
       const getAPI = (params) => {
@@ -1530,7 +1530,7 @@ export default new Vuex.Store({
       }
       return rtn;
     },
-    //기사 대/소제목 설정 API
+    //기사 목차분류 설정 API
     async getArticleClassTypeAPI(store, params) {
       // 요청
       const getAPI = (params) => {

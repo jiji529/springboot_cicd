@@ -2,7 +2,10 @@
   <div class="set_auto_box box6">
     <div class="set_title">
       <h2>출입기자</h2>
-      <p>* 출입기자에 등록되지 않은 모든 기자는 일반기자로 표시됩니다.</p>
+      <div class="des">
+        <p>* 출입기자에 등록되지 않은 모든 기자는 일반기자로 표시됩니다.</p>
+        <p>* 동일매체의 동명이인에 대한 구분은 불가능합니다.</p>
+      </div>
       <div class="set_tit_btn">
         <slot v-if="edit">
           <a @click="edit=false;onSetting()" class="btn_wh">취소</a>
@@ -51,6 +54,7 @@
             <div class="md col3-2">출입기자명</div>
             <div class="md col3-3">상태</div>
           </div>
+          <!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
           <dl v-for="(media, index) in filteredList" :key="index">
             <dt class="md col3-1">
               <slot v-if="edit">
@@ -176,7 +180,7 @@
             return ev.media_name.toLowerCase().includes(this.searchTextM.toLowerCase());
           });
 
-          return result.map(ev => {
+          result = result.map(ev => {
             if (!ev.reporter) {
               ev.reporter = [];
             }
@@ -191,13 +195,24 @@
                 }
               })
             });
+            
             if (res.reporter.length > 0) {
               return res;
             }
             return false;
           });
+
+          let remain = [];
+          for (let ev of result) {
+            if (ev && ev.reporter 
+              && Array.isArray(ev.reporter) 
+              && ev.reporter.length > 0) {
+              remain.push(ev);
+            }
+          }
+
+          return remain;
         }
-        return result;
       },
       
     },
@@ -665,4 +680,10 @@
     display:none;
   }
   .set_auto_box.box6 { height: calc(70% - 10px) !important; }
+  .set_auto_box.box6 .set_title{display: flex;}
+
+  .cont_wrap .set_title{height: 45px !important;}
+  .cont_wrap .set_title .des{display: flex; flex-direction: column; width: 406px; height: 35px;}
+  .set_tit_btn{padding-top: 17px;}
+
 </style>

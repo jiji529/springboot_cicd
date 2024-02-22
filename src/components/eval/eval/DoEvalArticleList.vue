@@ -84,53 +84,55 @@
 							</div>
 							<!--기사 -->
 							<li class="list_li" :class="{ on : one.news_id === news_id_local }" :key="oneIdx+'art'">
-								<div class="li_chk">
-									<input type="checkbox" :value="one" :id="'article_checkbox'+one.news_id"  v-model="selArticles"/>
-									<label :for="'article_checkbox'+one.news_id" >
-										<span></span>
-									</label>
+								<div class="onlyCursor">
+									<div class="li_chk">
+										<input type="checkbox" :value="one" :id="'article_checkbox'+one.news_id"  v-model="selArticles"/>
+										<label :for="'article_checkbox'+one.news_id" >
+											<span></span>
+										</label>
+									</div>
+									<div class="li_first" @click="oneCheck(one)"><!--:class="evalManualSetting.cssClassName"-->
+										<span class="ico li1" v-if="one.part_name === '' && one.news_comment !== '1'"></span><!-- 지면-->
+										<span class="ico li2" v-if="one.part_name === '' && one.news_comment === '1'"></span><!-- 지면&평가제외-->
+										<span class="ico li3" v-if="one.part_name !== '' && one.news_comment !== '1'"></span><!-- 온라인-->
+										<span class="ico li4" v-if="one.part_name !== '' && one.news_comment === '1'"></span><!-- 온라인&평가제외-->
+									</div>
+									<template v-if="classicViewMode">
+										<div class="li_item media_name" :class="{red : one.news_comment === '1'}">{{one.media_name}}</div>
+										<div class="li_item article_title" :class="{red : one.news_comment === '1'}" @click="oneCheck(one)">{{one.article_title}}</div>
+										<div class="li_item ev1" v-if="one.news_comment !== '1'">
+											<span v-if="getEvalInfo[one.news_id] && getEvalInfo[one.news_id].eval1">
+												<span class="ico li5" v-if="getEvalInfo[one.news_id].eval1.eval1_seq"></span> <!--평가1 O -->
+												<span v-else class="ico li7"></span> <!--평가1 X -->
+											</span>
+											<span v-else class="ico li7"></span>
+										</div>
+										<div class="li_item ev1" v-if="one.news_comment === '1'">
+											<span v-if="getEvalInfo[one.news_id] && getEvalInfo[one.news_id].eval1">
+												<span class="ico li8" v-if="getEvalInfo[one.news_id].eval1.eval1_seq"></span> <!--평가제외 평가1 O -->
+												<span v-else class="ico li10"></span> <!--평가제외 평가1 X -->
+											</span>
+											<span v-else class="ico li7"></span>
+										</div>
+										<div class="li_item ev2" v-if="one.news_comment !== '1'">
+											<span v-if="getEvalInfo[one.news_id]">
+												<span class="ico li5" v-if="getEvalInfo[one.news_id].eval2m2Cnt === getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 ○ -->
+												<span class="ico li7" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt === 0"></span><!-- 평가2 X-->
+												<span class="ico li6" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt < getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 △-->
+											</span>
+										</div>
+										<div class="li_item ev2" v-if="one.news_comment === '1'">
+											<span v-if="getEvalInfo[one.news_id]">
+												<span class="ico li8" v-if="getEvalInfo[one.news_id].eval2m2Cnt === getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 ○ -->
+												<span class="ico li10" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt === 0"></span><!-- 평가2 X-->
+												<span class="ico li9" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt < getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 △-->
+											</span>
+										</div>
+									</template>
+									<template v-for="(column, ci) in columnSettingWeb">
+										<div v-if="!(classicViewMode && (column.field === 'media_name' || column.field === 'article_title'))" class="li_item" :class="getArticleClassName(one.news_comment, column.field)" :key="one.news_id + ci" @click="oneCheck(one, 'col to event')">{{addComma(column.field, one[column.field])}}</div>
+									</template>
 								</div>
-								<div class="li_first" @click="oneCheck(one)"><!--:class="evalManualSetting.cssClassName"-->
-									<span class="ico li1" v-if="one.part_name === '' && one.news_comment !== '1'"></span><!-- 지면-->
-									<span class="ico li2" v-if="one.part_name === '' && one.news_comment === '1'"></span><!-- 지면&평가제외-->
-									<span class="ico li3" v-if="one.part_name !== '' && one.news_comment !== '1'"></span><!-- 온라인-->
-									<span class="ico li4" v-if="one.part_name !== '' && one.news_comment === '1'"></span><!-- 온라인&평가제외-->
-								</div>
-								<template v-if="classicViewMode">
-									<div class="li_item media_name" :class="{red : one.news_comment === '1'}">{{one.media_name}}</div>
-									<div class="li_item article_title" :class="{red : one.news_comment === '1'}" @click="oneCheck(one)">{{one.article_title}}</div>
-									<div class="li_item ev1" v-if="one.news_comment !== '1'">
-										<span v-if="getEvalInfo[one.news_id] && getEvalInfo[one.news_id].eval1">
-											<span class="ico li5" v-if="getEvalInfo[one.news_id].eval1.eval1_seq"></span> <!--평가1 O -->
-											<span v-else class="ico li7"></span> <!--평가1 X -->
-										</span>
-										<span v-else class="ico li7"></span>
-									</div>
-									<div class="li_item ev1" v-if="one.news_comment === '1'">
-										<span v-if="getEvalInfo[one.news_id] && getEvalInfo[one.news_id].eval1">
-											<span class="ico li8" v-if="getEvalInfo[one.news_id].eval1.eval1_seq"></span> <!--평가제외 평가1 O -->
-											<span v-else class="ico li10"></span> <!--평가제외 평가1 X -->
-										</span>
-										<span v-else class="ico li7"></span>
-									</div>
-									<div class="li_item ev2" v-if="one.news_comment !== '1'">
-										<span v-if="getEvalInfo[one.news_id]">
-											<span class="ico li5" v-if="getEvalInfo[one.news_id].eval2m2Cnt === getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 ○ -->
-											<span class="ico li7" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt === 0"></span><!-- 평가2 X-->
-											<span class="ico li6" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt < getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 △-->
-										</span>
-									</div>
-									<div class="li_item ev2" v-if="one.news_comment === '1'">
-										<span v-if="getEvalInfo[one.news_id]">
-											<span class="ico li8" v-if="getEvalInfo[one.news_id].eval2m2Cnt === getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 ○ -->
-											<span class="ico li10" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt === 0"></span><!-- 평가2 X-->
-											<span class="ico li9" v-else-if="getEvalInfo[one.news_id].eval2m2Cnt < getEvalInfo[one.news_id].eval2m2CntMax"></span><!-- 평가2 △-->
-										</span>
-									</div>
-								</template>
-								<template v-for="(column, ci) in columnSettingWeb">
-									<div v-if="!(classicViewMode && (column.field === 'media_name' || column.field === 'article_title'))" class="li_item" :class="getArticleClassName(one.news_comment, column.field)" :key="one.news_id + ci" @click="oneCheck(one, 'col to event')">{{addComma(column.field, one[column.field])}}</div>
-								</template>
 							</li>
 						</slot>
 					</ul>
@@ -803,6 +805,10 @@
 		overflow-y: scroll;
 	}
 	.cp {
+		cursor: pointer;
+	}
+	.onlyCursor{
+		display: flex;
 		cursor: pointer;
 	}
 </style>

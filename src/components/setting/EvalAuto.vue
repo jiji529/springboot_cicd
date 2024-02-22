@@ -16,7 +16,7 @@
 				<ArticlePositiveDenial :class="{conceal : nameEvalList['긍/부정'] && nameEvalList['긍/부정']['isUse'] === 'N'}"></ArticlePositiveDenial>
 			</div>
 			<div class="set_box_area">
-				<ArticleTitle :class="{conceal : nameEvalList['대/소제목'] && nameEvalList['대/소제목']['isUse'] === 'N'}"></ArticleTitle>
+				<ArticleTitle :class="{conceal : nameEvalList['목차분류'] && nameEvalList['목차분류']['isUse'] === 'N'}"></ArticleTitle>
 			</div>
 		</div>
 		<ul class="pre_group_set">

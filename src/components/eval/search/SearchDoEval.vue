@@ -125,7 +125,7 @@
 					</slot>
 
 					<slot v-if="visibleEvalList[7]" class="articleTit">
-						<dt class="ellipsis">대/소제목</dt>
+						<dt class="ellipsis">목차분류</dt>
 						<dd v-if="searchSelectedArticle"> 
 							<select id="eval2-combo-7" v-if="Object.keys(autoArticleClassType).length > 0" v-model="selEval2[autoArticleClassType.upper_cate_seq]" @change="eval2Combo($event, autoArticleClassType.upper_cate_seq)" tabindex="3">
 								<option value="null">선택</option>
@@ -678,7 +678,7 @@
 								this.autoLocation = item;
 							} else if (item.upper_cate_name === '긍/부정') {
 								this.autoPositiveDenial = item;
-					 		} else if (item.upper_cate_name === '대/소제목') {
+					 		} else if (item.upper_cate_name === '목차분류') {
 								this.autoArticleClassType = item;
 							}
 							this.autoCateSeq.push(item.upper_cate_seq);
