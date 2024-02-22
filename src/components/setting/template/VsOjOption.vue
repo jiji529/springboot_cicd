@@ -1515,10 +1515,12 @@ export default {
             // 교차-기준(항목)들의 이름(순서, 행/열)을 재배치하는 역할도 한다.
             voo.optionName = [];
             for(let r of voo.rowList.crossAxes) {
-                if (r.val != "0") voo.optionName.push({name:r.name,act:true});
+                if (r.val != "0" && r.val != "100001") voo.optionName.push({name:r.name,act:false});
+                else if (r.val != "0" && r.val == "100001") voo.optionName.push({name:r.name,act:true});
             }
             for(let c of voo.columnList.crossAxes) {
-                if (c.val != "0") voo.optionName.push({name:c.name,act:true});
+                if (c.val != "0" && c.val != "100001") voo.optionName.push({name:c.name,act:false});
+                else if (c.val != "0" && c.val == "100001") voo.optionName.push({name:c.name,act:true});
             }
             if (voo.crossAxesLength === 4) voo.verticalSplit = true; // 교차-기준을 최대로 선택했을 때
             if (voo.name==='Chart') this.chartOptionController(voo);
@@ -1595,7 +1597,7 @@ export default {
                 } 
             }
             if (type === "3") await this.itemUpDown(to, false);
-            await this.changeItemNameANDCounting(to);
+            await this.changeItemNameANDCounting(to); 
 
             // 항목 개수가 일정량 초과했는지 판별하는 로직
 /*            let dataScale = this.expectedDataSize(to[ListName].crossAxes)
