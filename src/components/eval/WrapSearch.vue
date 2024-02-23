@@ -102,4 +102,6 @@
 	.loading-image {position: absolute;top: 50%;left: 50%;z-index: 100;}
 	.loading-message {position: relative;margin: 0 auto;z-index: 101;}
 
+	.cont_wrap{padding-bottom: 10px; margin-bottom: 10px;}
+
 </style>

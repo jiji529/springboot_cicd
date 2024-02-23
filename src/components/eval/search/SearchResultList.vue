@@ -1049,5 +1049,5 @@
 		cursor: pointer;
 	}
 
-	.cont_wrap .list_wrap{bottom: 10px;}
+	
 </style>

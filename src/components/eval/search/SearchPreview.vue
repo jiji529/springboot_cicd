@@ -728,5 +728,5 @@
     background: url(/img/ico_pre.467a0115.png) 0 -102px no-repeat;
     text-indent: -9999px;
 	}
-	.cont_wrap .preview_wrap{bottom: 10px;}
+
 </style>
