@@ -86,6 +86,9 @@
 			this.$eventBus.$on('sendNewsMeToEvalHeader', selNewsMe => {
 				this.selNewsMe = selNewsMe;
 			});
+
+			//최지현
+			this.$eventBus.$emit('alignEvalList');
 		},
 		watch:{
             selectedArticle(){

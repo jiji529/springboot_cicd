@@ -1319,6 +1319,8 @@
 		width: 1px !important;
 	}
 
-		.cont_wrap .val_wrap .set_val .val_grp .val_item .articleTit:before{content: ''; background:#f0f4f7; position: absolute;}
+	.cont_wrap .val_wrap .set_val .val_grp .val_item .articleTit:before{content: ''; background:#f0f4f7; position: absolute;}
+
+	.cont_wrap .val_wrap{bottom: 10px;}
 
 </style>

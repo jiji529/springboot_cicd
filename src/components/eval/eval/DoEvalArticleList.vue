@@ -199,6 +199,7 @@
 			this.$eventBus.$on('sendDateToArticleList', () => {
 				this.getListWithAuth();
 			});
+			this.getArticleListToggle();
 			this.$eventBus.$on('alignEvalList', () => {
 				this.manageArticleListToggle();
 			});
@@ -502,18 +503,27 @@
 				this.TOGGLE_HIDE_AND_SHOW_ARTICLE_LIST(!this.hideAndShowArticleList);
 			},
 			async manageArticleListToggle() {
-				let obj = this.$el.querySelector('#evalList');
-				let objAlt = document.querySelector('#searchListWrap');
-				let parentWidth = Number(obj.offsetWidth), entireWidth = 0;
-				if (parentWidth === 0 && objAlt) {
-					parentWidth = objAlt.offsetWidth;
-					let br = this.$browserDetect;
-					if (br.isChrome || br.isFirefox || br.isIE) {
-						parentWidth += 3;
-					} else {
-						parentWidth -= 2;
-					}
+				// let obj = this.$el.querySelector('#evalList');
+				// let objAlt = document.querySelector('#searchListWrap');
+				// let parentWidth = Number(obj.offsetWidth), entireWidth = 0;
+				// if (parentWidth === 0 && objAlt) {
+				// 	parentWidth = objAlt.offsetWidth;
+				// 	let br = this.$browserDetect;
+				// 	if (br.isChrome || br.isFirefox || br.isIE) {
+				// 		parentWidth += 3;
+				// 	} else {
+				// 		parentWidth -= 2;
+				// 	}
+				// }
+
+				let obj = document.querySelector('#searchListWrap');
+				let parentWidth = Number(obj.getAttribute('org')), entireWidth = 0;
+				if (parentWidth === 0) {
+					parentWidth = 580;
+				} else {
+					parentWidth -= 5;
 				}
+
 				if (this.classicViewMode) {
 					if (this.evalManualSetting['M1'] && this.evalManualSetting['M2']) {
 						this.createCssClass('#evalList .article_title', 'width', (parentWidth - 75 - 180) + 'px');

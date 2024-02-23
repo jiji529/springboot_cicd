@@ -93,12 +93,13 @@
 	}
 </script>
 <style scoped>
-  .fold {
+  	.fold {
 		background-color: #ffffff !important;
 		overflow: hidden;
 		width:30px !important;
 	}
 	.loading { width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block;opacity: 0.7;background-color: #fff;z-index: 99;text-align: center;vertical-align: middle;}
-  .loading-image {position: absolute;top: 50%;left: 50%;z-index: 100;}
-  .loading-message {position: relative;margin: 0 auto;z-index: 101;}
+	.loading-image {position: absolute;top: 50%;left: 50%;z-index: 100;}
+	.loading-message {position: relative;margin: 0 auto;z-index: 101;}
+
 </style>

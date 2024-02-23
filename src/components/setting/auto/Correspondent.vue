@@ -682,8 +682,9 @@
   .set_auto_box.box6 { height: calc(70% - 10px) !important; }
   .set_auto_box.box6 .set_title{display: flex;}
 
+  /* 환경설정 - 자동 환경 설정 - 출입기자 CSS  */
   .cont_wrap .set_title{height: 45px !important;}
   .cont_wrap .set_title .des{display: flex; flex-direction: column; width: 406px; height: 35px;}
-  .set_tit_btn{padding-top: 17px;}
-
+  .set_tit_btn{padding-top: 17px; position: relative !important; right: 0; padding-left: 20px;}
+  .cont_wrap .set_box_area .set_auto_box .set_cont .set_cont_head {margin-bottom: 10px !important;}
 </style>
